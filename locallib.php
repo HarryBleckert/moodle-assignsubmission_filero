@@ -26,12 +26,12 @@
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
  */
 
-use assignsubmission_filero\event\submitted_file_archived;
+/* use assignsubmission_filero\event\submitted_file_archived; */
 
 defined('MOODLE_INTERNAL') || die();
 
 // validate and force required assignment settings for requiresubmissionstatement and submissiondrafts
-if (isset($record->assignment)) {
+if (isset($record->assignment) && $record->assignment) {
     assignsubmission_filero_validate_settings($record->assignment);
 }
 
@@ -844,7 +844,7 @@ class assign_submission_filero extends assign_submission_plugin {
 function assignsubmission_filero_validate_settings($assignment) {
     global $DB;
     $update = false;
-    if (!isset($_SESSION['filero_settings_validated'])) {
+    if ( is_siteadmin() || !isset($_SESSION['filero_settings_validated'])) {
         $_SESSION['filero_settings_validated'] = true;
         $config = get_config('assignsubmission_filero');
         $requiresubmissionstatement = $config->requiresubmissionstatement;
