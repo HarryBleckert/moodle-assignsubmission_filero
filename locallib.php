@@ -26,7 +26,7 @@
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
  */
 
-/* use assignsubmission_filero\event\submitted_file_archived; */
+use assignsubmission_filero\event\submitted_file_archived;
 
 defined('MOODLE_INTERNAL') || die();
 
