@@ -72,7 +72,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * Carry out any extra processing required when the work is submitted for grading
      *
      * @param stdClass $submission the assign_submission record being submitted.
-     * @return void
+     * @return boolean
      */
     public function submit_for_grading($submission) {
         // Used by Filero
@@ -112,7 +112,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $DB->delete_records('assignsubmission_filero_file',
                         array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
             }
-            //return true;
+            return false;
         }
 
         $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
@@ -224,6 +224,18 @@ class assign_submission_filero extends assign_submission_plugin {
      * @param int $submissionid
      * @return mixed
      */
+
+    /**
+     * Get file submission information from the database
+     *
+     * @param int $submissionid
+     * @return mixed
+     */
+    private function get_filero_submission($submissionid) {
+        global $DB;
+        return $DB->get_record('assignsubmission_filero', array('submission' => $submissionid));
+    }
+
     private function get_archived_files($submissionid, $count = false, $filearea = false) {
         global $DB;
         if (!empty($filearea)) {
@@ -238,80 +250,6 @@ class assign_submission_filero extends assign_submission_plugin {
             return (is_countable($records) ? count($records) : $count);
         }
         return $records;
-    }
-
-    /**
-     * Get formatted submitted files information from the database
-     *
-     * @param int $submissionid
-     * @return string
-     */
-    private function get_archived_files_info($submission) {
-        // global $DB, $USER;
-        $submissionid = $submission->id;
-        $files = $this->get_archived_files($submissionid);
-        $filero = $this->get_filero_submission($submissionid);
-        if (is_countable($files) and count($files)) {
-            $numfiles = count($files);
-            $info = "\n<script>\n
-                function toggleViewFiles() { var obj = document.getElementById('FileroFiles');
-                    obj.style.display = (obj.style.display === 'none') ? 'block' : 'none';}
-                    </script>\n"
-                    . '<span title="Click zum Anzeigen der Daten zur Archivierung" onclick="toggleViewFiles();">Daten'
-                    . ($numfiles ? (" und " . $numfiles . " Datei" . ($numfiles > 1 ? "en" : "")) : "")
-                    . '&nbsp;<i class="fa fa-angle-down" aria-hidden="true" style="font-weight:bolder;color:darkgreen;"></i>'
-                    . "\n</span>\n";
-
-            $info .= "\n" . '<div id="FileroFiles" style="display:none;border:2px solid darkgreen;margin:6px;" >';
-
-            // requiresubmissionstatement has been provided and logged
-            if ($filero->statement_accepted) {
-                $info .= $this->show_statement_accepted($submission) . "<br>";
-            }
-            $filearea = "none";
-            $cnt = 0;
-            foreach ($files as $file) {
-                if (empty($file->timecreated)) {
-                    $file->timecreated = $filero->submissiontimecreated;
-                }
-                if (empty($file->timemodified)) {
-                    $file->timemodified = $file->timecreated;
-                }
-                $fileromodified = $filero->feedbacktimemodified;
-                if ($filearea == assignsubmission_file_FILEAREA) {
-                    $fileromodified = $filero->submissiontimemodified;
-                }
-                if ($filearea != $file->filearea) {
-                    $info .= (!$cnt ? "" : "<br>") . "<b>Rechtssicher archiviert am "
-                            . date('d.m.Y \u\m H:i:s', $fileromodified) . "</b>";
-                }
-                $cnt++;
-                $is_submission = $file->filearea == assignsubmission_file_FILEAREA;
-                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>: "
-                        . $file->filename
-                        . " - Hochgeladen am: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
-                        . " - Größe: " . number_format($file->filesize, 0)
-                        . " Bytes"
-                        . "<br>ContentHash: " . $file->contenthashsha1 . "<br>";
-                /*. "SHA512: "
-                . substr($file->contenthashsha512,0,60). "<br>"
-                . substr($file->contenthashsha512,59). "<br>";*/
-                $filearea = $file->filearea;
-            }
-            //$info .= 'title="'.$info.'"';
-            $info .= "</div>";
-
-        } else {
-            $info = "-";
-        }
-        return $info;
-    }
-
-    function show_statement_accepted($submission) {
-        // global $DB;
-        $filero = $this->get_filero_submission($submission->id);
-        $statement_accepted = $filero->statement_accepted;
-        return $statement_accepted;
     }
 
     /**
@@ -357,30 +295,8 @@ class assign_submission_filero extends assign_submission_plugin {
     function duplicate_submissions_for_graders($submission) {
         global $DB;
 
-        // return false;
+        return true;
     }
-
-
-
-    /**
-     * Carry out any extra processing required when the work is locked.
-     *
-     * @param stdClass|false $submission - assign_submission data if any
-     * @param stdClass $flags - User flags record
-     * @return void
-     */
-    // public function lock($submission, stdClass $flags) {
-    // }
-
-    /**
-     * Carry out any extra processing required when the work is unlocked.
-     *
-     * @param stdClass|false $submission - assign_submission data if any
-     * @param stdClass $flags - User flags record
-     * @return void
-     */
-    // public function unlock($submission, stdClass $flags) {
-    // }
 
     /**
      * Carry out any extra processing required when the work reverted to draft.
@@ -420,27 +336,27 @@ class assign_submission_filero extends assign_submission_plugin {
         }
     }
 
-    /* end of functions added to support filero archiving */
+
 
     /**
-     * Get the name of the file submission plugin
+     * Carry out any extra processing required when the work is locked.
      *
-     * @return string
+     * @param stdClass|false $submission - assign_submission data if any
+     * @param stdClass $flags - User flags record
+     * @return void
      */
-    public function get_name() {
-        return get_string('filero', 'assignsubmission_filero');
-    }
+    // public function lock($submission, stdClass $flags) {
+    // }
 
     /**
-     * Get file submission information from the database
+     * Carry out any extra processing required when the work is unlocked.
      *
-     * @param int $submissionid
-     * @return mixed
+     * @param stdClass|false $submission - assign_submission data if any
+     * @param stdClass $flags - User flags record
+     * @return void
      */
-    private function get_filero_submission($submissionid) {
-        global $DB;
-        return $DB->get_record('assignsubmission_filero', array('submission' => $submissionid));
-    }
+    // public function unlock($submission, stdClass $flags) {
+    // }
 
     /**
      * Get the default setting for file submission plugin
@@ -450,7 +366,7 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function get_settings(MoodleQuickForm $mform) {
         /*
-		global $CFG, $COURSE;		
+		global $CFG, $COURSE;
         if ($this->assignment->has_instance()) {
             $defaultenabled = $this->get_config('fileroenabled');
         } else {
@@ -473,6 +389,8 @@ class assign_submission_filero extends assign_submission_plugin {
         // return true;
     }
 
+    /* end of functions added to support filero archiving */
+
     /**
      * Save the settings for file submission plugin
      *
@@ -490,25 +408,6 @@ class assign_submission_filero extends assign_submission_plugin {
          }
          */
         return true;
-    }
-
-    /**
-     * Count the number of files
-     *
-     * @param int $submissionid
-     * @param string $area
-     * @return int
-     */
-    private function count_files($submissionid, $area) {
-        $fs = get_file_storage();
-        $files = $fs->get_area_files($this->assignment->get_context()->id,
-                'assignsubmission_file',
-                $area,
-                $submissionid,
-                'id',
-                false);
-
-        return count($files);
     }
 
     /**
@@ -599,6 +498,80 @@ class assign_submission_filero extends assign_submission_plugin {
             }
         }
         return $fileroRes;
+    }
+
+    /**
+     * Get formatted submitted files information from the database
+     *
+     * @param int $submissionid
+     * @return string
+     */
+    private function get_archived_files_info($submission) {
+        // global $DB, $USER;
+        $submissionid = $submission->id;
+        $files = $this->get_archived_files($submissionid);
+        $filero = $this->get_filero_submission($submissionid);
+        if (is_countable($files) and count($files)) {
+            $numfiles = count($files);
+            $info = "\n<script>\n
+                function toggleViewFiles() { var obj = document.getElementById('FileroFiles');
+                    obj.style.display = (obj.style.display === 'none') ? 'block' : 'none';}
+                    </script>\n"
+                    . '<span title="Click zum Anzeigen der Daten zur Archivierung" onclick="toggleViewFiles();">Daten'
+                    . ($numfiles ? (" und " . $numfiles . " Datei" . ($numfiles > 1 ? "en" : "")) : "")
+                    . '&nbsp;<i class="fa fa-angle-down" aria-hidden="true" style="font-weight:bolder;color:darkgreen;"></i>'
+                    . "\n</span>\n";
+
+            $info .= "\n" . '<div id="FileroFiles" style="display:none;border:2px solid darkgreen;margin:6px;" >';
+
+            // requiresubmissionstatement has been provided and logged
+            if ($filero->statement_accepted) {
+                $info .= $this->show_statement_accepted($submission) . "<br>";
+            }
+            $filearea = "none";
+            $cnt = 0;
+            foreach ($files as $file) {
+                if (empty($file->timecreated)) {
+                    $file->timecreated = $filero->submissiontimecreated;
+                }
+                if (empty($file->timemodified)) {
+                    $file->timemodified = $file->timecreated;
+                }
+                $fileromodified = $filero->feedbacktimemodified;
+                if ($filearea == assignsubmission_file_FILEAREA) {
+                    $fileromodified = $filero->submissiontimemodified;
+                }
+                if ($filearea != $file->filearea) {
+                    $info .= (!$cnt ? "" : "<br>") . "<b>Rechtssicher archiviert am "
+                            . date('d.m.Y \u\m H:i:s', $fileromodified) . "</b>";
+                }
+                $cnt++;
+                $is_submission = $file->filearea == assignsubmission_file_FILEAREA;
+                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>: "
+                        . $file->filename
+                        . " - Hochgeladen am: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
+                        . " - Größe: " . number_format($file->filesize, 0)
+                        . " Bytes"
+                        . "<br>ContentHash: " . $file->contenthashsha1 . "<br>";
+                /*. "SHA512: "
+                . substr($file->contenthashsha512,0,60). "<br>"
+                . substr($file->contenthashsha512,59). "<br>";*/
+                $filearea = $file->filearea;
+            }
+            //$info .= 'title="'.$info.'"';
+            $info .= "</div>";
+
+        } else {
+            $info = "-";
+        }
+        return $info;
+    }
+
+    function show_statement_accepted($submission) {
+        // global $DB;
+        $filero = $this->get_filero_submission($submission->id);
+        $statement_accepted = $filero->statement_accepted;
+        return $statement_accepted;
     }
 
     /**
@@ -711,6 +684,25 @@ class assign_submission_filero extends assign_submission_plugin {
     }
 
     /**
+     * Count the number of files
+     *
+     * @param int $submissionid
+     * @param string $area
+     * @return int
+     */
+    private function count_files($submissionid, $area) {
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($this->assignment->get_context()->id,
+                'assignsubmission_file',
+                $area,
+                $submissionid,
+                'id',
+                false);
+
+        return count($files);
+    }
+
+    /**
      * Return true if there are no submission files
      *
      * @param stdClass $submission
@@ -748,6 +740,15 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function get_file_areas() {
         return array(assignsubmission_file_FILEAREA => $this->get_name());
+    }
+
+    /**
+     * Get the name of the file submission plugin
+     *
+     * @return string
+     */
+    public function get_name() {
+        return get_string('filero', 'assignsubmission_filero');
     }
 
     /**
