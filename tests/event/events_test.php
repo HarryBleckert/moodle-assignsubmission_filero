@@ -24,14 +24,16 @@
 
 namespace assignsubmission_filero\event;
 
+use advanced_testcase;
 use mod_assign_test_generator;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
 
-class events_test extends \advanced_testcase {
+class events_test extends advanced_testcase {
 
     // Use the generator helper.
     use mod_assign_test_generator;
@@ -73,7 +75,7 @@ class events_test extends \advanced_testcase {
         $files = $fs->get_area_files($context->id, 'assignsubmission_filero', assignsubmission_file_FILEAREA,
                 $submission->id, 'id', false);
 
-        $data = new \stdClass();
+        $data = new stdClass();
         $plugin = $assign->get_submission_plugin_by_type('file');
         $sink = $this->redirectEvents();
         $plugin->save($submission, $data);
@@ -87,7 +89,7 @@ class events_test extends \advanced_testcase {
         $this->assertCount(2, $event->other['pathnamehashes']);
         $this->assertEquals($fi->get_pathnamehash(), $event->other['pathnamehashes'][0]);
         $this->assertEquals($fi2->get_pathnamehash(), $event->other['pathnamehashes'][1]);
-        $expected = new \stdClass();
+        $expected = new stdClass();
         $expected->modulename = 'assign';
         $expected->cmid = $cm->id;
         $expected->itemid = $submission->id;
@@ -136,7 +138,7 @@ class events_test extends \advanced_testcase {
         $files = $fs->get_area_files($context->id, 'assignsubmission_filero', assignsubmission_file_FILEAREA,
                 $submission->id, 'id', false);
 
-        $data = new \stdClass();
+        $data = new stdClass();
         $plugin = $assign->get_submission_plugin_by_type('file');
         $sink = $this->redirectEvents();
         $plugin->save($submission, $data);
@@ -190,7 +192,7 @@ class events_test extends \advanced_testcase {
         $files = $fs->get_area_files($context->id, 'assignsubmission_filero', assignsubmission_file_FILEAREA,
                 $submission->id, 'id', false);
 
-        $data = new \stdClass();
+        $data = new stdClass();
         $plugin = $assign->get_submission_plugin_by_type('file');
         $sink = $this->redirectEvents();
         // Create a submission.

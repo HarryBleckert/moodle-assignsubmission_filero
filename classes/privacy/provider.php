@@ -28,10 +28,15 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\contextlist;
-use \mod_assign\privacy\assign_plugin_request_data;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\contextlist;
+use mod_assign\privacy\assign_plugin_request_data;
+use mod_assign\privacy\assignsubmission_provider;
+use mod_assign\privacy\assignsubmission_user_provider;
+use mod_assign\privacy\useridlist;
+use stdClass;
 
 /**
  * Privacy class for requesting user data.
@@ -42,8 +47,8 @@ use \mod_assign\privacy\assign_plugin_request_data;
  */
 class provider implements
         \core_privacy\local\metadata\provider,
-        \mod_assign\privacy\assignsubmission_provider,
-        \mod_assign\privacy\assignsubmission_user_provider {
+        assignsubmission_provider,
+        assignsubmission_user_provider {
 
     /**
      * Return meta data about this plugin.
@@ -75,9 +80,9 @@ class provider implements
     /**
      * This is also covered by the mod_assign provider and it's queries.
      *
-     * @param \mod_assign\privacy\useridlist $useridlist An object for obtaining user IDs of students.
+     * @param useridlist $useridlist An object for obtaining user IDs of students.
      */
-    public static function get_student_user_ids(\mod_assign\privacy\useridlist $useridlist) {
+    public static function get_student_user_ids(useridlist $useridlist) {
         // No need.
     }
 
@@ -85,9 +90,9 @@ class provider implements
      * If you have tables that contain userids and you can generate entries in your tables without creating an
      * entry in the assign_submission table then please fill in this method.
      *
-     * @param \core_privacy\local\request\userlist $userlist The userlist object
+     * @param userlist $userlist The userlist object
      */
-    public static function get_userids_from_context(\core_privacy\local\request\userlist $userlist) {
+    public static function get_userids_from_context(userlist $userlist) {
         // Not required.
     }
 
@@ -103,7 +108,7 @@ class provider implements
         if ($exportdata->get_user() != null) {
             return null;
         }
-        $user = new \stdClass();
+        $user = new stdClass();
         $assign = $exportdata->get_assign();
         $plugin = $assign->get_plugin_by_type('assignsubmission', 'filero');
         $files = $plugin->get_files($exportdata->get_pluginobject(), $user);

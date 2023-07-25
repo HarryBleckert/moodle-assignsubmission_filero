@@ -781,7 +781,7 @@ class assignsubmission_filero_filero {
             $fileSpecs->Component = $fileRec->component;
             $fileSpecs->Status = $fileRec->status;
             $fileSpecs->ContentHashSha512 = hash("sha512", $Source);
-            $fileSpecs->ContentHash = $fileRec->contenthash;;
+            $fileSpecs->ContentHash = $fileRec->contenthash;
             $fileSpecs->PathnameHash = $fileRec->pathnamehash;
             $fileSpecs->FileArea = $fileRec->filearea;
             $fileSpecs->FileId = $fileRec->id;

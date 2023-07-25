@@ -26,6 +26,8 @@
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
  */
 
+use assignsubmission_filero\event\submitted_file_archived;
+
 defined('MOODLE_INTERNAL') || die();
 
 // validate and force required assignment settings for requiresubmissionstatement and submissiondrafts
@@ -41,7 +43,6 @@ if (!defined('assignsubmission_file_FILEAREA')) {
 if (!defined('assignfeedback_file_FILEAREA')) {
     define('assignfeedback_file_FILEAREA', 'feedback_files');
 }
-
 
 // open Filero log file
 if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
@@ -117,13 +118,13 @@ class assign_submission_filero extends assign_submission_plugin {
         $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
         //$filero->showAssignment(); exit;
         $fileroRes = $filero->PutMoodleAssignmentSubmission();
-        if (empty($fileroRes) or !isset($fileroRes->filerocode)) {
-            /*
-            global $OUTPUT;
-            echo $OUTPUT->continue_button("/mod/assign/view.php?id=".$this->assignment->get_course_module()->id);
-            echo $OUTPUT->footer(); exit;
-            */
-        }
+        // if (empty($fileroRes) or !isset($fileroRes->filerocode)) {
+        /*
+        global $OUTPUT;
+        echo $OUTPUT->continue_button("/mod/assign/view.php?id=".$this->assignment->get_course_module()->id);
+        echo $OUTPUT->footer(); exit;
+        */
+        // }
 
         if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
             $grade = $DB->get_record('assign_grades',
@@ -210,11 +211,11 @@ class assign_submission_filero extends assign_submission_plugin {
             if ($this->assignment->is_blind_marking()) {
                 $params['anonymous'] = 1;
             }
-            $event = \assignsubmission_filero\event\submitted_file_archived::create($params);
+            $event = submitted_file_archived::create($params);
             $event->set_legacy_files($files);
             $event->trigger();
         }
-        return true;
+        // return true;
     }
 
     /*
@@ -356,7 +357,7 @@ class assign_submission_filero extends assign_submission_plugin {
     function duplicate_submissions_for_graders($submission) {
         global $DB;
 
-        return false;
+        // return false;
     }
 
 
@@ -469,7 +470,7 @@ class assign_submission_filero extends assign_submission_plugin {
         // $mform->hideIf('assignsubmission_file_enabled', 'assignsubmission_filero_enabled', 'checked');
         // $mform->hideIf('assignsubmission_filero_enabled', 'assignsubmission_file_enabled', 'checked');
         */
-        return true;
+        // return true;
     }
 
     /**
@@ -775,7 +776,8 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return external_description|null
      */
     public function get_external_parameters() {
-        return array();
+        return null;
+        /*
         return array(
                 'files_filemanager' => new external_value(
                         PARAM_INT,
@@ -783,6 +785,7 @@ class assign_submission_filero extends assign_submission_plugin {
                         VALUE_OPTIONAL
                 )
         );
+        */
     }
 
     /**

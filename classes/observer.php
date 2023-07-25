@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use assignsubmission_filero\event\feedback_file_archived;
+use mod_assign\event\statement_accepted;
+use mod_assign\event\submission_graded;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -46,9 +50,9 @@ class assignsubmission_filero_observer {
     /**
      * Listen to events and process Filero archiving.
      *
-     * @param \mod_assign\event\submission_graded $event
+     * @param submission_graded $event
      */
-    public static function process_submission_graded(\mod_assign\event\submission_graded $event) {
+    public static function process_submission_graded(submission_graded $event) {
         // public static function process_submission_graded($event) {
         global $DB;
         assignsubmission_filero_observer::observer_log("\nObserver for submission_graded has been called by event handler");
@@ -81,10 +85,10 @@ class assignsubmission_filero_observer {
     /**
      * Listen to events and process Filero archiving.
      *
-     * @param \mod_assign\event\statement_accepted $event
+     * @param statement_accepted $event
      */
 
-    public static function process_submission_statement_accepted(\mod_assign\event\statement_accepted $event) {
+    public static function process_submission_statement_accepted(statement_accepted $event) {
         global $DB;
         assignsubmission_filero_observer::observer_log("\nObserver for submission_statement_accepted has been called by event handler");
 
@@ -274,7 +278,7 @@ class assignsubmission_filero_observer {
             }
 
             $assign = new assign($context, $cm, $course);
-            $event = \assignsubmission_filero\event\feedback_file_archived::create_from_grade($assign, $grade);
+            $event = feedback_file_archived::create_from_grade($assign, $grade);
             // create($params);
             $event->set_legacy_files($files);
             $event->trigger();

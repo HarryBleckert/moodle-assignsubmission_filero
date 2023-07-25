@@ -24,6 +24,11 @@
 
 namespace assignsubmission_filero\privacy;
 
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\writer;
+use mod_assign\privacy\assign_plugin_request_data;
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -64,7 +69,7 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $sourcefile = $CFG->dirroot . '/mod/assign/feedback/editpdf/tests/fixtures/submission.pdf';
         $fi = $fs->create_file_from_pathname($pdfsubmission, $sourcefile);
 
-        $data = new \stdClass();
+        $data = new stdClass();
         $plugin = $assign->get_submission_plugin_by_type('file');
         $plugin->save($submission, $data);
 
@@ -75,8 +80,8 @@ class provider_test extends \mod_assign\privacy\provider_test {
      * Quick test to make sure that get_metadata returns something.
      */
     public function test_get_metadata() {
-        $collection = new \core_privacy\local\metadata\collection('assignsubmission_filero');
-        $collection = \assignsubmission_filero\privacy\provider::get_metadata($collection);
+        $collection = new collection('assignsubmission_filero');
+        $collection = provider::get_metadata($collection);
         $this->assertNotEmpty($collection);
     }
 
@@ -100,12 +105,12 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $studentfilename = 'user1file.pdf';
         list($plugin, $submission) = $this->create_file_submission($assign, $user1, $studentfilename);
 
-        $writer = \core_privacy\local\request\writer::with_context($context);
+        $writer = writer::with_context($context);
         $this->assertFalse($writer->has_any_data());
 
         // The student should have a file submission.
-        $exportdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign, $submission, ['Attempt 1']);
-        \assignsubmission_filero\privacy\provider::export_submission_user_data($exportdata);
+        $exportdata = new assign_plugin_request_data($context, $assign, $submission, ['Attempt 1']);
+        provider::export_submission_user_data($exportdata);
         // print_object($writer);
         $storedfile = $writer->get_files(['Attempt 1'])['user1file.pdf'];
         $this->assertInstanceOf('stored_file', $storedfile);
@@ -136,8 +141,8 @@ class provider_test extends \mod_assign\privacy\provider_test {
         list($plugin2, $submission2) = $this->create_file_submission($assign, $user2, $studentfilename);
 
         // Only need the context and assign object in this plugin for this operation.
-        $requestdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign);
-        \assignsubmission_filero\privacy\provider::delete_submission_for_context($requestdata);
+        $requestdata = new assign_plugin_request_data($context, $assign);
+        provider::delete_submission_for_context($requestdata);
         // This checks that there are no files in this submission.
         $this->assertTrue($plugin->is_empty($submission));
         $this->assertTrue($plugin2->is_empty($submission2));
@@ -167,8 +172,8 @@ class provider_test extends \mod_assign\privacy\provider_test {
         list($plugin2, $submission2) = $this->create_file_submission($assign, $user2, $studentfilename);
 
         // Only need the context and assign object in this plugin for this operation.
-        $requestdata = new \mod_assign\privacy\assign_plugin_request_data($context, $assign, $submission, [], $user1);
-        \assignsubmission_filero\privacy\provider::delete_submission_for_userid($requestdata);
+        $requestdata = new assign_plugin_request_data($context, $assign, $submission, [], $user1);
+        provider::delete_submission_for_userid($requestdata);
         // This checks that there are no files in this submission.
         $this->assertTrue($plugin->is_empty($submission));
         // There should be files here.
@@ -232,10 +237,10 @@ class provider_test extends \mod_assign\privacy\provider_test {
         $data = $DB->get_records('assignsubmission_filero', ['assignment' => $assign2->get_instance()->id]);
         $this->assertCount(2, $data);
 
-        $deletedata = new \mod_assign\privacy\assign_plugin_request_data($context1, $assign1);
+        $deletedata = new assign_plugin_request_data($context1, $assign1);
         $deletedata->set_userids($userids);
         $deletedata->populate_submissions_and_grades();
-        \assignsubmission_filero\privacy\provider::delete_submissions($deletedata);
+        provider::delete_submissions($deletedata);
         $data = $DB->get_records('files', ['contextid' => $context1->id, 'component' => 'assignsubmission_filero']);
         $this->assertCount(2, $data);
 

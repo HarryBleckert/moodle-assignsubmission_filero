@@ -26,6 +26,10 @@
 
 namespace assignsubmission_filero\event;
 
+use mod_assign\event\submission_graded;
+use moodle_url;
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -52,7 +56,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
  */
-class feedback_file_archived extends \mod_assign\event\submission_graded { // \core\event\assessable_submitted {
+class feedback_file_archived extends submission_graded { // \core\event\assessable_submitted {
 
     /**
      * Legacy event files.
@@ -94,10 +98,10 @@ class feedback_file_archived extends \mod_assign\event\submission_graded { // \c
     /**
      * Legacy event data if get_legacy_eventname() is not empty.
      *
-     * @return \stdClass
+     * @return stdClass
      */
     protected function get_legacy_eventdata() {
-        $eventdata = new \stdClass();
+        $eventdata = new stdClass();
         $eventdata->modulename = 'assign';
         $eventdata->cmid = $this->contextinstanceid;
         $eventdata->itemid = $this->objectid;
@@ -133,10 +137,10 @@ class feedback_file_archived extends \mod_assign\event\submission_graded { // \c
     /**
      * Get URL related to the action.
      *
-     * @return \moodle_url
+     * @return moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/assign/view.php', array('id' => $this->contextinstanceid));
+        return new moodle_url('/mod/assign/view.php', array('id' => $this->contextinstanceid));
     }
 
     /**
