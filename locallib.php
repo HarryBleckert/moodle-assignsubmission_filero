@@ -43,7 +43,7 @@ if (!defined('assignfeedback_file_FILEAREA')) {
 }
 
 // open Filero log file
-if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
+if (isset($_REQUEST['assignsubmission_filero_showLog'])) { 
     $filero = new assignsubmission_filero_filero();
     if (isset($_REQUEST['submissiontimemodified'])) {
         $filero->showLog($_REQUEST['assignsubmission_filero_showLog'], $_REQUEST['submissiontimemodified']);
