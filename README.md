@@ -1,8 +1,8 @@
 FILERO archiving of Moodle assignments
 ==========
-![Build Status](https://github.com/HarryBleckert/moodle-filero/?branch=master)
-![Open Issues](https://github.com/HarryBleckert/moodle-filero/issues)
-![![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[Build Status](https://github.com/HarryBleckert/moodle-filero/?branch=master)
+[Open Issues](https://github.com/HarryBleckert/moodle-filero/issues)
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 This plugin archives assignment submission and feedback data and files to FILERO DMS.
 
