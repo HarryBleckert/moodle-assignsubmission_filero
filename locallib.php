@@ -294,6 +294,8 @@ class assign_submission_filero extends assign_submission_plugin {
         global $DB, $USER;
         $currentsubmission = $DB->get_record('assign_submission',
                 array('assignment' => $submission->assignment,'userid' => $submission->userid), 'id DESC');
+        $assignmentname = $DB->get_record('assign',
+                array('id' => $submission->assignment), 'id DESC')->name;
         $assignments = $DB->get_records('assign',
                 array('course' => $currentsubmission->courseid), 'id DESC');
         foreach ($assignments AS $assignment ) {
@@ -309,6 +311,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $destsubmission = $currentsubmission;
                 unset($destsubmission->id);
                 $destsubmission->assignment = $assignment->id;
+                $destsubmission->status = "submitted";
                 $destsubmission->id = $DB->insert_record('assignsubmission_submission', $destsubmission);
             }
             // loop if current submission
@@ -316,6 +319,9 @@ class assign_submission_filero extends assign_submission_plugin {
                 continue;
             }
             copy_submission_file(stdClass $currentsubmission, stdClass $destsubmission);
+            assignsubmission_filero_observer::observer_log("Submission "
+                .$destsubmission->id." of assignment ".$assignment->name." created from submission "
+                    .$currentsubmission->id ." in assignment ".$assignmentname);
         }
         return true;
     }
