@@ -214,7 +214,7 @@ class assign_submission_filero extends assign_submission_plugin {
      */
 
     /**
-     * Get file submission information from the database
+     * Get filero archiving information from the database
      *
      * @param int $submissionid
      * @return mixed
@@ -238,6 +238,17 @@ class assign_submission_filero extends assign_submission_plugin {
             return (is_countable($records) ? count($records) : $count);
         }
         return $records;
+    }
+
+    /**
+     * Get file submission information from the database
+     *
+     * @param int $submissionid
+     * @return mixed
+     */
+    private function get_file_submission($submissionid) {
+        global $DB;
+        return $DB->get_record('assignsubmission_file', array('submission'=>$submissionid));
     }
 
     /**
@@ -281,9 +292,31 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     private function duplicate_submissions_for_graders($submission) {
         global $DB, $USER;
+        $currentsubmission = $DB->get_record('assign_submission',
+                array('assignment' => $submission->assignment,'userid' => $submission->userid), 'id DESC');
+        $assignments = $DB->get_records('assign',
+                array('course' => $currentsubmission->courseid), 'id DESC');
+        foreach ($assignments AS $assignment ) {
+            // loop if not grader assignment
+            if (!stristr($assignment->name, "gutachten")){
+                continue;
+            }
 
-        copy_submission(stdClass $submission, stdClass $destsubmission);
-
+            $destsubmission = $DB->get_record('assign_submission',
+                    array('assignment' => $assignment->id,'userid' => $submission->userid), 'id DESC');
+            // create new submission if not exists
+            if ( empty($destsubmission)){
+                $destsubmission = $currentsubmission;
+                unset($destsubmission->id);
+                $destsubmission->assignment = $assignment->id;
+                $destsubmission->id = $DB->insert_record('assignsubmission_submission', $destsubmission);
+            }
+            // loop if current submission
+            elseif ( $currentsubmission->id == $destsubmission->id){
+                continue;
+            }
+            copy_submission_file(stdClass $currentsubmission, stdClass $destsubmission);
+        }
         return true;
     }
 
@@ -728,7 +761,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return array - An array of fileareas (keys) and descriptions (values)
      */
     public function get_file_areas() {
-        return array(assignsubmission_file_FILEAREA => $this->get_name());
+        return array(assignsubmission_file_FILEAREA => get_string('file', 'assignsubmission_file'));
     }
 
     /**
@@ -747,7 +780,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @param stdClass $sourcesubmission
      * @param stdClass $destsubmission
      */
-    public function copy_submission(stdClass $sourcesubmission, stdClass $destsubmission) {
+    public function copy_submission_file(stdClass $sourcesubmission, stdClass $destsubmission) {
         global $DB;
 
         // Copy the files across.
