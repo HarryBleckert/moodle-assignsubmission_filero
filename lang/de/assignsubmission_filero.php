@@ -34,15 +34,12 @@ $string['password_help'] = 'Passwort des FILERO Kontos';
 $string['productkey'] = 'FILERO product key';
 $string['productkey_help'] = 'Der sogenannte "product key" wird von FILERO vergeben';
 $string['multiple_graders'] = 'Mehrere Gutachter_innen';
-$string['multiple_graders_help'] = 'Wenn gesetzt, dann wird aus der jeweils ersten Aufgabe eine Kurses heraus,
-                                    eine eigene Aufgabe für alle weiteren Gutacher_innen/Bewerter_innen automatisch angelegt,
-                                    sobald die erste Abgabe erfolgt. Alle weiteren Abgaben werden automatisch synchronisiert.<br>
-                                    In den so erzeugten Aufgaben sind keine Abgaben möglich.';
+$string['multiple_graders_help'] = 'Wenn gesetzt, dann wird jede Abgabe einer Teilnehmer_in mit FILERO archiviert und in alle
+                                    weiteren Abgaben derselben Teilnehmer_in im Kurs kopiert.';
 $string['title_tag'] = 'Bitte geben Sie den Basis Titel der Aufgabe an';
 $string['title_tag_help'] = 'Der gewählte Basis Titel wird automatisch gesetzt. Endend auf die Namen Gutachter/Bewerter im Kurs';
-$string['grader_roles'] = 'Zulässige Rollen für Gutachter/Bewerter';
-$string['grader_roles_help'] = 'Es sind die numerischen Werte der jeweiligen Rollen, getrennt durch Komma, einzugeben<br>'
-        . 'Standard: 3 = Dozent_in (editingteacher), 4 = non editing teacher, 5 = Student_in';
+$string['grader_roles'] = 'Zulässige Rolle für Gutachter_innen/Bewerter_innen';
+$string['grader_roles_help'] = 'Bitte wählen Sie die Rolle für Gutachter_innen/Bewerter_innen';
 
 $string['countfiles'] = '{$a} Dateien';
 $string['default'] = 'Standardmäßig aktiviert';

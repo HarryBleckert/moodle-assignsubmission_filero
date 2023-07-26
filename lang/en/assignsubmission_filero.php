@@ -33,16 +33,13 @@ $string['password_help'] = 'Password of FILERO account';
 $string['productkey'] = 'FILERO product key';
 $string['productkey_help'] = 'The so-called "product key" is assigned by FILERO';
 $string['multiple_graders'] = 'Multiple graders';
-$string['multiple_graders_help'] = 'If set, then each first assignment of a course,'
-        . 'a copy is automatically created for all other graders,'
-        . ' as soon as the first submission has been made. All further submission are automatically synchronized.<br>'
-        . 'Submissions are not possible in the secondary assignments created in this way.';
+$string['multiple_graders_help'] = 'If set, then each submission of any user inside each course will be archived with FILERO '
+        . 'and copied to all assignments of the same user in course';
 $string['title_tag'] = 'Please enter the basic title of the assignment';
 $string['title_tag_help'] =
         'The selected base title will be set automatically. Ending with the names evaluator/assessor in the course';
-$string['grader_roles'] = 'Allowed grader roles';
-$string['grader_roles_help'] = 'Enter the numeric values of each role, separated by a comma<br>'
-        . 'Default: 3 = Lecturer (editingteacher), 4 = non editing teacher, 5 = student';
+$string['grader_roles'] = 'Allowed grader role';
+$string['grader_roles_help'] = 'Please select the role of graders';
 
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';

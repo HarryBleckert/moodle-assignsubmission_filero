@@ -36,19 +36,19 @@ $settings->add($element);
 $element = new admin_setting_configtext('assignsubmission_filero/username',
         'username',
         new lang_string('username', 'assignsubmission_filero'),
-        "Administrator", PARAM_TEXT);
+        "", PARAM_TEXT);
 $settings->add($element);
 
 $element = new admin_setting_configtext('assignsubmission_filero/password',
         'password',
         new lang_string('password', 'assignsubmission_filero'),
-        "Admin1234!", PARAM_TEXT);
+        "", PARAM_TEXT);
 $settings->add($element);
 
 $element = new admin_setting_configtext('assignsubmission_filero/productkey',
         'productkey',
         new lang_string('productkey', 'assignsubmission_filero'),
-        "Prod436", PARAM_TEXT);
+        "", PARAM_TEXT);
 $settings->add($element);
 
 // override assign settings if activaed
@@ -69,20 +69,28 @@ $element = new admin_setting_configcheckbox('assignsubmission_filero/multiple_gr
         1);
 $settings->add($element);
 
+/*
 $name = new lang_string('title_tag', 'assignsubmission_filero');
 $description = new lang_string('title_tag_help', 'assignsubmission_filero');
 $element = new admin_setting_configtext('assignsubmission_filero/title_tag',
         $name,
         $description,
-        "Abgabe Bachelorarbeiten", PARAM_TEXT);
+        "Prüfungsabgabe", PARAM_TEXT);
 $settings->add($element);
+*/
 
+global $DB;
+$roles = $DB->get_records_sql("SELECT id,shortname FROM {role} WHERE id NOT IN(1,2,5,6,7,8,11) ORDER BY id asc");
+$grader_roles = array();
+foreach ( $roles as $role ){
+    $grader_roles[$role->id] = ucfirst(trim($role->shortname));
+}
 $name = new lang_string('grader_roles', 'assignsubmission_filero');
 $description = new lang_string('grader_roles_help', 'assignsubmission_filero');
-$element = new admin_setting_configtext('assignsubmission_filero/grader_roles',
+$element = new admin_setting_configselect('assignsubmission_filero/grader_roles',
         $name,
         $description,
-        "3", PARAM_TEXT);
+        "4", $grader_roles);
 $settings->add($element);
 
 
