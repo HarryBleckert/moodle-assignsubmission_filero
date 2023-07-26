@@ -66,9 +66,7 @@ if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
  */
 class assign_submission_filero extends assign_submission_plugin {
 
-    /* start of functions added to support filero archiving */
-
-    /**
+     /**
      * Carry out any extra processing required when the work is submitted for grading
      *
      * @param stdClass $submission the assign_submission record being submitted.
@@ -318,7 +316,7 @@ class assign_submission_filero extends assign_submission_plugin {
             elseif ( $currentsubmission->id == $destsubmission->id){
                 continue;
             }
-            copy_submission_file(stdClass $currentsubmission, stdClass $destsubmission);
+            copy_submission_file($currentsubmission, $destsubmission);
             assignsubmission_filero_observer::observer_log("Submission "
                 .$destsubmission->id." of assignment ".$assignment->name." created from submission "
                     .$currentsubmission->id ." in assignment ".$assignmentname);
