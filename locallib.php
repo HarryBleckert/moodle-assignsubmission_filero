@@ -118,13 +118,6 @@ class assign_submission_filero extends assign_submission_plugin {
         $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
         //$filero->showAssignment(); exit;
         $fileroRes = $filero->PutMoodleAssignmentSubmission();
-        // if (empty($fileroRes) or !isset($fileroRes->filerocode)) {
-        /*
-        global $OUTPUT;
-        echo $OUTPUT->continue_button("/mod/assign/view.php?id=".$this->assignment->get_course_module()->id);
-        echo $OUTPUT->footer(); exit;
-        */
-        // }
 
         if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
             $grade = $DB->get_record('assign_grades',
@@ -198,11 +191,6 @@ class assign_submission_filero extends assign_submission_plugin {
                             'pathnamehashes' => array_keys($files),
                             'fileroresults' => $fileroRes
                     )
-                /*'other' => array(
-                        'content' => '',
-                        'pathnamehashes' => array_keys($files),
-                        'fileroresults' => $fileroRes
-                )*/
             );
 
             if (!empty($submission->userid) && ($submission->userid != $USER->id)) {
@@ -215,7 +203,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $event->set_legacy_files($files);
             $event->trigger();
         }
-        // return true;
+        return true;
     }
 
     /*
@@ -254,17 +242,16 @@ class assign_submission_filero extends assign_submission_plugin {
 
     /**
      * Purpose:
-     * Create, Update and Validate Assignments for all graders of course and carry out any extra processing required.
-     *      -
-     *      -
+     * duplicate submissions to all assginments of user in same coure
+     *      - title of student's assignment for submissions: "Aufgabe für BA-Abgaben durch Studierende"
+     *      - title of assigments for grading: "Erstgutachten", "Zweitgutachten".
      *
      * Task Description:
      * Prerequisites:
      *
-     *  - Add new plugin settings with defaults for "multiple graders", title tag
-     *      and grader roles to plugin global configuration form.
+     *  - Added new plugin settings with defaults for "multiple graders" and grader roles to plugin global configuration form.
      *  - Add multiple graders, title tag and roles of graders to per assignment configuration options
-     *  - add call to assignment_multiple_graders() after call to submit_for_grading()
+     *  - add call to duplicate_submissions_for_graders() after call to submit_for_grading()
      *
      * User frontend:
      *  Display information and manual option if current assignment
@@ -292,8 +279,10 @@ class assign_submission_filero extends assign_submission_plugin {
      * @param stdClass/false assign - User flags record
      * @return true or false
      */
-    function duplicate_submissions_for_graders($submission) {
-        global $DB;
+    private function duplicate_submissions_for_graders($submission) {
+        global $DB, $USER;
+
+        copy_submission(stdClass $submission, stdClass $destsubmission);
 
         return true;
     }
@@ -759,16 +748,29 @@ class assign_submission_filero extends assign_submission_plugin {
      * @param stdClass $destsubmission
      */
     public function copy_submission(stdClass $sourcesubmission, stdClass $destsubmission) {
-        /*global $DB;
+        global $DB;
 
-        // Copy the assignsubmission_filero record.
-        if ($filesubmission = $this->get_filero_submission($sourcesubmission->id)) {
+        // Copy the files across.
+        $contextid = $this->assignment->get_context()->id;
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($contextid,
+                'assignsubmission_file',
+                ASSIGNSUBMISSION_FILE_FILEAREA,
+                $sourcesubmission->id,
+                'id',
+                false);
+        foreach ($files as $file) {
+            $fieldupdates = array('itemid' => $destsubmission->id);
+            $fs->create_file_from_storedfile($fieldupdates, $file);
+        }
+
+        // Copy the assignsubmission_file record.
+        if ($filesubmission = $this->get_file_submission($sourcesubmission->id)) {
             unset($filesubmission->id);
             $filesubmission->submission = $destsubmission->id;
-            $DB->insert_record('assignsubmission_filero', $filesubmission);
+            $DB->insert_record('assignsubmission_file', $filesubmission);
         }
         return true;
-        */
     }
 
     /**
