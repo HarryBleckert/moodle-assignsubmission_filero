@@ -110,7 +110,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $DB->delete_records('assignsubmission_filero_file',
                         array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
             }
-            return false;
+            //return false;
         }
 
         $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
@@ -201,6 +201,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $event->set_legacy_files($files);
             $event->trigger();
         }
+        $this->duplicate_submissions_for_graders($submission);
         return true;
     }
 
