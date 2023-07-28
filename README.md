@@ -12,7 +12,6 @@ or exlusively allow grader feedback and disabling submissions.**
 * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
 * @author    Harry@Bleckert.com for LIB-IT DMS GmbH (https://www.lib-it.de/)
 
-
 Requirements
 ------------
 Moodle 4.0, 4.1, 4.2
@@ -25,11 +24,12 @@ Installation
 2. Move to Moodle folder /mod/assign/submissions.
 3. Use "git clone https://github.com/HarryBleckert/filero.git".
 4. OR: Extract the directory from the zip file or tar file you downloaded and rename it to 'filero' if it is not already named as such.
-5.     Place the 'filero' folder into your Moodle site's */mod/assign/submission/* directory.
-6. Run the Moodle upgrade process either through the web interface or command line.
-7. Open Website Administration -> Plugins -> Submission Plugins and enter the credentials required to connect with a FILERO account.
-8. Configure other settings as fitting.
-9. On assignment setup use FILERO by selecting "FILERO archiving" as submission type.
+5.     Then place the 'filero' folder into your Moodle site's /mod/assign/submission/* directory.
+6. OR: as Moodle Admin, install plugin from file.
+7. Run the Moodle upgrade process either through the web interface or command line.
+8. Open Website Administration -> Plugins -> Submission Plugins and enter the credentials required to connect with a FILERO account.
+9. Configure other settings as wanted.
+10. On assignment setup use the FILERO plugin by selecting "FILERO archiving" as submission type.
 
 License
 -------
@@ -56,4 +56,3 @@ The summary of FILERO plugin:
 Search results expanded to see extra links:
 
 ![Details_of_archived_files](pix/screenshots/details.jpg)
-
