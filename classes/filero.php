@@ -23,7 +23,7 @@
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
+ * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
 
 defined('MOODLE_INTERNAL') || die();

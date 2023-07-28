@@ -21,7 +21,7 @@
  * @since      Moodle 4.1 * @copyright  2013 Frédéric Massart
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
+ * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
 
 namespace assignsubmission_filero\event;
@@ -54,7 +54,7 @@ defined('MOODLE_INTERNAL') || die();
  * @since     Moodle 4.1
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
+ * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
 class feedback_file_archived extends submission_graded { // \core\event\assessable_submitted {
 
