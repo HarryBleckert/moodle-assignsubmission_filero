@@ -23,7 +23,7 @@
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
+ * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
 
 use assignsubmission_filero\event\submitted_file_archived;
@@ -66,7 +66,7 @@ if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @author    Harry@Bleckert.com für LIB-IT DMS GmbH
+ * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/} {@link https://www.LIB-IT.de/}
  */
 class assign_submission_filero extends assign_submission_plugin {
 
@@ -92,6 +92,12 @@ class assign_submission_filero extends assign_submission_plugin {
         $DB->delete_records('assignsubmission_filero',
                 array('submission' => $submission->id));*/
         //$_SESSION["debugfilero"] = true;
+        if ($this->is_graders_submission($submission)){
+            ?><p class="infobox" style="clear:both;text-align:center;"><span
+                        style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben machen</span</p><?php
+            exit;
+            return false;
+        }
         $cm = context_module::instance($this->assignment->get_course_module()->id);
         $filesubmission = $this->get_filero_submission($submission->id);
 
@@ -293,6 +299,7 @@ class assign_submission_filero extends assign_submission_plugin {
         if ( !isset($multiple_graders) OR !$multiple_graders){
            assignsubmission_filero_observer::observer_log("grader_submissions: "
                    ."multiple_graders is disabled for assignment id $submission->assignment. No action required.");
+           return true;
         }
 
         $currentsubmission = $DB->get_record('assign_submission',
@@ -333,16 +340,6 @@ class assign_submission_filero extends assign_submission_plugin {
                     $coursemodulecontext = context_module::instance($coursemodule->id);
                     $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
                     $assign_g->remove_submission($destsubmission->userid);
-                    /*
-                    $fs = get_file_storage();
-                    $fs->delete_area_files($context->id,
-                            'assignsubmission_file',
-                            ASSIGNSUBMISSION_FILE_FILEAREA,
-                            $destsubmission->id);
-                    $destsubmission->numfiles = 0;
-                    $DB->update_record('assignsubmission_file', $destsubmission);
-                    }
-                    */
                 }
                 elseif ( $action == "duplicate"){
                     // create new submission if not exists
@@ -371,17 +368,29 @@ class assign_submission_filero extends assign_submission_plugin {
                             . $currentsubmission->id . " of assignment " . $assignmentname);
             }
         }
-
         return true;
     }
 
-    function revert_grader_submissions($submission){
+    private function revert_grader_submissions($submission){
         return $this->grader_submissions($submission, "revert");
     }
-    function remove_grader_submissions($submission){
+    private function remove_grader_submissions($submission){
         return $this->grader_submissions($submission, "remove");
     }
 
+    private function is_graders_submission($submission){
+        global $DB;
+        $config = get_config('assignsubmission_filero');
+        $multiple_graders = $config->multiple_graders;
+        $grading_title_tag = $config->grading_title_tag;
+        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        if ($multiple_graders AND stristr($assignment->name, $grading_title_tag)){
+            assignsubmission_filero_observer::observer_log("grader_submissions: "
+                    ."Assignment " .$assignment->name." is a grader assignment");
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Carry out any extra processing required when the work reverted to draft.
@@ -392,6 +401,12 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function revert_to_draft(stdClass $submission) {
         global $DB;
+        if ($this->is_graders_submission($submission)){
+            ?><p class="infobox" style="clear:both;text-align:center;"><span
+            style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben zurücksetzen</span</p><?php
+            exit;
+            return false;
+        }
         $currentsubmission = $this->get_filero_submission($submission->id);
         // set filero record to default 0
         if ($currentsubmission) {
@@ -503,6 +518,12 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function remove(stdClass $submission) {
         global $DB;
+        if ($this->is_graders_submission($submission)){
+            ?><p class="infobox" style="clear:both;text-align:center;"><span
+                        style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben löschen</span</p><?php
+            exit;
+            return false;
+        }
 
         $currentsubmission = $this->get_filero_submission($submission->id);
         if ($currentsubmission) {
