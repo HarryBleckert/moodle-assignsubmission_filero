@@ -401,7 +401,7 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function revert_to_draft(stdClass $submission) {
         global $DB;
-        if ($this->is_graders_submission($submission)){
+        if (false) {   // $this->is_graders_submission($submission)){
             ?><p class="infobox" style="clear:both;text-align:center;"><span
             style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben zurücksetzen</span</p><?php
             exit;
@@ -518,9 +518,11 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function remove(stdClass $submission) {
         global $DB;
-        if ($this->is_graders_submission($submission)){
+        // if ($this->is_graders_submission($submission)){
+        if (false){
             ?><p class="infobox" style="clear:both;text-align:center;"><span
-                        style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben löschen</span</p><?php
+                        style="font-size: 1.1em;font-weight:bold;color:darkgreen;">
+                    Gutachter dürfen aus Gutachter - Aufgaben heraus keine Abgaben löschen</span</p><?php
             exit;
             return false;
         }
