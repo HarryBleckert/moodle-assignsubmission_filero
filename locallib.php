@@ -352,13 +352,19 @@ class assign_submission_filero extends assign_submission_plugin {
                         $destsubmission->assignment = $assignment->id;
                         $destsubmission->status = "submitted";
                         $destsubmission->id = $DB->insert_record('assign_submission', $destsubmission);
-                    } // loop if current submission
-                    else if ($currentsubmission->id == $destsubmission->id) {
-                        assignsubmission_filero_observer::observer_log("grader_submissions: "
-                                . "Current submission is identical with destination submission. "
-                                . "Assignment " . $assignment->name . " was ignored");
-                        continue;
                     }
+                    else{
+                        // loop if current submission
+                        if ($currentsubmission->id == $destsubmission->id) {
+                            assignsubmission_filero_observer::observer_log("grader_submissions: "
+                                    . "Current submission is identical with destination submission. "
+                                    . "Assignment " . $assignment->name . " was ignored");
+                            continue;
+                        }
+                        $destsubmission->status = "submitted";
+                        $DB->update_record('assign_submission', $destsubmission);
+                    }
+
                     $this->copy_submission_file($currentsubmission, $destsubmission);
                     assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
                             . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
@@ -881,7 +887,7 @@ class assign_submission_filero extends assign_submission_plugin {
         // Copy the assignsubmission_file record.
         $dfilesubmission = $this->get_file_submission($destsubmission->id);
         if ($sfilesubmission = $this->get_file_submission($sourcesubmission->id)) {
-            $sfilesubmission->status = "submitted";
+            //$sfilesubmission->status = "submitted";
             $sfilesubmission->submission = $destsubmission->id;
             if ($dfilesubmission) {
                 $sfilesubmission->id = $dfilesubmission->id;
@@ -991,11 +997,11 @@ class assign_submission_filero extends assign_submission_plugin {
                 if ($update) {
                     $DB->update_record('assign', $assign);
                     assignsubmission_filero_observer::observer_log(
-                            "validate_settings: Updated assignment '$assign->name' with id $assign-id");
+                            "validate_settings: Updated assignment '$assign->name' with id $assign->id");
                 }
                 else {
                     assignsubmission_filero_observer::observer_log(
-                            "avalidate_settings: No update required for assignment '$assign->name' with id $assign-id");
+                            "avalidate_settings: No update required for assignment '$assign->name' with id $assign->id");
                 }
             }
             else{
