@@ -33,11 +33,16 @@ $string['password_help'] = 'Password of FILERO account';
 $string['productkey'] = 'FILERO product key';
 $string['productkey_help'] = 'The so-called "product key" is assigned by FILERO';
 $string['multiple_graders'] = 'Multiple graders';
-$string['multiple_graders_help'] = 'If set, then each submission of any user inside each course will be archived with FILERO '
-        . 'and copied to all assignments of the same user in course';
-$string['title_tag'] = 'Please enter the basic title of the assignment';
-$string['title_tag_help'] =
-        'The selected base title will be set automatically. Ending with the names evaluator/assessor in the course';
+$string['multiple_graders_help'] = 'If set, submissions from assignments tagged as submission assignments '
+        . 'will be copied to all assignments of the same user tagged as grading assignments.';
+$string['exam_submission'] = 'Exam submission';
+$string['exam_grading'] = 'Exam grading';
+$string['submission_title_tag'] = 'Please enter a text tag for submission assignments';
+$string['submission_title_tag_help'] =
+        'Submission assignments can\'t be graded and all submissions will be duplicated to existing grader assignments';
+$string['grading_title_tag'] = 'Please enter a text tag for grading assignments';
+$string['grading_title_tag_help'] =
+        'Grading assignments will not allow submissions, but receive duplicates of submissions from submission assignment';
 $string['grader_roles'] = 'Allowed grader role';
 $string['grader_roles_help'] = 'Please select the role of graders';
 

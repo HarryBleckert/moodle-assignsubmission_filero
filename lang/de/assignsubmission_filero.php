@@ -34,10 +34,20 @@ $string['password_help'] = 'Passwort des FILERO Kontos';
 $string['productkey'] = 'FILERO product key';
 $string['productkey_help'] = 'Der sogenannte "product key" wird von FILERO vergeben';
 $string['multiple_graders'] = 'Mehrere Gutachter_innen';
-$string['multiple_graders_help'] = 'Wenn gesetzt, dann wird jede Abgabe einer Teilnehmer_in mit FILERO archiviert und in alle
-                                    weiteren Abgaben derselben Teilnehmer_in im Kurs kopiert.';
-$string['title_tag'] = 'Bitte geben Sie den Basis Titel der Aufgabe an';
-$string['title_tag_help'] = 'Der gewählte Basis Titel wird automatisch gesetzt. Endend auf die Namen Gutachter/Bewerter im Kurs';
+
+$string['multiple_graders_help'] = 'Wenn festgelegt, werden Einreichungen von Aufgaben mit dem Tag „Einreichungsaufgaben“ angezeigt.'
+         . 'wird in alle Aufgaben desselben Benutzers kopiert, die als Benotungsaufgaben markiert sind.';
+$string['exam_submission'] = 'Prüfungsabgabe';
+$string['exam_grading'] = 'Prüfungsbewertung';
+$string['submission_title_tag'] = 'Bitte geben Sie ein Text-Tag für Prüfungsabgaben ein';
+$string['submission_title_tag_help'] =
+         'Aufgaben für Prüfungsabgaben können nicht bewertet werden. Alle Prüfungsabgaben werden in bestehende Bewerteraufgaben dupliziert';
+$string['grading_title_tag'] = 'Bitte geben Sie einen Text-Tag für die Aufgaben zuir Prüfungsbewertung ein';
+$string['grading_title_tag_help'] =
+         'In Aufgaben zur Prüfungsbewertung sind keine Abgaben möglich. '
+         .'Es werden Duplikate der Prüfungsabgaben aus der Aufgabe zur Prüfungsabgabe angzeigt';
+
+
 $string['grader_roles'] = 'Zulässige Rolle für Gutachter_innen/Bewerter_innen';
 $string['grader_roles_help'] = 'Bitte wählen Sie die Rolle für Gutachter_innen/Bewerter_innen';
 

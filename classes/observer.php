@@ -100,6 +100,7 @@ class assignsubmission_filero_observer {
             return false;
         }
         $submission = $DB->get_record('assign_submission', array('id' => $event->objectid));
+        $assign = $DB->get_record('assign', array('id' => $submission->assignment));
         if (!$submission) {
             assignsubmission_filero_observer::observer_log(
                     "No submission with 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
@@ -130,10 +131,13 @@ class assignsubmission_filero_observer {
             if ($student) {
                 $fullname = $student->firstname . " " . $student->lastname;
             }
+            $config = get_config('assign');
+            $submissionstatement = $config->submissionstatement;
             $msg = "$fullname hat am "
                     . date('d.m.Y \u\m H:i:s', $event->timecreated)
-                    . " die Eigenständigkeitserklärung abgegeben."
-                    . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "");
+                    . " diese Eigenständigkeitserklärung abgegeben."
+                    . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "")
+                    . ": ".$submissionstatement;
             $assignsubmission_filero->statement_accepted = $msg;
             assignsubmission_filero_observer::observer_log($msg);
             $DB->update_record('assignsubmission_filero', $assignsubmission_filero);
@@ -284,42 +288,5 @@ class assignsubmission_filero_observer {
             $event->trigger();
         }
     }
-
-
-    /**
-     *
-     * Can not execute event observer 'assignsubmission_filero_observer::submission_graded'
-     * line 164 of /lib/classes/event/manager.php: call to debugging()
-     * line 75 of /lib/classes/event/manager.php: call to core\event\manager::process_buffers()
-     * line 835 of /lib/classes/event/base.php: call to core\event\manager::dispatch()
-     * line 2955 of /mod/assign/locallib.php: call to core\event\base->trigger()
-     * line 8317 of /mod/assign/locallib.php: call to assign->update_grade()
-     * line 8358 of /mod/assign/locallib.php: call to assign->revert_to_draft()
-     * line 540 of /mod/assign/locallib.php: call to assign->process_revert_to_draft()
-     * line 55 of /mod/assign/view.php: call to assign->view()
-     *
-     * $descriptionstring = "Filero archiving of feedback files has been completed: The user with id '$this->grader' submitted " .
-     * "'{$this->other['filesubmissioncount']}' feedback file/s for user '$this->userid' in the assignment with course module id " .
-     * "'$this->contextinstanceid'";
-     * Listen to events and queue the submission for processing.
-     * @para \mod_assign\event\submission_updated $event
-     */
-    /*public static function submission_updated(\mod_assign\event\submission_updated $event) {
-        self::queue_conversion($event);
-    }*/
-
-    /**
-     * Queue the submission for processing.
-     * @para \mod_assign\event\base $event The submission created/updated event.
-     */
-    /*protected static function queue_conversion($event) {
-        $data = [
-                'submissionid' => $event->other['submissionid'],
-                'submissionattempt' => $event->other['submissionattempt'],
-        ];
-        $task = new \assignfeedback_editpdf\task\convert_submission;
-        $task->set_custom_data($data);
-        \core\task\manager::queue_adhoc_task($task, true);
-    }*/
 
 }

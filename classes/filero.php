@@ -544,7 +544,7 @@ class assignsubmission_filero_filero {
         list($Files, $submittedFiles, $totalfilesize) = $this->create_files_obj($query, $this->filearea);
         if (!empty($submittedFiles)) {
             $AssignFeedbackFile = new stdClass();
-            $AssignFeedbackFile->AssignFeedbackFileId = $assignfeedback_file->id;
+            $AssignFeedbackFile->AssignFeedbackFileId = (isset($assignfeedback_file->id) ?$assignfeedback_file->id :0);
             $AssignFeedbackFile->AssignId = $assign->id;
             $AssignFeedbackFile->AssignGradeId = $grade->id;
             $AssignFeedbackFile->Numfiles = (is_countable($submittedFiles) ? count($submittedFiles) : $this->submission->numfiles);
@@ -761,7 +761,7 @@ class assignsubmission_filero_filero {
         $totalfilesize = 0;
         // assignsubmission_filero_observer::observer_log("Query for files:\n'$query'");
         if (empty($fileRecs)) {
-            assignsubmission_filero_observer::observer_log("No file record with filearea '$filerarea' and query\n'$query'");
+            assignsubmission_filero_observer::observer_log("No file record with filearea '$filearea' and query\n'$query'");
         }
         foreach ($fileRecs as $fileRec) {
             $submittedFiles[] = $filepath = $this->filero_get_filepath($fileRec, $filearea);

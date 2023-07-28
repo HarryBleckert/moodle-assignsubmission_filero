@@ -51,7 +51,7 @@ $element = new admin_setting_configtext('assignsubmission_filero/productkey',
         "", PARAM_TEXT);
 $settings->add($element);
 
-// override assign settings if activaed
+// override assign settings if activated
 $name = new lang_string('requiresubmissionstatement', 'mod_assign');
 $description = new lang_string('requiresubmissionstatement_help', 'mod_assign');
 $element = new admin_setting_configcheckbox('assignsubmission_filero/requiresubmissionstatement',
@@ -60,7 +60,7 @@ $element = new admin_setting_configcheckbox('assignsubmission_filero/requiresubm
         1);
 $settings->add($element);
 
-// override assign settings if activaed
+// override assign settings if activated
 $name = new lang_string('multiple_graders', 'assignsubmission_filero');
 $description = new lang_string('multiple_graders_help', 'assignsubmission_filero');
 $element = new admin_setting_configcheckbox('assignsubmission_filero/multiple_graders',
@@ -69,15 +69,25 @@ $element = new admin_setting_configcheckbox('assignsubmission_filero/multiple_gr
         1);
 $settings->add($element);
 
-/*
-$name = new lang_string('title_tag', 'assignsubmission_filero');
-$description = new lang_string('title_tag_help', 'assignsubmission_filero');
-$element = new admin_setting_configtext('assignsubmission_filero/title_tag',
+
+$name = new lang_string('submission_title_tag', 'assignsubmission_filero');
+$description = new lang_string('submission_title_tag_help', 'assignsubmission_filero');
+$defaultv = new lang_string('exam_submission', 'assignsubmission_filero');
+$element = new admin_setting_configtext('assignsubmission_filero/submission_title_tag',
         $name,
         $description,
-        "Prüfungsabgabe", PARAM_TEXT);
+        $defaultv, PARAM_TEXT);
 $settings->add($element);
-*/
+
+$name = new lang_string('grading_title_tag', 'assignsubmission_filero');
+$description = new lang_string('grading_title_tag_help', 'assignsubmission_filero');
+$defaultv = new lang_string('exam_grading', 'assignsubmission_filero');
+$element = new admin_setting_configtext('assignsubmission_filero/grading_title_tag',
+        $name,
+        $description,
+        $defaultv, PARAM_TEXT);
+$settings->add($element);
+
 
 global $DB;
 $roles = $DB->get_records_sql("SELECT id,shortname FROM {role} WHERE id NOT IN(1,2,5,6,7,8,11) ORDER BY id asc");

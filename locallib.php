@@ -34,12 +34,16 @@ defined('MOODLE_INTERNAL') || die();
 if (isset($record->assignment) && $record->assignment) {
     assignsubmission_filero_validate_settings($record->assignment);
 }
+elseif (isset($this->assignment->id) && $this->assignment->id) {
+    assignsubmission_filero_validate_settings($this->assignment->id);
+}
 
-// File areas for file submission assignment.
+
+// File area for file submission assignment.
 if (!defined('assignsubmission_file_FILEAREA')) {
     define('assignsubmission_file_FILEAREA', 'submission_files');
 }
-// File areas for file feedback assignment.
+// File area for file feedback assignment.
 if (!defined('assignfeedback_file_FILEAREA')) {
     define('assignfeedback_file_FILEAREA', 'feedback_files');
 }
@@ -103,14 +107,14 @@ class assign_submission_filero extends assign_submission_plugin {
         $count = (is_countable($files) ? count($files) : 0);
         if (empty($count)) {
             $_SESSION["debugfilero"] = false;
-            assignsubmission_filero_observer::observer_log("\n<hr>No submitted files found!<hr>\n");
+            assignsubmission_filero_observer::observer_log("No submitted files found!");
             if (!empty($DB->get_records('assignsubmission_filero_file',
                     array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA)))
             ) {
                 $DB->delete_records('assignsubmission_filero_file',
                         array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
             }
-            //return false;
+            return false;
         }
 
         $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
@@ -201,7 +205,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $event->set_legacy_files($files);
             $event->trigger();
         }
-        $this->duplicate_submissions_for_graders($submission);
+        $this->grader_submissions($submission,"duplicate");
         return true;
     }
 
@@ -252,7 +256,7 @@ class assign_submission_filero extends assign_submission_plugin {
 
     /**
      * Purpose:
-     * duplicate submissions to all assginments of user in same coure
+     * duplicate submissions to all assginments of user in same course
      *      - title of student's assignment for submissions: "Aufgabe für BA-Abgaben durch Studierende"
      *      - title of assigments for grading: "Erstgutachten", "Zweitgutachten".
      *
@@ -261,11 +265,9 @@ class assign_submission_filero extends assign_submission_plugin {
      *
      *  - Added new plugin settings with defaults for "multiple graders" and grader roles to plugin global configuration form.
      *  - Add multiple graders, title tag and roles of graders to per assignment configuration options
-     *  - add call to duplicate_submissions_for_graders() after call to submit_for_grading()
+     *  - add call to grader_submissions() after call to submit_for_grading()
      *
      * User frontend:
-     *  Display information and manual option if current assignment
-     *  is primary (allowing submissions) or secondary (synced with primary)
      *
      *  Process flow:
      * 1. Check if current assignment is flagged as "multiple graders" and title tag has been set.
@@ -274,60 +276,110 @@ class assign_submission_filero extends assign_submission_plugin {
      *      - Setting title tag
      * 2. Validate that current assignment title starts with name tag
      *      - Change title to title tag + ": " + grader name
-     * 3. Get a list of all teachers/graders in course
-     *      - filter by roles of graders
-     *      - Evaluate the list of graders
-     * 4. If not set: Add name of current grader(s) to title of assignment.
-     * 5. Search all assignment in course for graders without assignment (name tag in title)
-     *      if any found: Create new assignments from existing assignment with all assignment settings.
-     *      Include submissions and all submission sub plugin data, but no feedback data.
-     *      Add name of grader to the end of assignment title
      * 6. Synchronize all Assignments with same name tag with all submission data from assignment created as first (Primary).
      *      - store this detail in filero table columns
      *
      * @param stdClass $submission - assign_submission data if any
      * @param stdClass/false assign - User flags record
-     * @return true or false
+     * @return boolean
      */
-    private function duplicate_submissions_for_graders($submission) {
-        global $DB, $USER;
-        $currentsubmission = $DB->get_record('assign_submission',
-                array('assignment' => $submission->assignment,'userid' => $submission->userid), 'id DESC');
-        $assignmentname = $DB->get_record('assign',
-                array('id' => $submission->assignment), 'id DESC')->name;
-        $assignments = $DB->get_records('assign',
-                array('course' => $currentsubmission->courseid), 'id DESC');
-        foreach ($assignments AS $assignment ) {
-            // loop if not grader assignment
-            if (!stristr($assignment->name, "gutachten")){
-                continue;
-            }
+    private function grader_submissions($submission,$action="duplicate") {
+        global $DB;
+        $config = get_config('assignsubmission_filero');
+        $multiple_graders = $config->multiple_graders;
+        $submission_title_tag = $config->submission_title_tag;
+        $grading_title_tag = $config->grading_title_tag;
 
-            $destsubmission = $DB->get_record('assign_submission',
-                    array('assignment' => $assignment->id,'userid' => $submission->userid), 'id DESC');
-            // create new submission if not exists
-            if ( empty($destsubmission)){
-                $destsubmission = $currentsubmission;
-                unset($destsubmission->id);
-                $destsubmission->assignment = $assignment->id;
-                $destsubmission->status = "submitted";
-                $destsubmission->id = $DB->insert_record('assignsubmission_submission', $destsubmission);
-            }
-            // loop if current submission
-            elseif ( $currentsubmission->id == $destsubmission->id){
-                continue;
-            }
-            copy_submission_file($currentsubmission, $destsubmission);
-            assignsubmission_filero_observer::observer_log("Submission "
-                .$destsubmission->id." of assignment ".$assignment->name." created from submission "
-                    .$currentsubmission->id ." in assignment ".$assignmentname);
+        if ( !isset($multiple_graders) OR !$multiple_graders){
+           assignsubmission_filero_observer::observer_log("grader_submissions: "
+                   ."multiple_graders is disabled for assignment id $submission->assignment. No action required.");
         }
+
+        $currentsubmission = $DB->get_record('assign_submission',
+                array('assignment' => $submission->assignment,'userid' => $submission->userid));
+        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        $assignmentname = $assignment->name;
+        $assignmentcourse = $assignment->course;
+
+            // ignore assignments that don't have tag "abgabe" in name
+            if (!stristr($assignmentname, $submission_title_tag)){
+                assignsubmission_filero_observer::observer_log("grader_submissions: "
+                        ."Assignment " .$assignment->name." was ignored as title is not tagged as $submission_title_tag");
+                return false;
+            }
+            $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
+            foreach ($assignments AS $assignment ) {
+                // loop if not grader assignment
+                if (!stristr($assignment->name, $grading_title_tag)){
+                    assignsubmission_filero_observer::observer_log("grader_submissions: "
+                            ."Assignment " .$assignment->name." was ignored as it is not tagged with $grading_title_tag in title");
+                    continue;
+                }
+                elseif ( $assignment->id == $submission->assignment){ // AND $action == "duplicate"){
+                    assignsubmission_filero_observer::observer_log("ignore current assignment " .$assignment->name);
+                    continue;
+                }
+                $destsubmission = $DB->get_record('assign_submission',
+                        array('assignment' => $assignment->id,'userid' => $submission->userid));
+
+                if ( $action == "revert" AND $destsubmission){
+                    $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
+                    $coursemodulecontext = context_module::instance($coursemodule->id);
+                    $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
+                    $assign_g->revert_to_draft($destsubmission->userid);
+                }
+                elseif ( $action == "remove" AND $destsubmission){
+                    $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
+                    $coursemodulecontext = context_module::instance($coursemodule->id);
+                    $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
+                    $assign_g->remove_submission($destsubmission->userid);
+                    /*
+                    $fs = get_file_storage();
+                    $fs->delete_area_files($context->id,
+                            'assignsubmission_file',
+                            ASSIGNSUBMISSION_FILE_FILEAREA,
+                            $destsubmission->id);
+                    $destsubmission->numfiles = 0;
+                    $DB->update_record('assignsubmission_file', $destsubmission);
+                    }
+                    */
+                }
+                elseif ( $action == "duplicate"){
+                    // create new submission if not exists
+                    if (empty($destsubmission)) {
+                        $destsubmission = $currentsubmission;
+                        unset($destsubmission->id);
+                        $destsubmission->assignment = $assignment->id;
+                        $destsubmission->status = "submitted";
+                        $destsubmission->id = $DB->insert_record('assign_submission', $destsubmission);
+                    } // loop if current submission
+                    else if ($currentsubmission->id == $destsubmission->id) {
+                        assignsubmission_filero_observer::observer_log("grader_submissions: "
+                                . "Current submission is identical with destination submission. "
+                                . "Assignment " . $assignment->name . " was ignored");
+                        continue;
+                    }
+                    $this->copy_submission_file($currentsubmission, $destsubmission);
+                    assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
+                            . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
+                            . $currentsubmission->id . " of assignment " . $assignmentname);
+            }
+        }
+
         return true;
     }
 
+    function revert_grader_submissions($submission){
+        return $this->grader_submissions($submission, "revert");
+    }
+    function remove_grader_submissions($submission){
+        return $this->grader_submissions($submission, "remove");
+    }
+
+
     /**
      * Carry out any extra processing required when the work reverted to draft.
-     * Used here for rmoving Filero Submissions
+     * Used here for removing Filero Submissions
      *
      * @param stdClass $submission - assign_submission data
      * @return void
@@ -360,6 +412,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     = $currentsubmission->submissiontimemodified = 0;
             $currentsubmission->statement_accepted = "";
             $DB->update_record('assignsubmission_filero', $currentsubmission);
+            $this->revert_grader_submissions($submission);
         }
     }
 
@@ -416,7 +469,6 @@ class assign_submission_filero extends assign_submission_plugin {
         // return true;
     }
 
-    /* end of functions added to support filero archiving */
 
     /**
      * Save the settings for file submission plugin
@@ -467,6 +519,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     = $currentsubmission->submissionimemodified = 0;
             $currentsubmission->statement_accepted = "";
             $DB->update_record('assignsubmission_filero', $currentsubmission);
+            $this->remove_grader_submissions($submission);
         }
         return true;
     }
@@ -536,6 +589,7 @@ class assign_submission_filero extends assign_submission_plugin {
     private function get_archived_files_info($submission) {
         // global $DB, $USER;
         $submissionid = $submission->id;
+        $this->assignsubmission_filero_validate_settings($submission->assignment);
         $files = $this->get_archived_files($submissionid);
         $filero = $this->get_filero_submission($submissionid);
         if (is_countable($files) and count($files)) {
@@ -788,9 +842,18 @@ class assign_submission_filero extends assign_submission_plugin {
     public function copy_submission_file(stdClass $sourcesubmission, stdClass $destsubmission) {
         global $DB;
 
-        // Copy the files across.
+        // copy links to the files across.
         $contextid = $this->assignment->get_context()->id;
+        $module = get_coursemodule_from_instance('assign', $destsubmission->assignment);
+        $context = context_module::instance($module->id);
         $fs = get_file_storage();
+        $fs->delete_area_files($context->id,
+                'assignsubmission_file',
+                ASSIGNSUBMISSION_FILE_FILEAREA,
+                $destsubmission->id);
+
+        // $destsubmission->numfiles = 0;
+        $DB->update_record('assignsubmission_file', $destsubmission);
         $files = $fs->get_area_files($contextid,
                 'assignsubmission_file',
                 ASSIGNSUBMISSION_FILE_FILEAREA,
@@ -798,15 +861,37 @@ class assign_submission_filero extends assign_submission_plugin {
                 'id',
                 false);
         foreach ($files as $file) {
-            $fieldupdates = array('itemid' => $destsubmission->id);
-            $fs->create_file_from_storedfile($fieldupdates, $file);
+            // unset($file->pathnamehash);
+            // echo "<br><br><br><br><hr>File: " . print_r($file, true) ."<hr>";
+            $filename = $file->get_filename();
+            $fieldupdates = array('itemid' => $destsubmission->id,'contextid' => $context->id);
+            $filter = "contextid=$context->id AND component='assignsubmission_file' AND filearea= 'submission_files'
+                    AND itemid=$destsubmission->id AND filepath = '/' AND filename ='$filename'";
+
+           //  $file->contextid =  $context->id;
+            if ( $destfile = $DB->get_record_sql("SELECT * FROM {files} WHERE $filter limit 1" )){
+                $destfile->timemodified =  time();
+                $DB->update_record('files',$destfile);
+            }
+            else {
+               $fs->create_file_from_storedfile($fieldupdates, $file);
+            }
         }
 
         // Copy the assignsubmission_file record.
-        if ($filesubmission = $this->get_file_submission($sourcesubmission->id)) {
-            unset($filesubmission->id);
-            $filesubmission->submission = $destsubmission->id;
-            $DB->insert_record('assignsubmission_file', $filesubmission);
+        $dfilesubmission = $this->get_file_submission($destsubmission->id);
+        if ($sfilesubmission = $this->get_file_submission($sourcesubmission->id)) {
+            $sfilesubmission->status = "submitted";
+            $sfilesubmission->submission = $destsubmission->id;
+            if ($dfilesubmission) {
+                $sfilesubmission->id = $dfilesubmission->id;
+                $DB->update_record('assignsubmission_file', $sfilesubmission);
+            }
+            else{
+                unset($sfilesubmission->id);
+                $DB->insert_record('assignsubmission_file', $sfilesubmission);
+            }
+
         }
         return true;
     }
@@ -876,31 +961,49 @@ class assign_submission_filero extends assign_submission_plugin {
         return 0;
     }
 
-}
+    public function get_assign_cm_from_id($assign)
+    {	global $DB;
+        $cm = $DB->get_record_sql("SELECT * FROM {course_modules} AS cm, {modules} AS m WHERE
+						cm.instance = $assign->id and cm.module = m.id  and m.name='assign'");
+        return ($cm);
+    }
 
-/*
-     * Functions to control and show assign->requiresubmissionstatement (Eigenständigkeitserklärung)
-     */
-function assignsubmission_filero_validate_settings($assignment) {
-    global $DB;
-    $update = false;
-    if ( is_siteadmin() || !isset($_SESSION['filero_settings_validated'])) {
-        $_SESSION['filero_settings_validated'] = true;
-        $config = get_config('assignsubmission_filero');
-        $requiresubmissionstatement = $config->requiresubmissionstatement;
-        if ($assign = $DB->get_record("assign", array("id" => $assignment))) {
-            if ($requiresubmissionstatement and !$assign->requiresubmissionstatement) {
-                $assign->requiresubmissionstatement = 1;
-                $update = true;
+    /*
+     * Function to control and show assign->requiresubmissionstatement (Eigenständigkeitserklärung)
+*/
+    function assignsubmission_filero_validate_settings($assignment) {
+        global $DB;
+        $update = false;
+        // is_siteadmin() ||
+        if ( !isset($_SESSION['filero_settings_validated'])) {
+            $_SESSION['filero_settings_validated'] = true;
+            $config = get_config('assignsubmission_filero');
+            $requiresubmissionstatement = $config->requiresubmissionstatement;
+            if ($assign = $DB->get_record("assign", array("id" => $assignment))) {
+                if ($requiresubmissionstatement and !$assign->requiresubmissionstatement) {
+                    $assign->requiresubmissionstatement = 1;
+                    $update = true;
+                }
+                if (!$assign->submissiondrafts) {
+                    $assign->submissiondrafts = 1;
+                    $update = true;
+                }
+                if ($update) {
+                    $DB->update_record('assign', $assign);
+                    assignsubmission_filero_observer::observer_log(
+                            "validate_settings: Updated assignment '$assign->name' with id $assign-id");
+                }
+                else {
+                    assignsubmission_filero_observer::observer_log(
+                            "avalidate_settings: No update required for assignment '$assign->name' with id $assign-id");
+                }
             }
-            if (!$assign->submissiondrafts) {
-                $assign->submissiondrafts = 1;
-                $update = true;
-            }
-            if ($update) {
-                $DB->update_record('assign', $assign);
+            else{
+                assignsubmission_filero_observer::observer_log(
+                        "validate_settings: No assignment with id $assignment found!");
             }
         }
+        return $update;
     }
-    return $update;
 }
+
