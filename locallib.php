@@ -308,64 +308,65 @@ class assign_submission_filero extends assign_submission_plugin {
         $assignmentname = $assignment->name;
         $assignmentcourse = $assignment->course;
 
-            // ignore assignments that don't have tag "abgabe" in name
-            if (!stristr($assignmentname, $submission_title_tag)){
+        // ignore assignments that don't have tag "abgabe" in name
+        if (!stristr($assignmentname, $submission_title_tag)){
+            assignsubmission_filero_observer::observer_log("grader_submissions: "
+                    ."Assignment " .$assignment->name." was ignored as title is not tagged as $submission_title_tag");
+            return false;
+        }
+        $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
+        foreach ($assignments AS $assignment ) {
+            // loop if not grader assignment
+            if (!stristr($assignment->name, $grading_title_tag)){
                 assignsubmission_filero_observer::observer_log("grader_submissions: "
-                        ."Assignment " .$assignment->name." was ignored as title is not tagged as $submission_title_tag");
-                return false;
+                        ."Assignment " .$assignment->name." was ignored as it is not tagged with $grading_title_tag in title");
+                continue;
             }
-            $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
-            foreach ($assignments AS $assignment ) {
-                // loop if not grader assignment
-                if (!stristr($assignment->name, $grading_title_tag)){
+            elseif ( $assignment->id == $submission->assignment){ // AND $action == "duplicate"){
+                assignsubmission_filero_observer::observer_log("ignore current assignment " .$assignment->name);
+                continue;
+            }
+            $destsubmission = $DB->get_record('assign_submission',
+                    array('assignment' => $assignment->id,'userid' => $submission->userid));
+
+            if ( $action == "revert" AND $destsubmission){
+                $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
+                $coursemodulecontext = context_module::instance($coursemodule->id);
+                $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
+                $assign_g->revert_to_draft($destsubmission->userid);
+            }
+            elseif ( $action == "remove" AND $destsubmission){
+                $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
+                $coursemodulecontext = context_module::instance($coursemodule->id);
+                $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
+                $assign_g->remove_submission($destsubmission->userid);
+            }
+            elseif ( $action == "duplicate"){
+                // create new submission if not exists
+                if (empty($destsubmission)) {
+                    $destsubmission = $currentsubmission;
+                    unset($destsubmission->id);
+                    $destsubmission->assignment = $assignment->id;
+                    $destsubmission->status = "submitted";
+                    $destsubmission->id = $DB->insert_record('assign_submission', $destsubmission);
+                }
+
+                // loop if current submission
+                if ($currentsubmission->id == $destsubmission->id) {
                     assignsubmission_filero_observer::observer_log("grader_submissions: "
-                            ."Assignment " .$assignment->name." was ignored as it is not tagged with $grading_title_tag in title");
+                            . "Current submission is identical with destination submission. "
+                            . "Assignment " . $assignment->name . " was ignored");
                     continue;
                 }
-                elseif ( $assignment->id == $submission->assignment){ // AND $action == "duplicate"){
-                    assignsubmission_filero_observer::observer_log("ignore current assignment " .$assignment->name);
-                    continue;
-                }
-                $destsubmission = $DB->get_record('assign_submission',
-                        array('assignment' => $assignment->id,'userid' => $submission->userid));
+                $destsubmission->status = "submitted";
+                $destsubmission->timemodified= $currentsubmission->timemodified;
+                $DB->update_record('assign_submission', $destsubmission);
+            }
 
-                if ( $action == "revert" AND $destsubmission){
-                    $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
-                    $coursemodulecontext = context_module::instance($coursemodule->id);
-                    $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
-                    $assign_g->revert_to_draft($destsubmission->userid);
-                }
-                elseif ( $action == "remove" AND $destsubmission){
-                    $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
-                    $coursemodulecontext = context_module::instance($coursemodule->id);
-                    $assign_g = new assign ($coursemodulecontext, $coursemodule, $assignment->course);
-                    $assign_g->remove_submission($destsubmission->userid);
-                }
-                elseif ( $action == "duplicate"){
-                    // create new submission if not exists
-                    if (empty($destsubmission)) {
-                        $destsubmission = $currentsubmission;
-                        unset($destsubmission->id);
-                        $destsubmission->assignment = $assignment->id;
-                        $destsubmission->status = "submitted";
-                        $destsubmission->id = $DB->insert_record('assign_submission', $destsubmission);
-                    }
-                    else{
-                        // loop if current submission
-                        if ($currentsubmission->id == $destsubmission->id) {
-                            assignsubmission_filero_observer::observer_log("grader_submissions: "
-                                    . "Current submission is identical with destination submission. "
-                                    . "Assignment " . $assignment->name . " was ignored");
-                            continue;
-                        }
-                        $destsubmission->status = "submitted";
-                        $DB->update_record('assign_submission', $destsubmission);
-                    }
-
-                    $this->copy_submission_file($currentsubmission, $destsubmission);
-                    assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
-                            . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
-                            . $currentsubmission->id . " of assignment " . $assignmentname);
+                $this->copy_submission_file($currentsubmission, $destsubmission);
+                assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
+                        . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
+                        . $currentsubmission->id . " of assignment " . $assignmentname);
             }
         }
         return true;
