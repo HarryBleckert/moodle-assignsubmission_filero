@@ -361,7 +361,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $destsubmission->status = "submitted";
                 $destsubmission->timemodified= $currentsubmission->timemodified;
                 $DB->update_record('assign_submission', $destsubmission);
-            }
+
 
                 $this->copy_submission_file($currentsubmission, $destsubmission);
                 assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
@@ -406,7 +406,7 @@ class assign_submission_filero extends assign_submission_plugin {
             ?><p class="infobox" style="clear:both;text-align:center;"><span
             style="font-size: 1.1em;font-weight:bold;color:darkgreen;">Gutachter-Aufgaben können keine Abgaben zurücksetzen</span</p><?php
             exit;
-            return false;
+            return;
         }
         $currentsubmission = $this->get_filero_submission($submission->id);
         // set filero record to default 0
