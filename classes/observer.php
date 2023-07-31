@@ -76,22 +76,21 @@ class assignsubmission_filero_observer {
         }
         assignsubmission_filero_observer::observer_log(
                 "Start archiving of feedback for 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
-        assignsubmission_filero_observer::feedback_archive($submission, $grade);
+        assignsubmission_filero_observer::archive_feedback($submission, $grade);
         $filero_feedback++;
         //return false;
         return true;
     }
 
     /**
-     * Listen to events and process Filero archiving.
-     *
+     * Listen to process_submission_statement_accepted and save submission statement.
+     * Note: Th event process_submission_statement_accepted is triggered AFTER assessable submitted!!!
      * @param statement_accepted $event
      */
 
     public static function process_submission_statement_accepted(statement_accepted $event) {
         global $DB;
         assignsubmission_filero_observer::observer_log("\nObserver for submission_statement_accepted has been called by event handler");
-
         // catch looping calls of this observer class
         static $filero_feedback = 1;
         if ($filero_feedback > 1) {
@@ -100,14 +99,14 @@ class assignsubmission_filero_observer {
             return false;
         }
         $submission = $DB->get_record('assign_submission', array('id' => $event->objectid));
-        $assign = $DB->get_record('assign', array('id' => $submission->assignment));
         if (!$submission) {
             assignsubmission_filero_observer::observer_log(
-                    "No submission with 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
+                    "No submission with 'userid'=>$submission->userid,'assignment'=>$submission->assignment!");
             return false;
         }
         assignsubmission_filero_observer::observer_log(
                 "Start saving of statement_accepted for 'userid'=$submission->userid and 'assignment'=$submission->assignment");
+
         $assignsubmission_filero = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
         if (!$assignsubmission_filero) {
             $grade = $DB->get_record('assign_grades',
@@ -127,20 +126,52 @@ class assignsubmission_filero_observer {
             // assignsubmission_filero_observer::statement_accepted($assignsubmission_filero);
             //assignsubmission_filero_observer::observer_log("Event: " .print_r($event,true));
             $student = core_user::get_user($submission->userid);
-            $fullname = "Der Student";
+            $fullname = "Der Student/Die Studentin";
             if ($student) {
                 $fullname = $student->firstname . " " . $student->lastname;
             }
-            $config = get_config('assign');
-            $submissionstatement = $config->submissionstatement;
-            $msg = "$fullname hat am "
+            $configassign = get_config('assign');
+            $submissionstatement = $configassign->submissionstatement;
+            $statement_accepted = "$fullname hat am "
                     . date('d.m.Y \u\m H:i:s', $event->timecreated)
                     . " diese Eigenständigkeitserklärung abgegeben."
                     . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "")
-                    . ": ".$submissionstatement;
-            $assignsubmission_filero->statement_accepted = $msg;
-            assignsubmission_filero_observer::observer_log($msg);
+                    . ': "' . $submissionstatement .'"';
+            $assignsubmission_filero->statement_accepted = $statement_accepted;
+            assignsubmission_filero_observer::observer_log($statement_accepted);
             $DB->update_record('assignsubmission_filero', $assignsubmission_filero);
+
+            // handle multiple graders
+            $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+            // $assignmentname = $assignment->name;
+            $assignmentcourse = $assignment->course;
+            $configfilero = get_config('assignsubmission_filero');
+            $multiple_graders = $configfilero->multiple_graders;
+            $grading_title_tag = $configfilero->grading_title_tag;
+            $submission_title_tag = $configfilero->submission_title_tag;
+            if (isset($multiple_graders) and $multiple_graders) {
+                assignsubmission_filero_observer::observer_log("statement_accepted: multiple_graders");
+                $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
+                foreach ($assignments as $assignment) {
+                    // loop if not grader assignment
+                    if ($assignment->id == $submission->assignment) { // AND $action == "duplicate"){
+                        assignsubmission_filero_observer::observer_log(
+                                "statement_accepted: ignore current assignment ".$assignment->name);
+                        continue;
+                    }
+                    elseif (!stristr($assignment->name, $submission_title_tag) and !stristr($assignment->name, $grading_title_tag)) {
+                        //assignsubmission_filero_observer::observer_log("grader_submissions: "
+                        //        ."Assignment " .$assignment->name." was ignored. It is not tagged with '$submission_title_tag' or '$grading_title_tag' in title");
+                        continue;
+                    }
+                    if ($filerorec = $DB->get_record('assignsubmission_filero',
+                            array('assignment' => $assignment->id, 'userid' => $submission->userid))) {
+                        $filerorec->statement_accepted = $statement_accepted;
+                        $DB->update_record('assignsubmission_filero', $filerorec);
+                        assignsubmission_filero_observer::observer_log("statement_accepted: updated submission $filerorec->submission");
+                    }
+                }
+            }
         }
         $filero_feedback++;
         //return false;
@@ -161,7 +192,7 @@ class assignsubmission_filero_observer {
      * @param stdClass $submission the assign_submission record being submitted.
      * @return void
      */
-    public static function feedback_archive($submission, $grade = false) {
+    public static function archive_feedback($submission, $grade = false) {
         // Used by Filero
         /* Needs to be called on event \mod_assign\event\submission_graded
          * $string['eventassessablesubmitted'] = 'A submission has been submitted.';
@@ -204,7 +235,7 @@ class assignsubmission_filero_observer {
         $count = ($files ? count($files) : 0);
         if (empty($count)) {
             $_SESSION["debugfilero"] = false;
-            assignsubmission_filero_observer::observer_log("No feedback files!");
+            assignsubmission_filero_observer::observer_log("observer: archive_feedback: No feedback files!");
             if (!empty($DB->get_records('assignsubmission_filero_file',
                     array('grade' => $grade->id)))
             ) {

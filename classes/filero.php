@@ -583,6 +583,7 @@ class assignsubmission_filero_filero {
         $AssignGrades->Assign = $Assign;
         $AssignGrades->GradeId = $grade->id;
         $AssignGrades->AssignGradeUserId = $grade->userid;
+        $AssignGrades->statement_accepted = $this->show_statement_accepted($this->submission);
         // $AssignGrades->SubmissionId = $this->submission->id;
         $AssignGrades->Grader = $grade->grader;
         $AssignGrades->Grade = $grade->grade;
@@ -760,9 +761,9 @@ class assignsubmission_filero_filero {
         $submittedFiles = array();
         $totalfilesize = 0;
         // assignsubmission_filero_observer::observer_log("Query for files:\n'$query'");
-        if (empty($fileRecs)) {
+        /*if (empty($fileRecs)) {
             assignsubmission_filero_observer::observer_log("No file record with filearea '$filearea' and query\n'$query'");
-        }
+        }*/
         foreach ($fileRecs as $fileRec) {
             $submittedFiles[] = $filepath = $this->filero_get_filepath($fileRec, $filearea);
             $Source = "";
@@ -906,9 +907,9 @@ class assignsubmission_filero_filero {
     public function show_statement_accepted($submission) {
         global $DB;
         $statement_accepted = "";
-        $filero = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
-        if ($filero) {
-            $statement_accepted = $filero->statement_accepted;
+        $filerorec = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
+        if ($filerorec) {
+            $statement_accepted = $filerorec->statement_accepted;
         }
         return $statement_accepted;
     }

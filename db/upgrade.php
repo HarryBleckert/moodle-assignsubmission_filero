@@ -144,5 +144,20 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
     }
 
+    $newversion = 2023073101;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('assignsubmission_filero');
+        $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $table = new xmldb_table('assignsubmission_filero_file');
+        $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
+    }
+
     return true;
 }
