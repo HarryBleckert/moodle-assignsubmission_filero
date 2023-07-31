@@ -71,8 +71,11 @@ if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
 class assign_submission_filero extends assign_submission_plugin {
 
      /**
-     * Carry out any extra processing required when the work is submitted for grading
-     *
+     * Carry out FILERO tasks when the work is submitted for grading
+     * Event: \mod_assign\event\assessable_submitted
+      * Notes: submit_for_grading() wird vor assessable_submitted und vor \mod_assign\event\statement_accepted
+      * aufgerufen. Daher wäre es eventuell besser diese Methode umzubenonnen und über den Event Observer aufzurufen.
+      *
      * @param stdClass $submission the assign_submission record being submitted.
      * @return boolean
      */
@@ -83,7 +86,22 @@ class assign_submission_filero extends assign_submission_plugin {
         $coursemodulecontext = context_module::instance($coursemodule->id);
 
         //$coursemodule = context_module::instance($this->assignment->get_course_module()->id);
+        $statement_accepted = assignsubmission_filero_observer::get_statement_accepted($submission);
         $filerorecord = $this->get_filero_submission($submission->id);
+
+        if (!$filerorecord = $this->get_filero_submission($submission->id)) {
+            $filerorecord = new stdclass;
+            $filerorecord->assignment = $submission->assignment;
+            $filerorecord->submission = $submission->id;
+            $filerorecord->grade = $grade->id;
+            $filerorecord->userid = $submission->userid;
+            $filerorecord->statement_accepted = $statement_accepted;
+            $filerorecord->filerocode = $filerorecord->fileroid
+                    = $filerorecord->numfiles = 0;
+            $filerorecord->id = $DB->insert_record("assignsubmission_filero", $filerorecord);
+        }
+        $filerorecord->statement_accepted = $statement_accepted;
+        $DB->update_record('assignsubmission_filero', $filerorecord);
 
         $fs = get_file_storage();
         $files = $fs->get_area_files($coursemodulecontext->id, //$this->assignment->get_context()->id,
@@ -113,15 +131,6 @@ class assign_submission_filero extends assign_submission_plugin {
         if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
             $grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
-            if (!$filerorecord) {
-                $filerorecord = new stdclass;
-                $filerorecord->assignment = $submission->assignment;
-                $filerorecord->submission = $submission->id;
-                $filerorecord->grade = $grade->id;
-                $filerorecord->filerocode = $filerorecord->fileroid
-                        = $filerorecord->numfiles = 0;
-                $filerorecord->id = $DB->insert_record("assignsubmission_filero", $filerorecord);
-            }
 
             if ($numfiles = $this->get_archived_files($submission->id, ($count ?: 1))) {
                 $count = $numfiles;
@@ -131,9 +140,9 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->filerocode = $fileroRes->filerocode;
             $filerorecord->fileroid = $fileroRes->fileroid;
             // duplicate statement_accepted if called from grader_submissions()
-            if (isset($_SESSION['filero_statement_accepted']) AND !empty($_SESSION['filero_statement_accepted'])) {
-                $filerorecord->statement_accepted = $_SESSION['filero_statement_accepted'];
-            }
+            //if (isset($_SESSION['filero_statement_accepted']) AND !empty($_SESSION['filero_statement_accepted'])) {
+            $filerorecord->statement_accepted = $statement_accepted;
+            //}
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
             $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
             $filerorecord->filerovalidated = $fileroRes->filerovalidated;
@@ -297,9 +306,11 @@ class assign_submission_filero extends assign_submission_plugin {
                     ."Assignment " .$assignment->name." was ignored as title is not tagged as $submission_title_tag");
             return false;
         }
+        /*
         if ($filerorecord = $this->get_filero_submission($currentsubmission->id)) {
             $_SESSION['filero_statement_accepted'] = $filerorecord->statement_accepted;
         }
+        */
         $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
         foreach ($assignments AS $assignment ) {
             // loop if not grader assignment
@@ -366,9 +377,10 @@ class assign_submission_filero extends assign_submission_plugin {
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
                 $this->submit_for_grading($destsubmission);
                 //$assign_g->submit_for_grading($destsubmission,[]);
+                unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
             }
         }
-        unset($_SESSION['filero_statement_accepted']);
+        //unset($_SESSION['filero_statement_accepted']);
         return true;
     }
 

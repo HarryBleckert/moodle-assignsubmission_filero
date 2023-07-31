@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-             xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://filero.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://filero.com">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://filero.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://filero.com">
     <types>
         <s:schema elementFormDefault="qualified" targetNamespace="http://filero.com">
             <s:element name="DeleteMoodleAssignmentGrade">
@@ -650,12 +648,11 @@
         </operation>
         <operation name="ImpersonateToUser">
             <documentation>Returns valid ticket for &lt;var&gt;username&lt;/var&gt; without knowing the password (impersonation).
-                To get a valid ticket &lt;var&gt;username&lt;/var&gt; must be marked for impersonation
-                and current user &lt;var&gt;ticket&lt;/var&gt; must have the right to impersonate. Both users must be enabled.
-                The returned ticket is valid just for a certain amount of time (default 60 seconds, parameter in FILERO System Configuration)
-                but is also limited to &lt;var&gt;ticket&lt;/var&gt; livetime.
-                In case of any error or not fullfilled requirement NULL is returned.
-            </documentation>
+To get a valid ticket &lt;var&gt;username&lt;/var&gt; must be marked for impersonation
+and current user &lt;var&gt;ticket&lt;/var&gt; must have the right to impersonate. Both users must be enabled.
+The returned ticket is valid just for a certain amount of time (default 60 seconds, parameter in FILERO System Configuration)
+but is also limited to &lt;var&gt;ticket&lt;/var&gt; livetime.
+In case of any error or not fullfilled requirement NULL is returned.</documentation>
             <input message="s0:ImpersonateToUserSoapIn"/>
             <output message="s0:ImpersonateToUserSoapOut"/>
         </operation>
@@ -665,11 +662,8 @@
             <output message="s0:IsValidTicketSoapOut"/>
         </operation>
         <operation name="Login">
-            <documentation>Returns a &lt;var&gt;ticketTimeOut&lt;/var&gt; seconds valid ticket for further api actions for the &lt;var&gt;username&lt;/var&gt; as a &lt;class&gt;Filero.Soap.LoginContext&lt;/class&gt;
-                object.
-                Returns an invalid object if &lt;var&gt;username&lt;/var&gt; is not an active user or the &lt;var&gt;password&lt;/var&gt; and the &lt;var&gt;secondFactor&lt;/var&gt;
-                do not fit.
-            </documentation>
+            <documentation>Returns a &lt;var&gt;ticketTimeOut&lt;/var&gt; seconds valid ticket for further api actions for the &lt;var&gt;username&lt;/var&gt; as a &lt;class&gt;Filero.Soap.LoginContext&lt;/class&gt; object.
+Returns an invalid object if &lt;var&gt;username&lt;/var&gt; is not an active user or the &lt;var&gt;password&lt;/var&gt; and the &lt;var&gt;secondFactor&lt;/var&gt; do not fit.</documentation>
             <input message="s0:LoginSoapIn"/>
             <output message="s0:LoginSoapOut"/>
         </operation>

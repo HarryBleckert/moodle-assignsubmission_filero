@@ -907,8 +907,7 @@ class assignsubmission_filero_filero {
     public function show_statement_accepted($submission) {
         global $DB;
         $statement_accepted = "";
-        $filerorec = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
-        if ($filerorec) {
+        if ($filerorec = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id))) {
             $statement_accepted = $filerorec->statement_accepted;
         }
         return $statement_accepted;

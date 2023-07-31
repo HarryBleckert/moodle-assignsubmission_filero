@@ -104,8 +104,14 @@ class assignsubmission_filero_observer {
                     "No submission with 'userid'=>$submission->userid,'assignment'=>$submission->assignment!");
             return false;
         }
+        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        if ( !isset($assignment->requiresubmissionstatement) OR !$assignment->requiresubmissionstatement){
+            assignsubmission_filero_observer::observer_log(
+                    "statement_accepted: submissionstatement is not required in '$assignment->name. Aborting.");
+            return false;
+        }
         assignsubmission_filero_observer::observer_log(
-                "Start saving of statement_accepted for 'userid'=$submission->userid and 'assignment'=$submission->assignment");
+                "statement_accepted: Start saving of statement_accepted for 'userid'=$submission->userid and 'assignment'=$submission->assignment");
 
         $assignsubmission_filero = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
         if (!$assignsubmission_filero) {
@@ -125,24 +131,12 @@ class assignsubmission_filero_observer {
         if ($assignsubmission_filero) {
             // assignsubmission_filero_observer::statement_accepted($assignsubmission_filero);
             //assignsubmission_filero_observer::observer_log("Event: " .print_r($event,true));
-            $student = core_user::get_user($submission->userid);
-            $fullname = "Der Student/Die Studentin";
-            if ($student) {
-                $fullname = $student->firstname . " " . $student->lastname;
-            }
-            $configassign = get_config('assign');
-            $submissionstatement = $configassign->submissionstatement;
-            $statement_accepted = "$fullname hat am "
-                    . date('d.m.Y \u\m H:i:s', $event->timecreated)
-                    . " diese Eigenständigkeitserklärung abgegeben."
-                    . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "")
-                    . ': "' . $submissionstatement .'"';
+            $statement_accepted = assignsubmission_filero_observer::get_statement_accepted($submission);
             $assignsubmission_filero->statement_accepted = $statement_accepted;
             assignsubmission_filero_observer::observer_log($statement_accepted);
             $DB->update_record('assignsubmission_filero', $assignsubmission_filero);
 
             // handle multiple graders
-            $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
             // $assignmentname = $assignment->name;
             $assignmentcourse = $assignment->course;
             $configfilero = get_config('assignsubmission_filero');
@@ -186,6 +180,29 @@ class assignsubmission_filero_observer {
         return true;
     }
 
+    public static function get_statement_accepted($submission){
+        global $DB;
+        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        if ( !isset($assignment->requiresubmissionstatement) OR !$assignment->requiresubmissionstatement){
+            assignsubmission_filero_observer::observer_log(
+                    "statement_accepted: submissionstatement is not required in '$assignment->name. No response.");
+            return "Es musste keine Eigenständigkeitserklärung abgegeben werden.";
+        }
+
+        $fullname = "Der/die Teilnehmer_in mit userid: $submission->userid";
+        if ($student = core_user::get_user($submission->userid)) {
+            $fullname = $student->firstname . " " . $student->lastname . " (userid: $submission->userid)";
+        }
+        $configassign = get_config('assign');
+        $submissionstatement = $configassign->submissionstatement;
+        $statement_accepted = $fullname ." hat mit der Abgabe am "
+                . date('d.m.Y \u\m H:i:s', $submission->timemodified)
+                . " diese Eigenständigkeitserklärung abgegeben."
+                . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "")
+                . ': "' . $submissionstatement . '"';
+        return $statement_accepted;
+    }
+
     /**
      * Carry out any extra processing required when the work is submitted for grading
      *
@@ -198,7 +215,7 @@ class assignsubmission_filero_observer {
          * $string['eventassessablesubmitted'] = 'A submission has been submitted.';
          *
         */
-        global $USER, $DB;
+        global $DB;
         // File areas for file feedback assignment.
         if (!defined('assignfeedback_file_FILEAREA')) {
             define('assignfeedback_file_FILEAREA', 'feedback_files');
@@ -212,7 +229,7 @@ class assignsubmission_filero_observer {
                         array('assignment' => $submission->assignment, "userid" => $submission->userid))
         ) {
             assignsubmission_filero_observer::observer_log("No assign_grades with 'assignment'=>$submission->assignment, 'userid' => $submission->userid!");
-            return false;
+            return;
         }
 
         //$_SESSION["debugfilero"] = true;

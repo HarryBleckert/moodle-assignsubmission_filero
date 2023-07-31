@@ -42,9 +42,12 @@ $observers = array(
                 'eventname' => '\mod_assign\event\submission_graded',
                 'callback' => 'assignsubmission_filero_observer::process_submission_graded'
         ),
-        array(
+        /*
+         * Das event statement_accepted wird nicht mehr abgefangen, da es erst nach dem event submit
+         array(
                 'eventname' => '\mod_assign\event\statement_accepted',
                 'callback' => 'assignsubmission_filero_observer::process_submission_statement_accepted'
         )
+        */
 
 );
