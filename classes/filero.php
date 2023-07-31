@@ -594,7 +594,7 @@ class assignsubmission_filero_filero {
         $AssignGrades->FeedbackComments = $FeedbackComments;
         unset($AssignFiles);
 
-        $this->output .= "Total file size: " . number_format($totalfilesize / 1024, 0)
+        $this->output .= "Total file size: " . number_format(($totalfilesize / 1024), 0)
                 . "KB - Memory used after processing files: " . round(memory_get_peak_usage(true) / 1024 / 1024) . "M\n";
 
         $AssignGradesWTicket = new stdClass();
