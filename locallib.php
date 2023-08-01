@@ -88,12 +88,16 @@ class assign_submission_filero extends assign_submission_plugin {
         //$coursemodule = context_module::instance($this->assignment->get_course_module()->id);
         $statement_accepted = assignsubmission_filero_observer::get_statement_accepted($submission);
         $filerorecord = $this->get_filero_submission($submission->id);
+        $grade = $DB->get_record('assign_grades',
+                array('assignment' => $submission->assignment, "userid" => $submission->userid));
 
         if (!$filerorecord = $this->get_filero_submission($submission->id)) {
             $filerorecord = new stdclass;
             $filerorecord->assignment = $submission->assignment;
             $filerorecord->submission = $submission->id;
-            $filerorecord->grade = $grade->id ?:0;
+            if ( isset($grade->id) ) {
+                $filerorecord->grade = $grade->id ?: 0;
+            }
             $filerorecord->userid = $submission->userid;
             $filerorecord->statement_accepted = $statement_accepted;
             $filerorecord->filerocode = $filerorecord->fileroid
@@ -129,9 +133,6 @@ class assign_submission_filero extends assign_submission_plugin {
         $fileroRes = $filero->PutMoodleAssignmentSubmission();
 
         if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
-            $grade = $DB->get_record('assign_grades',
-                    array('assignment' => $submission->assignment, "userid" => $submission->userid));
-
             if ($numfiles = $this->get_archived_files($submission->id, ($count ?: 1))) {
                 $count = $numfiles;
             }
@@ -143,7 +144,9 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
             $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
             $filerorecord->filerovalidated = $fileroRes->filerovalidated;
-            $filerorecord->grade = $grade->id ?:0;
+            if ( isset($grade->id) ) {
+                $filerorecord->grade = $grade->id ?: 0;
+            }
             $DB->update_record('assignsubmission_filero', $filerorecord);
             if (isset($fileroRes->validated_files) and is_countable($fileroRes->validated_files)) {
                 $submittedfiles = new stdClass();
