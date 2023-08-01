@@ -634,7 +634,6 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     private function get_archived_files_info($submission) {
-        // global $DB, $USER;
         $submissionid = $submission->id;
         $this->assignsubmission_filero_validate_settings($submission->assignment);
         $files = $this->get_archived_files($submissionid);
