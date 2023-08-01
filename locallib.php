@@ -639,10 +639,10 @@ class assign_submission_filero extends assign_submission_plugin {
         $this->assignsubmission_filero_validate_settings($submission->assignment);
         $files = $this->get_archived_files($submissionid);
         $filero = $this->get_filero_submission($submissionid);
-        if (is_countable($files) and count($files)) {
+        if ($filero AND is_countable($files) AND count($files)) {
             $numfiles = count($files);
             $info = "\n<script>\n
-                function toggleViewFiles() { var obj = document.getElementById('FileroFiles_".$submissionid."');
+                function toggleViewFiles() { var obj = document.getElementById('FileroFiles_".$filero->id."');
                     obj.style.display = (obj.style.display === 'none') ? 'block' : 'none';}
                     </script>\n"
                     . '<span title="Click zum Anzeigen der Daten zur Archivierung" onclick="toggleViewFiles();">Daten'
@@ -650,7 +650,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     . '&nbsp;<i class="fa fa-angle-down" aria-hidden="true" style="font-weight:bolder;color:darkgreen;"></i>'
                     . "\n</span>\n";
 
-            $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
+            $info .= "\n" . '<div id="FileroFiles_'.$filero->id.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
 
             // requiresubmissionstatement has been provided and logged
             if ($filero->statement_accepted) {
