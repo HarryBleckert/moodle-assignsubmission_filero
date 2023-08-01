@@ -642,7 +642,7 @@ class assign_submission_filero extends assign_submission_plugin {
         if (is_countable($files) and count($files)) {
             $numfiles = count($files);
             $info = "\n<script>\n
-                function toggleViewFiles() { var obj = document.getElementById('FileroFiles_".$submissionid.";');
+                function toggleViewFiles() { var obj = document.getElementById('FileroFiles_".$submissionid."');
                     obj.style.display = (obj.style.display === 'none') ? 'block' : 'none';}
                     </script>\n"
                     . '<span title="Click zum Anzeigen der Daten zur Archivierung" onclick="toggleViewFiles();">Daten'
