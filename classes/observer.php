@@ -308,8 +308,6 @@ class assignsubmission_filero_observer {
                 $submittedfiles->assignment = $assign->id;
                 $submittedfiles->submission = $submission->id;
                 $submittedfiles->grade = $grade->id ?:0;
-                //$submittedfiles->timemodified = $fileroRes->filerotimemodified;
-                //$submittedfiles->timecreated = $fileroRes->filerotimemodified;
                 if (!empty($DB->get_records('assignsubmission_filero_file',
                         array('grade' => $grade->id)))
                 ) {

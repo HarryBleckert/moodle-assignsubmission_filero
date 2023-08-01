@@ -139,10 +139,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->numfiles = $count;
             $filerorecord->filerocode = $fileroRes->filerocode;
             $filerorecord->fileroid = $fileroRes->fileroid;
-            // duplicate statement_accepted if called from grader_submissions()
-            //if (isset($_SESSION['filero_statement_accepted']) AND !empty($_SESSION['filero_statement_accepted'])) {
             $filerorecord->statement_accepted = $statement_accepted;
-            //}
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
             $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
             $filerorecord->filerovalidated = $fileroRes->filerovalidated;
