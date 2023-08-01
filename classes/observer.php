@@ -283,7 +283,7 @@ class assignsubmission_filero_observer {
                 $assignsubmission_filero = new stdclass;
                 $assignsubmission_filero->assignment = $submission->assignment;
                 $assignsubmission_filero->submission = $submission->id;
-                $assignsubmission_filero->grade = $grade->id;
+                $assignsubmission_filero->grade = $grade->id ?:0;
                 $assignsubmission_filero->userid = $submission->userid;
                 $assignsubmission_filero->feedbacktimecreated = time();
                 $assignsubmission_filero->feedbacktimemodified = time();
@@ -307,7 +307,7 @@ class assignsubmission_filero_observer {
                 $submittedfiles->fileroid = $fileroRes->fileroid;
                 $submittedfiles->assignment = $assign->id;
                 $submittedfiles->submission = $submission->id;
-                $submittedfiles->grade = $grade->id;
+                $submittedfiles->grade = $grade->id ?:0;
                 //$submittedfiles->timemodified = $fileroRes->filerotimemodified;
                 //$submittedfiles->timecreated = $fileroRes->filerotimemodified;
                 if (!empty($DB->get_records('assignsubmission_filero_file',

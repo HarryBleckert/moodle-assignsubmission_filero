@@ -93,7 +93,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord = new stdclass;
             $filerorecord->assignment = $submission->assignment;
             $filerorecord->submission = $submission->id;
-            $filerorecord->grade = $grade->id;
+            $filerorecord->grade = $grade->id ?:0;
             $filerorecord->userid = $submission->userid;
             $filerorecord->statement_accepted = $statement_accepted;
             $filerorecord->filerocode = $filerorecord->fileroid
@@ -146,7 +146,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
             $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
             $filerorecord->filerovalidated = $fileroRes->filerovalidated;
-            $filerorecord->grade = $grade->id;
+            $filerorecord->grade = $grade->id ?:0;
             $DB->update_record('assignsubmission_filero', $filerorecord);
             if (isset($fileroRes->validated_files) and is_countable($fileroRes->validated_files)) {
                 $submittedfiles = new stdClass();
