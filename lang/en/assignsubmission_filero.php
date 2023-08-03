@@ -43,8 +43,8 @@ $string['submission_title_tag_help'] =
 $string['grading_title_tag'] = 'Please enter a text tag for grading assignments';
 $string['grading_title_tag_help'] =
         'Grading assignments will not allow submissions, but receive duplicates of submissions from submission assignment';
-$string['grader_roles'] = 'Allowed grader role';
-$string['grader_roles_help'] = 'Please select the role of graders';
+$string['grader_roles'] = 'Allowed grader roles';
+$string['grader_roles_help'] = 'Please select possible roles of graders';
 
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';

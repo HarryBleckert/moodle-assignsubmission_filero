@@ -48,8 +48,8 @@ $string['grading_title_tag_help'] =
          .'Es werden Duplikate der Prüfungsabgaben aus der Aufgabe zur Prüfungsabgabe angzeigt';
 
 
-$string['grader_roles'] = 'Zulässige Rolle für Gutachter_innen/Bewerter_innen';
-$string['grader_roles_help'] = 'Bitte wählen Sie die Rolle für Gutachter_innen/Bewerter_innen';
+$string['grader_roles'] = 'Zulässige Rollen für Gutachter_innen/Bewerter_innen';
+$string['grader_roles_help'] = 'Bitte wählen Sie eine oder mehrere Rollen für Gutachter_innen/Bewerter_innen';
 
 $string['countfiles'] = '{$a} Dateien';
 $string['default'] = 'Standardmäßig aktiviert';

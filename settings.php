@@ -97,7 +97,7 @@ foreach ( $roles as $role ){
 }
 $name = new lang_string('grader_roles', 'assignsubmission_filero');
 $description = new lang_string('grader_roles_help', 'assignsubmission_filero');
-$element = new admin_setting_configselect('assignsubmission_filero/grader_roles',
+$element = new admin_setting_configmultiselect('assignsubmission_filero/grader_roles',
         $name,
         $description,
         "4", $grader_roles);
