@@ -83,6 +83,11 @@ class assign_submission_filero extends assign_submission_plugin {
         global $USER, $DB;
         //$_SESSION["debugfilero"] = true;
         $coursemodule = get_coursemodule_from_instance('assign', $submission->assignment);
+        if ( !$coursemodule ){
+            assignsubmission_filero_observer::observer_log(
+                    "Course Module not found for assignment $submission->assignment of submission $submission->id!");
+            return;
+        }
         $coursemodulecontext = context_module::instance($coursemodule->id);
 
         //$coursemodule = context_module::instance($this->assignment->get_course_module()->id);
