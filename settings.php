@@ -100,7 +100,7 @@ $description = new lang_string('grader_roles_help', 'assignsubmission_filero');
 $element = new admin_setting_configmultiselect('assignsubmission_filero/grader_roles',
         $name,
         $description,
-        "4", $grader_roles);
+        array("4"), $grader_roles);
 $settings->add($element);
 
 
