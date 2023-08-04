@@ -82,10 +82,10 @@ class assign_submission_filero extends assign_submission_plugin {
     public function submit_for_grading($submission) {
         global $USER, $DB;
         //$_SESSION["debugfilero"] = true;
-        $coursemodule = get_coursemodule_from_instance('assign', $submission->assignment);
-        if ( !$coursemodule ){
+        if ( !$coursemodule = get_coursemodule_from_instance('assign', $submission->assignment)){
             assignsubmission_filero_observer::observer_log(
-                    "Course Module not found for assignment $submission->assignment of submission $submission->id!");
+                    "submit_for_grading(): Course Module not found for assignment $submission->assignment ".
+                    " of submission $submission->id!");
             return;
         }
         $coursemodulecontext = context_module::instance($coursemodule->id);
@@ -328,30 +328,34 @@ class assign_submission_filero extends assign_submission_plugin {
                 assignsubmission_filero_observer::observer_log("grader_submissions: ignore current assignment " .$assignment->name);
                 continue;
             }
-            $destsubmission = $DB->get_record('assign_submission',
-                    array('assignment' => $assignment->id,'userid' => $submission->userid));
 
-            $coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment);
-            $coursemodulecontext = context_module::instance($coursemodule->id);
-            $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-
-            if ( $action == "revert" AND $destsubmission){
-                // avoid looping when assign_g->revert_to_draft is called on filero plugin
-                assignsubmission_filero_observer::observer_log("grader_submissions: revert: "
-                        ."Submission for assignment " .$assignment->name." from user id $submission->userid was reverted to draft");
-                $_SESSION['filero_revert_to_draft_' . $destsubmission->id] = true;
-                $assign_g->revert_to_draft($destsubmission->userid);
-                unset($_SESSION['filero_revert_to_draft_' . $destsubmission->id]);
+            if ( $destsubmission = $DB->get_record('assign_submission',
+                    array('assignment' => $assignment->id,'userid' => $submission->userid))) {
+                if ( !$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)){
+                    assignsubmission_filero_observer::observer_log(
+                            "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
+                    return;
+                }
+                $coursemodulecontext = context_module::instance($coursemodule->id);
+                $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                if ( $action == "revert"){
+                    // avoid looping when assign_g->revert_to_draft is called on filero plugin
+                    assignsubmission_filero_observer::observer_log("grader_submissions: revert: "
+                            ."Submission for assignment " .$assignment->name." from user id $submission->userid was reverted to draft");
+                    $_SESSION['filero_revert_to_draft_' . $destsubmission->id] = true;
+                    $assign_g->revert_to_draft($destsubmission->userid);
+                    unset($_SESSION['filero_revert_to_draft_' . $destsubmission->id]);
+                }
+                elseif ( $action == "remove"){
+                    assignsubmission_filero_observer::observer_log("grader_submissions: remove: "
+                            ."Submission for assignment " .$assignment->name." from user id $submission->userid was removed");
+                    // avoid looping when $assign_g->remove_submission is called on filero plugin
+                    $_SESSION['filero_remove_submission_' . $destsubmission->id] = true;
+                    $assign_g->remove_submission($destsubmission->userid);
+                    unset($_SESSION['filero_remove_submission_' . $destsubmission->id]);
+                }
             }
-            elseif ( $action == "remove" AND $destsubmission){
-                assignsubmission_filero_observer::observer_log("grader_submissions: remove: "
-                        ."Submission for assignment " .$assignment->name." from user id $submission->userid was removed");
-                // avoid looping when $assign_g->remove_submission is called on filero plugin
-                $_SESSION['filero_remove_submission_' . $destsubmission->id] = true;
-                $assign_g->remove_submission($destsubmission->userid);
-                unset($_SESSION['filero_remove_submission_' . $destsubmission->id]);
-            }
-            elseif ( $action == "duplicate"){
+            if ( $action == "duplicate"){
                 // create new submission if not exists
                 if (empty($destsubmission)) {
                     $destsubmission = $currentsubmission;
