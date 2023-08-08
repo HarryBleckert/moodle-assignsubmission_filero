@@ -1077,8 +1077,8 @@ class assign_submission_filero extends assign_submission_plugin {
         global $DB;
         $update = false;
         // is_siteadmin() ||
-        if ( !isset($_SESSION['filero_settings_validated'])) {
-            $_SESSION['filero_settings_validated'] = true;
+        if ( !isset($_SESSION['filero_settings_validated_'.$assignmentid])) {
+            $_SESSION['filero_settings_validated_'.$assignmentid] = true;
             $config = get_config('assignsubmission_filero');
             $requiresubmissionstatement = $config->requiresubmissionstatement;
             if ($assign = $DB->get_record("assign", array("id" => $assignmentid))) {
