@@ -30,15 +30,6 @@ use assignsubmission_filero\event\submitted_file_archived;
 
 defined('MOODLE_INTERNAL') || die();
 
-// validate and force required assignment settings for requiresubmissionstatement and submissiondrafts
-if (isset($record->assignment) && $record->assignment) {
-    assignsubmission_filero_validate_settings($record->assignment);
-}
-elseif (isset($this->assignment->id) && $this->assignment->id) {
-    assignsubmission_filero_validate_settings($this->assignment->id);
-}
-
-
 // File area for file submission assignment.
 if (!defined('assignsubmission_file_FILEAREA')) {
     define('assignsubmission_file_FILEAREA', 'submission_files');
