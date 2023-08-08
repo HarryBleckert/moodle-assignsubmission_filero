@@ -386,7 +386,8 @@ class assign_submission_filero extends assign_submission_plugin {
                 $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
                 $this->submit_for_grading($destsubmission);
-                /*if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
+                /* Not working when calling via new assign class, but maybe usefull for notifications
+                 * if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                     assignsubmission_filero_observer::observer_log(
                             "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
                     return;
