@@ -29,4 +29,4 @@ $plugin->version = 2023080800;
 $plugin->requires = 2021111800;
 $plugin->component = 'assignsubmission_filero';
 $plugin->maturity  = MATURITY_BETA;
-$plugin->release   = "v1.3.4-Beta";
+$plugin->release   = "v1.3.5-Beta";
