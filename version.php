@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'assignsubmission_filero';
 $plugin->version = 2023080901;
 $plugin->release   = "v1.3.9-Beta";
+$plugin->component = 'assignsubmission_filero';
 $plugin->requires = 2021051700;
 $plugin->supported = [
 
