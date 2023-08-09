@@ -298,6 +298,7 @@ class assignsubmission_filero_observer {
             $assignsubmission_filero->numfiles = $count;
             $assignsubmission_filero->filerocode = $fileroRes->filerocode;
             $assignsubmission_filero->fileroid = $fileroRes->fileroid;
+            $assignsubmission_filero->userid = $submission->userid;
             $assignsubmission_filero->feedbacktimecreated = $fileroRes->filerotimecreated;
             $assignsubmission_filero->feedbacktimemodified = $fileroRes->filerotimemodified;
             $assignsubmission_filero->filerovalidated = $fileroRes->filerovalidated;
