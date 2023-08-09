@@ -29,14 +29,7 @@ $plugin->version = 2023080901;
 $plugin->release   = "v1.3.9-Beta";
 $plugin->component = 'assignsubmission_filero';
 $plugin->requires = 2021051700;
-$plugin->supported = [
 
-    // Support from the Moodle 3.11 series.
-        311,
-
-    // To the Moodle 4.x series.
-        400,401,402
-];
 // The plugin is a pre-release version.
 // $plugin->maturity = MATURITY_ALPHA;
 
