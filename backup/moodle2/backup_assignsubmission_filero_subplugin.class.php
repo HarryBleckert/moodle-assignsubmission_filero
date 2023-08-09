@@ -61,9 +61,11 @@ class backup_assignsubmission_filero_subplugin extends backup_subplugin {
         $subpluginelement->set_source_table('assignsubmission_filero',
                 array('submission' => backup::VAR_PARENTID));
 
-        $subpluginelement->annotate_files('assignsubmission_filero',
+        /*
+         $subpluginelement->annotate_files('assignsubmission_filero',
                 'submission_filero',
                 'submission');
+        */
         return $subplugin;
     }
 

@@ -72,8 +72,7 @@ class restore_assignsubmission_filero_subplugin extends restore_subplugin {
         $data->submission = $this->get_mappingid('submission', $data->submission);
 
         $DB->insert_record('assignsubmission_filero', $data);
-
-        $this->add_related_files('assignsubmission_filero', 'submissions_filero', 'submission', null, $oldsubmissionid);
+        //$this->add_related_files('assignsubmission_filero', 'submissions_filero', 'submission', null, $oldsubmissionid);
     }
 
 }
