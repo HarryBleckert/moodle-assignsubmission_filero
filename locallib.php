@@ -705,33 +705,6 @@ class assign_submission_filero extends assign_submission_plugin {
     }
 
     /**
-     * Display the list of files  in the submission status table
-     *
-     * @param stdClass $submission
-     * @param bool $showviewlink Set this to true if the list of files is long
-     * @return string
-     * html Classes: fileuploadsubmission and fileuploadsubmissiontime
-     */
-    public function view_summary(stdClass $submission, &$showviewlink) {
-        global $USER;
-        $filesubmission = $this->get_filero_submission($submission->id);
-        $fileroRes = "-";
-        if ($filesubmission) {
-            $cm = context_module::instance($this->assignment->get_course_module()->id);
-            $fileroRes = $this->get_archived_files_info($submission);
-            if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
-                $fileroRes .= '<form method="GET" target="showLog" style="font-size:81%;display:inline;">
-                            <input type="hidden" name="id" value="' . $cm->instanceid . '">
-                            <input type="hidden" name="submissiontimemodified" value="'
-                        . $filesubmission->submissiontimemodified . '">
-                            <span><button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
-                             title="Studierende sehen diesen Button nicht!">Log anzeigen</span></button></form>';
-            }
-        }
-        return $fileroRes;
-    }
-
-    /**
      * Get formatted submitted files information from the database
      *
      * @param int $submissionid
@@ -752,7 +725,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     .$submissionid.'();">Daten'
                     . ($numfiles ? (" und " . $numfiles . " Datei" . ($numfiles > 1 ? "en" : "")) : "")
                     . '&nbsp;<i class="fa fa-angle-down" aria-hidden="true" style="font-weight:bolder;color:darkgreen;"></i>'
-                    . "\n</span>\n";
+                    . "</span>\n";
 
             $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
 
@@ -805,6 +778,19 @@ class assign_submission_filero extends assign_submission_plugin {
         return $statement_accepted;
     }
 
+
+    /**
+     * Display Filero archiving Infos
+     *
+     * @param stdClass $submission
+     * @param bool $showviewlink Set this to true if the list of files is long
+     * @return string
+     * html Classes: fileuploadsubmission and fileuploadsubmissiontime
+     */
+    public function view_summary(stdClass $submission, &$showviewlink) {
+        return $this->view($submission);
+    }
+
     /**
      * No full submission view - the summary contains the list of files and that is the whole submission
      *
@@ -816,15 +802,19 @@ class assign_submission_filero extends assign_submission_plugin {
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission) {
-            $cm = context_module::instance($this->assignment->get_course_module()->id);
             $fileroRes = $this->get_archived_files_info($submission);
             if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
+                $cm = context_module::instance($this->assignment->get_course_module()->id);
+                $pluginfo = $this->get_plugin_version();
+                $info = "\n\n".$this->get_name()." Plugin Version: ".$pluginfo->version." - Release: "
+                        .$pluginfo->release;
                 $fileroRes .= '<form method="GET" target="showLog" style="font-size:81%;display:inline;">
                             <input type="hidden" name="id" value="' . $cm->instanceid . '">
                             <input type="hidden" name="submissiontimemodified" value="'
                         . $filesubmission->submissiontimemodified . '">
                             <span><button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
-                             title="Studierende sehen diesen Button nicht!">Log anzeigen</span></button></form>';
+                             title="Studierende sehen diesen Button nicht!'.$info.'">Log anzeigen</span></button>'
+                        ."</form>\n";
             }
         }
         return $fileroRes;
@@ -1062,9 +1052,18 @@ class assign_submission_filero extends assign_submission_plugin {
         return ($cm);
     }
 
+    function get_plugin_version($component = "assignsubmission_filero") {
+        list($plugintype, $pluginname) = core_component::normalize_component($component);
+        $pluginpath = core_component::get_plugin_directory($plugintype, $pluginname);
+        $plugin = new \stdClass();
+        require $pluginpath.'/version.php';
+        //return $plugin->version;
+        return $plugin;
+    }
+
     /*
      * Function to control and show assign->requiresubmissionstatement (Eigenständigkeitserklärung)
-*/
+    */
     function assignsubmission_filero_validate_settings($assignmentid) {
         global $DB;
         $update = false;

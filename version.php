@@ -25,8 +25,26 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023080900;
-$plugin->requires = 2021111800;
 $plugin->component = 'assignsubmission_filero';
-$plugin->maturity  = MATURITY_BETA;
+$plugin->version = 2023080901;
 $plugin->release   = "v1.3.9-Beta";
+$plugin->requires = 2021051700;
+$plugin->supported = [
+
+    // Support from the Moodle 3.11 series.
+        311,
+
+    // To the Moodle 4.x series.
+        400,401,402
+];
+// The plugin is a pre-release version.
+// $plugin->maturity = MATURITY_ALPHA;
+
+// The plugin is a beta version.
+$plugin->maturity = MATURITY_BETA;
+
+// The plugin is a release candidate version.
+// $plugin->maturity = MATURITY_RC;
+
+// The plugin is a stable version.
+// $plugin->maturity = MATURITY_STABLE;
