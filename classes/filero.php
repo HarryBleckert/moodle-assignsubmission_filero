@@ -799,7 +799,9 @@ class assignsubmission_filero_filero {
                 if ($grader and $student) {
                     $gfullname = $grader->firstname . " " . $grader->lastname;
                     $sfullname = $student->firstname . " " . $student->lastname;
-                    $fileSpecs->Filename = str_replace(" " , "_", "Kommentierte PDF Abgabedatei. Bewerter in ist "
+                    $fileSpecs->Filename = str_replace(" " , "_", "Kommentierte PDF Abgabedatei"
+                            . (count($fileRecs)>1 ?"en" :"")
+                            .". Bewerter in ist "
                             . $gfullname . ". Student_in ist_"
                             . $sfullname . ".pdf");
                 }
