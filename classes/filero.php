@@ -338,7 +338,7 @@ class assignsubmission_filero_filero {
         // Live status is still 'draft' when processing submit_for_grading()
         // $AssignSubmission->Status = $this->submission->status;
         $AssignSubmission->Status = "submitted";
-        $AssignSubmission->statement_accepted = $this->show_statement_accepted($this->submission);
+        $AssignSubmission->StatementAccepted = $this->show_statement_accepted($this->submission);
         $AssignSubmission->TimeModified = $this->submission->timemodified;
         $AssignSubmission->TimeCreated = $this->submission->timecreated;
         $AssignSubmission->TimeStarted = $this->submission->timestarted;
@@ -587,7 +587,7 @@ class assignsubmission_filero_filero {
         $AssignGrades->Assign = $Assign;
         $AssignGrades->GradeId = $grade->id;
         $AssignGrades->AssignGradeUserId = $grade->userid;
-        $AssignGrades->statement_accepted = $this->show_statement_accepted($this->submission);
+        $AssignGrades->StatementAccepted = $this->show_statement_accepted($this->submission);
         // $AssignGrades->SubmissionId = $this->submission->id;
         $AssignGrades->Grader = $grade->grader;
         $AssignGrades->Grade = $grade->grade;
