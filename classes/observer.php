@@ -308,6 +308,7 @@ class assignsubmission_filero_observer {
                 $submittedfiles->fileroid = $fileroRes->fileroid;
                 $submittedfiles->assignment = $assign->id;
                 $submittedfiles->submission = $submission->id;
+                $submittedfiles->userid = $submission->userid;
                 $submittedfiles->grade = $grade->id ?:0;
                 if (!empty($DB->get_records('assignsubmission_filero_file',
                         array('grade' => $grade->id)))
