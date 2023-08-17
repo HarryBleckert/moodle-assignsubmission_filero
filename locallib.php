@@ -717,7 +717,7 @@ class assign_submission_filero extends assign_submission_plugin {
         $filero = $this->get_filero_submission($submissionid);
         if ($filero AND is_countable($files) AND count($files)) {
             $numfiles = count($files);
-            $LogfilePath = assignsubmission_filero_filero:LogfilePath($submission->id);
+            $LogfilePath = assignsubmission_filero_filero::LogfilePath($submission->id);
             if (empty($LogfilePath) OR !is_readable($LogfilePath)){
                 return "Fehler: Log Datei '$LogfilePath' für Abgabe id $submissionid ist nicht vorhanden, oder kann nicht gelesen werden!";
             }
