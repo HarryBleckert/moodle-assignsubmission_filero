@@ -208,6 +208,7 @@
                             <s:element minOccurs="0" name="AttemptNumber" type="s0:Integer"/>
                             <s:element minOccurs="0" name="FeedbackComments" type="s0:ArrayOfAssignFeedbackComments"/>
                             <s:element minOccurs="0" name="FeedbackFiles" type="s0:ArrayOfAssignFeedbackFile"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -227,6 +228,7 @@
                                 </s:simpleType>
                             </s:element>
                             <s:element minOccurs="0" name="AssignId" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -254,6 +256,7 @@
                                 </s:simpleType>
                             </s:element>
                             <s:element minOccurs="0" name="CommentFormat" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -272,6 +275,7 @@
                             <s:element minOccurs="0" name="AssignGradeId" type="s0:Integer"/>
                             <s:element minOccurs="0" name="Numfiles" type="s0:Integer"/>
                             <s:element minOccurs="0" name="Files" type="s0:ArrayOfFile"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -319,6 +323,7 @@
                             <s:element minOccurs="0" name="TimeModified" type="s0:Integer"/>
                             <s:element minOccurs="0" name="SortOrder" type="s0:Integer"/>
                             <s:element minOccurs="0" name="ReferenceFileId" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -359,6 +364,8 @@
                             <s:element minOccurs="0" name="AttemptNumber" type="s0:Integer"/>
                             <s:element minOccurs="0" name="Latest" type="s0:Integer"/>
                             <s:element minOccurs="0" name="AssignFiles" type="s0:ArrayOfAssignSubmissionFile"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
+                            <s:element minOccurs="0" name="AssignSubmissionOnlineText" type="s0:AssignSubmissionOnlineText"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
@@ -377,6 +384,22 @@
                             <s:element minOccurs="0" name="AssignSubmissionId" type="s0:Integer"/>
                             <s:element minOccurs="0" name="Numfiles" type="s0:Integer"/>
                             <s:element minOccurs="0" name="Files" type="s0:ArrayOfFile"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
+                            <s:element minOccurs="0" name="OnlineText" type="s0:AssignSubmissionOnlineText"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="AssignSubmissionOnlineText">
+                <s:complexContent>
+                    <s:extension base="s0:PersistentObject">
+                        <s:sequence>
+                            <s:element minOccurs="0" name="AssignSubOnlineTextId" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="AssignId" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="AssignSubmissionId" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="OnlineText" type="s0:String"/>
+                            <s:element minOccurs="0" name="OnlineFormat" type="s0:Integer"/>
+                            <s:element minOccurs="0" name="StatementAccepted" type="s0:String"/>
                         </s:sequence>
                     </s:extension>
                 </s:complexContent>
