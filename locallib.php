@@ -732,7 +732,6 @@ class assign_submission_filero extends assign_submission_plugin {
                     . "</span>\n";
 
             $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
-
             // requiresubmissionstatement has been provided and logged
             if ($filero->statement_accepted) {
                 $info .= $this->show_statement_accepted($submission) . "<br>";
