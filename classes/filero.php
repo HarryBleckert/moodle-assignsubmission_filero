@@ -360,7 +360,7 @@ class assignsubmission_filero_filero {
 
         $this->output .= "\n\n" . "AssignSubmission with ticket data: (Memory used: " .
                 round(memory_get_peak_usage(true) / 1024 / 1024) . "M)\n"
-                . $this->rmFileContent(var_export($AssignSubmissionWTicket, true)) . "\n";
+                . $this->hideFileContent(var_export($AssignSubmissionWTicket, true)) . "\n";
 
         try {
             if (strstr(implode("\n", $this->client->__getFunctions()), "PutMoodleAssignmentSubmission")) {
@@ -368,7 +368,7 @@ class assignsubmission_filero_filero {
                 unset($AssignSubmissionWTicket);
 
                 $this->output .= "\nPutMoodleAssignmentSubmission Response: " .
-                        $this->rmFileContent(var_export($response_param, true)) .
+                        $this->hideFileContent(var_export($response_param, true)) .
                         "\n\n";
                 $SubmissionResult = $response_param->PutMoodleAssignmentSubmissionResult;
                 $filerocode = $SubmissionResult->code;
@@ -428,7 +428,7 @@ class assignsubmission_filero_filero {
                 $AssignSubmissionWTicket->status = $this->status;
                 $response_param = $this->client->GetMoodleAssignmentSubmission($AssignSubmissionWTicket);
                 $this->output .= "\nGetMoodleAssignmentSubmission Response on Submission ID $fileroid: "
-                        . $this->rmFileContent(var_export($response_param, true)) . "\n\n";
+                        . $this->hideFileContent(var_export($response_param, true)) . "\n\n";
             }
 
             unset($Files, $File);
@@ -486,7 +486,7 @@ class assignsubmission_filero_filero {
 
         $response_param = $this->client->DeleteMoodleAssignmentSubmission($AssignSubmissionWTicket);
         $this->output .= "\nDeleteMoodleAssignmentSubmission Response: " .
-                $this->rmFileContent(var_export($response_param, true)) .
+                $this->hideFileContent(var_export($response_param, true)) .
                 "\n\n";
         $SubmissionResult = $response_param->DeleteMoodleAssignmentSubmissionResult;
         if (isset($SubmissionResult->TimeModified) and $SubmissionResult->TimeModified > 0) {
@@ -608,7 +608,7 @@ class assignsubmission_filero_filero {
         unset($AssignGrades);
         $this->output .= "\n\n" . "AssignGrades with ticket data: (Memory used: " .
                 round(memory_get_peak_usage(true) / 1024 / 1024) . "M)\n"
-                . $this->rmFileContent(var_export($AssignGradesWTicket, true)) . "\n";
+                . $this->hideFileContent(var_export($AssignGradesWTicket, true)) . "\n";
 
         try {
             if (strstr(implode("\n", $this->client->__getFunctions()), "PutMoodleAssignmentGrade")) {
@@ -616,7 +616,7 @@ class assignsubmission_filero_filero {
                 unset($AssignGradesWTicket);
 
                 $this->output .= "\nPutMoodleAssignmentGrade Response: " .
-                        $this->rmFileContent(var_export($response_param, true)) .
+                        $this->hideFileContent(var_export($response_param, true)) .
                         "\n\n";
                 $GradeResult = $response_param->PutMoodleAssignmentGradeResult;
                 $filerocode = $GradeResult->code;
@@ -679,7 +679,7 @@ class assignsubmission_filero_filero {
                 $AssignGradesWTicket->status = $this->status;
                 $response_param = $this->client->GetMoodleAssignmentGrade($AssignGradesWTicket);
                 $this->output .= "\nGetMoodleAssignmentGrade Response on Submission ID $fileroid: "
-                        . $this->rmFileContent(var_export($response_param, true)) . "\n\n";
+                        . $this->hideFileContent(var_export($response_param, true)) . "\n\n";
             }
 
             unset($Files, $File);
@@ -737,7 +737,7 @@ class assignsubmission_filero_filero {
 
         $response_param = $this->client->PutMoodleAssignmentGradeResult($AssignGradesWTicket);
         $this->output .= "\nDeleteMoodleAssignmentSubmission Response: " .
-                $this->rmFileContent(var_export($response_param, true)) .
+                $this->hideFileContent(var_export($response_param, true)) .
                 "\n\n";
         $GradeResult = $response_param->DeleteMoodleAssignmentGradeResult;
         if (isset($GradeResult->TimeModified) and $GradeResult->TimeModified > 0) {
@@ -836,10 +836,10 @@ class assignsubmission_filero_filero {
         }
         $this->output .= "\n<b>__getLastRequest</b>: " . htmlentities(var_export($response_param, true), ENT_XML1) . "\n\n";
         $response_param = $client->__getLastResponseHeaders();
-        $this->output .= "\n<b>__getLastResponseHeaders</b>: " . $this->rmFileContent(var_export($response_param, true)) . "\n\n";
+        $this->output .= "\n<b>__getLastResponseHeaders</b>: " . $this->hideFileContent(var_export($response_param, true)) . "\n\n";
         $response_param = $client->__getLastResponse();
         $this->output .= "\n<b>__getLastResponse</b>: " .
-                htmlentities($this->rmFileContent(var_export($response_param, true)), ENT_XML1) . "\n\n";
+                htmlentities($this->hideFileContent(var_export($response_param, true)), ENT_XML1) . "\n\n";
         return true;
     }
 
@@ -865,11 +865,21 @@ class assignsubmission_filero_filero {
     /*
     * remove file source from displayed and logged values
     */
-    private function rmFileContent($string) {
+    private function hideFileContent($string) {
         return preg_replace("|'Source' => '.*?',|i", "'Source' => '<base64_encoded>',", $string);
     }
 
-    // show log
+    // check if log file exists
+    static public function LogfilePath($submissionid) {
+        $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
+        $isReadable = is_readable($logfile);
+        if ( !$isReadable) {
+            return ""; // "$logfile für Abgabe id $submissionid kann nicht gelesen werden!";
+        }
+        return $logfile;
+    }
+
+            // show log
     public function showLog($submissionid, $filerotimemodified = false) {
         $title = "FILERO Log of submissions and grades for submission #" . $submissionid;
         $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
@@ -891,7 +901,7 @@ class assignsubmission_filero_filero {
             */
             $this->filero_log($submissionid);
         } else {
-            $this->output = "$logfile can't be read";
+            $this->output = "$logfile für Abgabe id $submissionid kann nicht gelesen werden!";
             // return false;
         }
         print nl2br("<head><title>$title</title></head><html><body><h2 title='Log file: $logfile'><b>$title</b></h2>"
