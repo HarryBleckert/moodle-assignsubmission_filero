@@ -30,7 +30,7 @@ $settings->add(new admin_setting_configcheckbox('assignsubmission_filero/default
 $element = new admin_setting_configtext('assignsubmission_filero/location',
         'location',
         new lang_string('location', 'assignsubmission_filero'),
-        "https://10.20.58.10/csp/fileroapi//FLC.PKG.Moodle.Soap.Api.cls", PARAM_RAW, 72);
+        "https://10.20.58.10/csp/fileroapi//FLC.PKG.Moodle.Soap.Api.cls", PARAM_RAW, 120);
 $settings->add($element);
 
 $element = new admin_setting_configtext('assignsubmission_filero/username',

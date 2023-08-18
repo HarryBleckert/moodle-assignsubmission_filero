@@ -168,10 +168,10 @@ class assignsubmission_filero_filero {
     private function LoginToFilero() {
 
         $config = get_config('assignsubmission_filero');
-        $location = $config->location; //
-        $username = $config->username; // "Administrator";
-        $password = $config->password; // "Admin1234!";
-        $productKey = $config->productkey;// "Prod436";
+        $location = $config->location; // full WSDL API URL
+        $username = $config->username;
+        $password = $config->password;
+        $productKey = $config->productkey;
         // $this->output .= "\nConfig: ".print_r($config,true);
         // $location = "https://10.20.58.10/csp/fileroapi//FLC.PKG.Moodle.Soap.Api.cls";
         // $wsdl = "http://10.20.58.10/csp/fileroapi//FLC.PKG.Moodle.Soap.Api.cls?wsdl=1";
