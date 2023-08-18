@@ -71,7 +71,7 @@ class assignsubmission_filero_observer {
         // Task: Only archive feedbacks if submission has been graded!
         $config = get_config('assignsubmission_filero');
         if ( !($grade->grade >0) AND $config->archive_feedback_after_grading ){
-            // assignsubmission_filero_observer::observer_log("No archiving: Record assign_grades with id $event->objectid has not been graded yet.");
+            assignsubmission_filero_observer::observer_log("No archiving: Record assign_grades with id $event->objectid has not been graded yet.");
             return;
         }
 
