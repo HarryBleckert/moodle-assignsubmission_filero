@@ -126,4 +126,3 @@ $setting = new admin_setting_configcheckbox('assignsubmission_filero/submissiond
         1);
 $settings->add($element);
 */
-
