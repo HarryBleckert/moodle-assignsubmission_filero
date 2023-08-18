@@ -45,6 +45,9 @@ $string['grading_title_tag_help'] =
         'Grading assignments will not allow submissions, but receive duplicates of submissions from submission assignment';
 $string['grader_roles'] = 'Allowed grader roles';
 $string['grader_roles_help'] = 'Please select possible roles of graders';
+$string['archive_feedback_after_grading'] = 'Archive grader feedbacks after grading';
+$string['archive_feedback_after_grading_help'] = 'If enabled, grader feedbacks will only be archived after the submission has been graded.';
+
 
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';

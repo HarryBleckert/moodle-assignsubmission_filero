@@ -86,6 +86,7 @@ class assign_submission_filero extends assign_submission_plugin {
         //$filerorecord = $this->get_filero_submission($submission->id);
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $submission->assignment, "userid" => $submission->userid));
+        $assign = $DB->get_record('assign', array('id' => $submission->assignment));
 
         if (!$filerorecord = $this->get_filero_submission($submission->id)) {
             $filerorecord = new stdclass;
@@ -178,7 +179,7 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             $params = array(
                     'context' => $coursemodulecontext,
-                    'courseid' => $this->assignment->get_course()->id,
+                    'courseid' => $assign->course,
                     'objectid' => $filerorecord->id,
                     'other' => array(
                             'content' => '',
@@ -196,7 +197,7 @@ class assign_submission_filero extends assign_submission_plugin {
             if (!empty($submission->userid) && ($submission->userid != $USER->id)) {
                 $params['relateduserid'] = $submission->userid;
             }
-            if ($this->assignment->is_blind_marking()) {
+            if ($assign->blindmarking) {
                 $params['anonymous'] = 1;
             }
             $event = submitted_file_archived::create($params);
@@ -386,6 +387,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
                 $this->submit_for_grading($destsubmission);
+
                 /* Not working when calling via new assign class, but maybe usefull for notifications
                  * if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                     assignsubmission_filero_observer::observer_log(
@@ -510,12 +512,18 @@ class assign_submission_filero extends assign_submission_plugin {
         return false;
     }
 
+    private function archive_feedback_after_grading($submission){
+        $config = get_config('assignsubmission_filero');
+        $_SESSION['filero_archive_feedback_after_grading'] = $config->archive_feedback_after_grading;
+        return $_SESSION['filero_archive_feedback_after_grading'] ?:false;
+    }
+
     private function init_multiple_graders($submission){
-        global $DB;
         $config = get_config('assignsubmission_filero');
         $_SESSION['filero_multiple_graders'] = $config->multiple_graders;
         $_SESSION['filero_grading_title_tag'] = $config->grading_title_tag;
         $_SESSION['filero_submission_title_tag'] = $config->submission_title_tag;
+        $_SESSION['filero_archive_feedback_after_grading'] = $config->archive_feedback_after_grading;
         return $_SESSION['filero_multiple_graders'] ?:false;
     }
 
@@ -711,6 +719,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     private function get_archived_files_info($submission) {
+        global $DB, $USER;
         $submissionid = $submission->id;
         $this->assignsubmission_filero_validate_settings($submission->assignment);
         $files = $this->get_archived_files($submissionid);
@@ -734,9 +743,9 @@ class assign_submission_filero extends assign_submission_plugin {
             $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
             // requiresubmissionstatement has been provided and logged
             if ($filero->statement_accepted) {
-                $info .= $this->show_statement_accepted($submission) . "<br>";
+                $info .= $this->show_statement_accepted($submission) . "<br><br>";
             }
-            $filearea = "none";
+                $filearea = "none";
             $cnt = 0;
             foreach ($files as $file) {
                 if (empty($file->timecreated)) {
@@ -765,6 +774,19 @@ class assign_submission_filero extends assign_submission_plugin {
                 . substr($file->contenthashsha512,0,60). "<br>"
                 . substr($file->contenthashsha512,59). "<br>";*/
                 $filearea = $file->filearea;
+            }
+            if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
+                // show info regarding $_SESSION['filero_archive_feedback_after_grading']
+                if ($grade = $DB->get_record('assign_grades',
+                        array('assignment' => $submission->assignment, 'userid' => $submission->userid))) {
+                    if (!isset($_SESSION['filero_archive_feedback_after_grading'])) {
+                        $this->archive_feedback_after_grading($submission);
+                    }
+                    if ($_SESSION['filero_archive_feedback_after_grading'] and !($grade->grade > 0)
+                            and !stristr($info, "Feedback</b>:")) {
+                        $info .= '<br><b>Das Feedback von Bewertern wird erst nach Bewertung archiviert.</b>';
+                    }
+                }
             }
             $info .= "</div>";
 
@@ -801,7 +823,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     public function view(stdClass $submission) {
-        global $USER;
+        global $DB, $USER;
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission) {

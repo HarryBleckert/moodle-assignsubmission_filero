@@ -64,9 +64,17 @@ class assignsubmission_filero_observer {
         }
         /* assignment id userid timecreated timemodified grader grade attemptnumber */
         if (!$grade = $DB->get_record('assign_grades', array('id' => $event->objectid))) {
-            assignsubmission_filero_observer::observer_log("No assign_grades with id=" . $event->objectid . "!");
+            assignsubmission_filero_observer::observer_log("No assign_grades record with id $event->objectid!");
             return;
         }
+
+        // Task: Only archive feedbacks if submission has been graded!
+        $config = get_config('assignsubmission_filero');
+        if ( !($grade->grade >0) AND $config->archive_feedback_after_grading ){
+            // assignsubmission_filero_observer::observer_log("No archiving: Record assign_grades with id $event->objectid has not been graded yet.");
+            return;
+        }
+
         assignsubmission_filero_observer::observer_log("Table assign_grades with id=" . $event->objectid . "!");
         /* id assignment userid timecreated timemodified timestarted status groupid attemptnumber latest */
         if (!$submission = $DB->get_record('assign_submission',

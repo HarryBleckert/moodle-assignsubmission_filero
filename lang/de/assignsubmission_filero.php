@@ -46,10 +46,11 @@ $string['grading_title_tag'] = 'Bitte geben Sie einen Text-Tag für die Aufgaben
 $string['grading_title_tag_help'] =
          'In Aufgaben zur Prüfungsbewertung sind keine Abgaben möglich. '
          .'Es werden Duplikate der Prüfungsabgaben aus der Aufgabe zur Prüfungsabgabe angzeigt';
-
-
 $string['grader_roles'] = 'Zulässige Rollen für Gutachter_innen/Bewerter_innen';
 $string['grader_roles_help'] = 'Bitte wählen Sie eine oder mehrere Rollen für Gutachter_innen/Bewerter_innen';
+$string['archive_feedback_after_grading'] = 'Feedbacks erst nach Bewertung archivieren';
+$string['archive_feedback_after_grading_help'] = 'Wenn aktiviert, dann werden Feedbacks des Bewerters erst nach Bewertung der Abgabe archiviert.';
+
 
 $string['countfiles'] = '{$a} Dateien';
 $string['default'] = 'Standardmäßig aktiviert';

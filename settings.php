@@ -103,6 +103,17 @@ $element = new admin_setting_configmultiselect('assignsubmission_filero/grader_r
         array("4"), $grader_roles);
 $settings->add($element);
 
+// Archive to Filero only AFTER grading has been recorded (assign_grades->grade >0)
+$name = new lang_string('archive_feedback_after_grading', 'assignsubmission_filero');
+$description = new lang_string('archive_feedback_after_grading_help', 'assignsubmission_filero');
+$element = new admin_setting_configcheckbox('assignsubmission_filero/archive_feedback_after_grading',
+        $name,
+        $description,
+        1);
+$settings->add($element);
+
+
+
 
 // "multiple graders", title tag and roles of graders
 // submissiondrafts = Abgabebestätigung. Muss immer gesetzt sein für Filero, sonst kein submit_for_grading
