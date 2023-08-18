@@ -746,7 +746,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $info .= $this->show_statement_accepted($submission) . "<br><br>";
             }
                 $filearea = "none";
-            $cnt = 0;
+            $cnt = $feedbackfiles = 0;
             foreach ($files as $file) {
                 if (empty($file->timecreated)) {
                     $file->timecreated = $filero->submissiontimecreated;
@@ -774,6 +774,9 @@ class assign_submission_filero extends assign_submission_plugin {
                 . substr($file->contenthashsha512,0,60). "<br>"
                 . substr($file->contenthashsha512,59). "<br>";*/
                 $filearea = $file->filearea;
+                if ($filearea != $file->filearea) {
+                    $feedbackfiles++;
+                }
             }
             if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
                 // show info regarding $_SESSION['filero_archive_feedback_after_grading']
@@ -782,8 +785,8 @@ class assign_submission_filero extends assign_submission_plugin {
                     if (!isset($_SESSION['filero_archive_feedback_after_grading'])) {
                         $this->archive_feedback_after_grading($submission);
                     }
-                    if ($_SESSION['filero_archive_feedback_after_grading'] and !($grade->grade > 0)
-                            and !stristr($info, "Feedback</b>:")) {
+                    if (!$feedbackfiles AND $_SESSION['filero_archive_feedback_after_grading'] and !($grade->grade > 0)
+                            AND !stristr($info, "Feedback</b>:")) {
                         $info .= '<br><b>Das Feedback von Bewertern wird erst nach Bewertung archiviert.</b>';
                     }
                 }
