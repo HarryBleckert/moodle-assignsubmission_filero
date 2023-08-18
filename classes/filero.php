@@ -793,6 +793,10 @@ class assignsubmission_filero_filero {
             $fileSpecs->ReferenceFileId = $fileRec->referencefileid;
             $fileSpecs->Filesize = $fileRec->filesize;
             $fileSpecs->Filename = $fileRec->filename;
+            // rename commented submission file combined.pdf
+            // by default Moodle builds download file names from Scheme:
+            // <filename of first submitted file>_user_enrolments->id_user_enrolments->status.
+            // Makes no sense to me, thus the custom rename.
             if ($fileRec->filename == "combined.pdf" and $fileRec->filearea == "combined") {
                 $grader = core_user::get_user($this->grade->grader);
                 $student = core_user::get_user($this->submission->userid);
