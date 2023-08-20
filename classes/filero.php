@@ -894,7 +894,7 @@ class assignsubmission_filero_filero {
             $tmp = substr($tmp,0,120000);
             $spos = strpos($tmp,$needlet);
             if ($spos>0){
-                $tmp = substr($spos);
+                $tmp = substr($tmp,$spos);
                 $saved_bytes = file_put_contents($logfile, $tmp) ?: 0;
             }
         }
