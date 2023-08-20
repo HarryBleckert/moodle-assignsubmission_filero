@@ -891,7 +891,7 @@ class assignsubmission_filero_filero {
         $needlet = $needle . "Date: ";
         if ( is_file($logfile) AND is_writable($logfile) AND (filesize($logfile)/1024)>600 ){
             $tmp = file_get_contents($logfile);
-            $tmp = substr($tmp,0,600000);
+            $tmp = substr($tmp,0,120000);
             $spos = strpos($tmp,$needlet);
             if ($spos>0){
                 $tmp = substr($spos);
