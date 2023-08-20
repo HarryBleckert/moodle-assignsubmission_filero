@@ -793,6 +793,10 @@ class assignsubmission_filero_filero {
             $fileSpecs->ReferenceFileId = $fileRec->referencefileid;
             $fileSpecs->Filesize = $fileRec->filesize;
             $fileSpecs->Filename = $fileRec->filename;
+            // rename commented submission file combined.pdf
+            // by default Moodle builds download file names from Scheme:
+            // <filename of first submitted file>_user_enrolments->id_user_enrolments->status.
+            // Makes no sense to me, thus the custom rename.
             if ($fileRec->filename == "combined.pdf" and $fileRec->filearea == "combined") {
                 $grader = core_user::get_user($this->grade->grader);
                 $student = core_user::get_user($this->submission->userid);
@@ -911,6 +915,13 @@ class assignsubmission_filero_filero {
 
     private function filero_log($submissionid) {
         $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
+        $pluginfo = assign_submission_filero::get_plugin_version();
+        $info = "Filero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
+                .$pluginfo->release;
+        $padding = round(81-(strlen($info)/2),0);
+        if (!strstr($this->output, $info)) {
+            $this->output .= str_repeat("_", $padding) . $info . str_repeat("_", $padding) . "\n";
+        }
         $saved_bytes = file_put_contents($logfile, $this->output, FILE_APPEND) ?: 0;
         assignsubmission_filero_observer::observer_log("Saved " . number_format(($saved_bytes / 1024), 0)
                 . "KB data to Filero submission log $logfile\n");
