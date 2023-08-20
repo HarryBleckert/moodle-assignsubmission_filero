@@ -916,7 +916,7 @@ class assignsubmission_filero_filero {
     private function filero_log($submissionid) {
         $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
         $pluginfo = assign_submission_filero::get_plugin_version();
-        $info = "\nFilero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
+        $info = "Filero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
                 .$pluginfo->release;
         $padding = 81-(strlen($info)/2);
         $this->output .= str_repeat("_", $padding).$info.str_repeat("_", $padding) ."\n";
