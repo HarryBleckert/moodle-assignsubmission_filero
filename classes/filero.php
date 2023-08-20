@@ -919,7 +919,7 @@ class assignsubmission_filero_filero {
         $info = "Filero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
                 .$pluginfo->release;
         $padding = round(81-(strlen($info)/2),0);
-        $this->output .= str_repeat("_", $padding).$info.str_repeat("_", $padding) ."\n";
+        $this->output .= str_repeat("_", $padding).$info.str_repeat("_", $padding) . "\n";
         $saved_bytes = file_put_contents($logfile, $this->output, FILE_APPEND) ?: 0;
         assignsubmission_filero_observer::observer_log("Saved " . number_format(($saved_bytes / 1024), 0)
                 . "KB data to Filero submission log $logfile\n");
