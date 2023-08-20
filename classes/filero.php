@@ -918,7 +918,7 @@ class assignsubmission_filero_filero {
         $pluginfo = assign_submission_filero::get_plugin_version();
         $info = "Filero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
                 .$pluginfo->release;
-        $padding = 81-(strlen($info)/2);
+        $padding = round(81-(strlen($info)/2),0);
         $this->output .= str_repeat("_", $padding).$info.str_repeat("_", $padding) ."\n";
         $saved_bytes = file_put_contents($logfile, $this->output, FILE_APPEND) ?: 0;
         assignsubmission_filero_observer::observer_log("Saved " . number_format(($saved_bytes / 1024), 0)
