@@ -915,6 +915,11 @@ class assignsubmission_filero_filero {
 
     private function filero_log($submissionid) {
         $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
+        $pluginfo = assign_submission_filero::get_plugin_version();
+        $info = "\nFilero Plugin für Moodle. Plugin Version: ".$pluginfo->version." - Release: "
+                .$pluginfo->release;
+        $padding = 81-(strlen($info)/2);
+        $this->output .= str_repeat("_", $padding).$info.str_repeat("_", $padding) ."\n";
         $saved_bytes = file_put_contents($logfile, $this->output, FILE_APPEND) ?: 0;
         assignsubmission_filero_observer::observer_log("Saved " . number_format(($saved_bytes / 1024), 0)
                 . "KB data to Filero submission log $logfile\n");

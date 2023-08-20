@@ -833,7 +833,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $fileroRes = $this->get_archived_files_info($submission);
             if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
                 $cm = context_module::instance($this->assignment->get_course_module()->id);
-                $pluginfo = $this->get_plugin_version();
+                $pluginfo = assign_submission_filero::get_plugin_version();
                 $info = "\n\n".$this->get_name()." Plugin Version: ".$pluginfo->version." - Release: "
                         .$pluginfo->release;
                 $fileroRes .= '<form method="GET" target="showLog" style="font-size:81%;display:inline;">
@@ -1080,7 +1080,7 @@ class assign_submission_filero extends assign_submission_plugin {
         return ($cm);
     }
 
-    function get_plugin_version($component = "assignsubmission_filero") {
+    static public function get_plugin_version($component = "assignsubmission_filero") {
         list($plugintype, $pluginname) = core_component::normalize_component($component);
         $pluginpath = core_component::get_plugin_directory($plugintype, $pluginname);
         $plugin = new \stdClass();
