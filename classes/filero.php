@@ -887,11 +887,21 @@ class assignsubmission_filero_filero {
     public function showLog($submissionid, $filerotimemodified = false) {
         $title = "FILERO Log of submissions and grades for submission #" . $submissionid;
         $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
-        if (is_file($logfile)) {
+        $needle = "\nSubmission ID: " . trim($submissionid) . "\n";
+        $needlet = $needle . "Date: ";
+        if ( is_file($logfile) AND is_writable($logfile) AND (filesize($logfile)/1024)>600 ){
+            $tmp = file_get_contents($logfile);
+            $tmp = substr($tmp,0,600000);
+            $spos = strpos($tmp,$needlet);
+            if ($spos>0){
+                $tmp = substr($spos);
+                $saved_bytes = file_put_contents($logfile, $tmp) ?: 0;
+            }
+        }
+        if (is_readable($logfile)) {
             $this->output = file_get_contents($logfile);
             /*
-            $needle = "\nSubmission ID: " . trim($submissionid) . "\n";
-            $needlet = $needle . "Date: ";
+
             if ( !empty($filerotimemodified)){
                 $needlet .= $needlet .  date("D, d.m.Y ", $filerotimemodified);
             }
@@ -903,9 +913,9 @@ class assignsubmission_filero_filero {
             $pos = strpos(substr($this->output, strlen($needle)), "seconds" . $needle) - strlen("seconds" . $needle);
             $this->output = substr($this->output, 0, $pos . strlen($needle));
             */
-            $this->filero_log($submissionid);
+            // $this->filero_log($submissionid);
         } else {
-            $this->output = "$logfile für Abgabe id $submissionid kann nicht gelesen werden!";
+            $this->output = "Datei $logfile für Abgabe id $submissionid kann nicht gelesen werden!";
             // return false;
         }
         print nl2br("<head><title>$title</title></head><html><body><h2 title='Log file: $logfile'><b>$title</b></h2>"
