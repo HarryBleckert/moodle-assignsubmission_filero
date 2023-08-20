@@ -922,6 +922,9 @@ class assignsubmission_filero_filero {
         if (!strstr($this->output, $info)) {
             $this->output .= str_repeat("_", $padding) . $info . str_repeat("_", $padding) . "\n";
         }
+        else{
+            $this->output .= str_repeat("_", 81) . "\n";
+        }
         $saved_bytes = file_put_contents($logfile, $this->output, FILE_APPEND) ?: 0;
         assignsubmission_filero_observer::observer_log("Saved " . number_format(($saved_bytes / 1024), 0)
                 . "KB data to Filero submission log $logfile\n");
