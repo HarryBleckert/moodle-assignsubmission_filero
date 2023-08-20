@@ -42,7 +42,7 @@ if (!defined('assignfeedback_file_FILEAREA')) {
 // open Filero log file
 if (isset($_REQUEST['assignsubmission_filero_showLog'])) {
     $filero = new assignsubmission_filero_filero();
-    if ( false AND isset($_REQUEST['submissiontimemodified'])) {
+    if ( isset($_REQUEST['submissiontimemodified'])) {
         $filero->showLog($_REQUEST['assignsubmission_filero_showLog'], $_REQUEST['submissiontimemodified']);
     } else {
         $filero->showLog($_REQUEST['assignsubmission_filero_showLog']);
@@ -836,7 +836,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $pluginfo = assign_submission_filero::get_plugin_version();
                 $info = "\n\n".$this->get_name()." Plugin Version: ".$pluginfo->version." - Release: "
                         .$pluginfo->release;
-                $fileroRes .= '<form method="GET" target="showLog" style="font-size:81%;display:inline;">
+                $fileroRes .= '<form method="POST" target="showLog" style="font-size:81%;display:inline;">
                             <input type="hidden" name="id" value="' . $cm->instanceid . '">
                             <input type="hidden" name="submissiontimemodified" value="'
                         . $filesubmission->submissiontimemodified . '">
