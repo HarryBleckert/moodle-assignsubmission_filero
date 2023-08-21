@@ -293,7 +293,7 @@ class assignsubmission_filero_filero {
         $AssignSubmissionFile = new stdClass();
         $AssignFiles = new stdClass();
         if (!empty($submittedFiles)) {
-            $AssignSubmissionFile->AssignSubFileId = $AssignSubmissionFile->AssignId = $assign->id;
+            $AssignSubmissionFile->XAssignSubFileId = $AssignSubmissionFile->AssignId = $assign->id;
             $AssignSubmissionFile->Numfiles =
                     (is_countable($submittedFiles) ? count($submittedFiles) : $this->submission->numfiles);
             $AssignSubmissionFile->Files = $Files;
