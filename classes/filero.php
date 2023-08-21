@@ -373,7 +373,9 @@ class assignsubmission_filero_filero {
                         "\n\n";
                 $SubmissionResult = $response_param->PutMoodleAssignmentSubmissionResult;
                 $filerocode = $SubmissionResult->code;
-                $fileromsg = $SubmissionResult->msg;
+                if (isset($SubmissionResult->msg)) {
+                    $fileromsg = $SubmissionResult->msg;
+                }
                 $fileroid = $SubmissionResult->id;
                 $filerovalidated = 0;
                 if (isset($SubmissionResult->TimeCreated) and $SubmissionResult->TimeCreated > 0
@@ -637,7 +639,9 @@ class assignsubmission_filero_filero {
                         "\n\n";
                 $GradeResult = $response_param->PutMoodleAssignmentGradeResult;
                 $filerocode = $GradeResult->code;
-                $fileromsg = $GradeResult->msg;
+                if (isset($GradeResult->msg)) {
+                    $fileromsg = $GradeResult->msg;
+                }
                 $fileroid = $GradeResult->id;
                 $filerovalidated = 0;
                 if (isset($GradeResult->TimeCreated) and $GradeResult->TimeCreated > 0
