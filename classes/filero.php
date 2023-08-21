@@ -527,7 +527,8 @@ class assignsubmission_filero_filero {
     public function PutMoodleAssignmentGrade() {
         global $DB;
         $starttime = time();
-        $filerotimecreated = $filerotimemodified = 0;
+        $filerotimecreated = $filerotimemodified = $filerocode = $filerovalidated = 0;
+        $fileromsg = "";
         $validated_files = array();
         $assign = $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $this->grade;
@@ -636,6 +637,7 @@ class assignsubmission_filero_filero {
                         "\n\n";
                 $GradeResult = $response_param->PutMoodleAssignmentGradeResult;
                 $filerocode = $GradeResult->code;
+                $fileromsg = $GradeResult->msg;
                 $fileroid = $GradeResult->id;
                 $filerovalidated = 0;
                 if (isset($GradeResult->TimeCreated) and $GradeResult->TimeCreated > 0
@@ -704,16 +706,18 @@ class assignsubmission_filero_filero {
             }
 
         } catch (Exception $e) {
-            $this->output .= "\n<h2><b>Exception Error</b></h2>";
-            $this->output .= $e->getMessage() . "\n\n";
-            // unset($AssignFeedbackFile->Files, $Files, $File);
-            $this->output .= $this->SoapDebug($this->client);
+            $fileromsg = "Exception Error: ";
+            $fileromsg .= $e->getMessage();
+            $filerovalidated = $filerocode = 0;
+            $this->output .= $fileromsg . "\n\n";
+            // $this->output .= $this->SoapDebug($this->client);
         }
 
         unset($AssignFeedbackFile->Files, $Files);
         $filerograding = new stdClass();
         if (isset($filerocode)) {
             $filerograding->filerocode = $filerocode;
+            $filerograding->fileromsg = $fileromsg;
             $filerograding->fileroid = $fileroid;
             $filerograding->filerotimecreated = $filerotimecreated;
             $filerograding->filerotimemodified = $filerotimemodified;
