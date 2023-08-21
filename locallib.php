@@ -744,8 +744,8 @@ class assign_submission_filero extends assign_submission_plugin {
             // requiresubmissionstatement has been provided and logged
             // show last error msg if any
             if (!empty($filero->lasterrormsg) AND !$filero->filerovalidated AND (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
-                $info .= "Fehler #".$filero->filerocode." wurde bei der letzten Archivierung gemeldet: " .$filero->lasterrormsg
-                        ."<br><br>";
+                $info .= "Fehler #".$filero->filerocode." wurde mit der letzten Archivierung gemeldet: <b>" .$filero->lasterrormsg
+                        ."</b><br><br>";
             }
 
             if ($filero->statement_accepted) {
