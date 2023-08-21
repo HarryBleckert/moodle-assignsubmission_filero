@@ -135,7 +135,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->userid = $submission->userid;
             $filerorecord->numfiles = $count;
             $filerorecord->filerocode = $fileroRes->filerocode;
-            $filerorecord->fileromsg = $fileroRes->fileromsg;
+            $filerorecord->lasterrormsg = $fileroRes->fileromsg;
             $filerorecord->fileroid = $fileroRes->fileroid;
             $filerorecord->statement_accepted = $statement_accepted;
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
@@ -561,7 +561,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $currentsubmission->numfiles = $currentsubmission->filerocode
                     = $currentsubmission->submissiontimecreated
                     = $currentsubmission->submissiontimemodified = 0;
-            $currentsubmission->statement_accepted = "";
+            $currentsubmission->statement_accepted = $currentsubmission->lasterrormsg = "";
             $DB->update_record('assignsubmission_filero', $currentsubmission);
             if ( !isset($_SESSION['filero_revert_to_draft_' . $submission->id])) {
                 $this->revert_grader_submissions($submission);
@@ -744,7 +744,7 @@ class assign_submission_filero extends assign_submission_plugin {
             // requiresubmissionstatement has been provided and logged
             // show last error msg if any
             if (!empty($filero->lasterrormsg) AND !$filero->filerovalidated AND (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
-                $info .= "Fehler #".$filero->code." der letzten Archivierung: " .$filero->lasterrormsg
+                $info .= "Fehler #".$filero->filerocode." wurde bei der letzten Archivierung gemeldet: " .$filero->lasterrormsg
                         ."<br><br>";
             }
 
