@@ -256,7 +256,8 @@ class assignsubmission_filero_filero {
     public function PutMoodleAssignmentSubmission() {
         global $DB;
         $starttime = time();
-        $filerotimecreated = $filerotimemodified = 0;
+        $filerotimecreated = $filerotimemodified = $filerocode = $fileroid = 0;
+        $fileromsg = "";
         $validated_files = array();
         // $this->showSpinner();  // showing only after page load!
         $this->output = "\n\nSubmission ID: " . trim($this->submission->id) . "\n";
@@ -372,6 +373,7 @@ class assignsubmission_filero_filero {
                         "\n\n";
                 $SubmissionResult = $response_param->PutMoodleAssignmentSubmissionResult;
                 $filerocode = $SubmissionResult->code;
+                $fileromsg = $SubmissionResult->msg;
                 $fileroid = $SubmissionResult->id;
                 $filerovalidated = 0;
                 if (isset($SubmissionResult->TimeCreated) and $SubmissionResult->TimeCreated > 0
@@ -379,8 +381,9 @@ class assignsubmission_filero_filero {
                 ) {
                     $filerotimemodified = $SubmissionResult->TimeModified;
                     $filerotimecreated = $SubmissionResult->TimeCreated;
+                    $filerovalidated = 1;
                 } else {
-                    $filerotimecreated = $filerotimemodified = 0;
+                    $filerotimecreated = $filerotimemodified = $filerovalidated = 0;
                 }
                 if (isset($SubmissionResult->Files->FileInfo)) {
                     $cnt = 0;
@@ -437,16 +440,19 @@ class assignsubmission_filero_filero {
             }
 
         } catch (Exception $e) {
-            $this->output .= "\n<h2><b>Exception Error</b></h2>";
-            $this->output .= $e->getMessage() . "\n\n";
+            $fileromsg = "Exception Error: ";
+            $fileromsg .= $e->getMessage();
+            $filerovalidated = $filerocode = 0;
+            $this->output .= $fileromsg . "\n\n";
             // unset($AssignSubmissionFile->Files, $Files, $File);
-            $this->output .= $this->SoapDebug($this->client);
+            // $this->output .= $this->SoapDebug($this->client);
         }
 
         unset($Files);
         $filerosubmission = new stdClass();
         if (isset($filerocode)) {
             $filerosubmission->filerocode = $filerocode;
+            $filerosubmission->fileromsg = $fileromsg;
             $filerosubmission->fileroid = $fileroid;
             $filerosubmission->filerotimecreated = $filerotimecreated;
             $filerosubmission->filerotimemodified = $filerotimemodified;
@@ -473,7 +479,9 @@ class assignsubmission_filero_filero {
         $starttime = time();
         $this->output = "\n\nSubmission ID: " . trim($this->submission->id) . "\n";
         $this->output .= "Date: " . date("D, d.m.Y H:i:s e")
-                . " (UTC offset: " . $this->utcOffset . "s)\n";
+                . " (UTC offset: " . $this->utcOffset . "s)\n"
+                . "Deleting FILERO archive of submission from: User id " . $this->submission->userid
+                . " stored in assign_submission with id:" . $this->submission->id . "\n";
 
         if (!$this->LoginToFilero()) {
 
@@ -485,17 +493,24 @@ class assignsubmission_filero_filero {
         $AssignSubmissionWTicket->status = $this->status;
 
         $response_param = $this->client->DeleteMoodleAssignmentSubmission($AssignSubmissionWTicket);
-        $this->output .= "\nDeleteMoodleAssignmentSubmission Response: " .
+        /*$this->output .= "\nDeleteMoodleAssignmentSubmission Response: " .
                 $this->hideFileContent(var_export($response_param, true)) .
                 "\n\n";
+        */
         $SubmissionResult = $response_param->DeleteMoodleAssignmentSubmissionResult;
-        if (isset($SubmissionResult->TimeModified) and $SubmissionResult->TimeModified > 0) {
-            $filerotimemodified = $SubmissionResult->TimeModified;
-        } else {
-            $filerotimemodified = 0;
+        $deletionresult = "Fehler beim Löschen des FILERO Archivs der lezten Abgabe mit submisssion ID $this->submission->id";
+        if ( isset($SubmissionResult->msg)){
+                if ( stristr($SubmissionResult->msg, " null") ) {
+                    $deletionresult = "Das FILERO Archiv der letzten Abgabe mit submisssion ID "
+                            . $this->submission->id . " wurde erfolgreich gelöscht.";
+                }
+                else{
+                    $deletionresult .= "\nFILERO Fehlermeldung: ".$SubmissionResult->msg;
+                }
         }
-        $this->output .= "\nFilero submission data and files deleted on "
-                . date("D, d.m.Y H:i:s e", $filerotimemodified)
+
+        $this->output .= "\n$deletionresult. Datum: "
+                . date("D, d.m.Y H:i:s e")
                 . ":\n"
                 . "\nTotal processing time: " . (time() - $starttime) . " seconds\n"
                 . "Submission ID: " . trim($this->submission->id) . "\n";

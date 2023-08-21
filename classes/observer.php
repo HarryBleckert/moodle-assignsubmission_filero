@@ -121,28 +121,27 @@ class assignsubmission_filero_observer {
         assignsubmission_filero_observer::observer_log(
                 "statement_accepted: Start saving of statement_accepted for 'userid'=$submission->userid and 'assignment'=$submission->assignment");
 
-        $assignsubmission_filero = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
-        if (!$assignsubmission_filero) {
+        $filerorecord = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
+        if (!$filerorecord) {
             $grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
-            $assignsubmission_filero = new stdclass;
-            $assignsubmission_filero->assignment = $submission->assignment;
-            $assignsubmission_filero->submission = $submission->id;
-            $assignsubmission_filero->grade = $grade->id;
-            $assignsubmission_filero->userid = $submission->userid;
-            $assignsubmission_filero->filerocode = $assignsubmission_filero->fileroid
-                    = $assignsubmission_filero->numfiles = 0;
-            $assignsubmission_filero->feedbacktimecreated = $assignsubmission_filero->feedbacktimemodified = time();
-            $assignsubmission_filero->id = $DB->insert_record("assignsubmission_filero", $assignsubmission_filero);
+            $filerorecord = new stdclass;
+            $filerorecord->assignment = $submission->assignment;
+            $filerorecord->submission = $submission->id;
+            $filerorecord->grade = $grade->id;
+            $filerorecord->userid = $submission->userid;
+            $filerorecord->filerocode = $filerorecord->fileroid = $filerorecord->numfiles = 0;
+            $filerorecord->feedbacktimecreated = $filerorecord->feedbacktimemodified = time();
+            $filerorecord->id = $DB->insert_record("assignsubmission_filero", $filerorecord);
         }
 
-        if ($assignsubmission_filero) {
+        if ($filerorecord) {
             // assignsubmission_filero_observer::statement_accepted($assignsubmission_filero);
             //assignsubmission_filero_observer::observer_log("Event: " .print_r($event,true));
             $statement_accepted = assignsubmission_filero_observer::get_statement_accepted($submission);
-            $assignsubmission_filero->statement_accepted = $statement_accepted;
+            $filerorecord->statement_accepted = $statement_accepted;
             assignsubmission_filero_observer::observer_log($statement_accepted);
-            $DB->update_record('assignsubmission_filero', $assignsubmission_filero);
+            $DB->update_record('assignsubmission_filero', $filerorecord);
 
             // handle multiple graders
             // $assignmentname = $assignment->name;
@@ -241,7 +240,7 @@ class assignsubmission_filero_observer {
         }
 
         //$_SESSION["debugfilero"] = true;
-        $assignsubmission_filero = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
+        $filerorecord = $DB->get_record('assignsubmission_filero', array('submission' => $submission->id));
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id,
                 'assignfeedback_file',
@@ -287,30 +286,31 @@ class assignsubmission_filero_observer {
         }
 
         if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
-            if (!$assignsubmission_filero) {
-                $assignsubmission_filero = new stdclass;
-                $assignsubmission_filero->assignment = $submission->assignment;
-                $assignsubmission_filero->submission = $submission->id;
-                $assignsubmission_filero->grade = $grade->id ?:0;
-                $assignsubmission_filero->userid = $submission->userid;
-                $assignsubmission_filero->feedbacktimecreated = time();
-                $assignsubmission_filero->feedbacktimemodified = time();
-                $assignsubmission_filero->filerocode = $assignsubmission_filero->fileroid
-                        = $assignsubmission_filero->numfiles = 0;
-                $assignsubmission_filero->id = $DB->insert_record("assignsubmission_filero", $assignsubmission_filero);
+            if (!$filerorecord) {
+                $filerorecord = new stdclass;
+                $filerorecord->assignment = $submission->assignment;
+                $filerorecord->submission = $submission->id;
+                $filerorecord->grade = $grade->id ?:0;
+                $filerorecord->userid = $submission->userid;
+                $filerorecord->feedbacktimecreated = time();
+                $filerorecord->feedbacktimemodified = time();
+                $filerorecord->filerocode = $filerorecord->fileroid
+                        = $filerorecord->numfiles = 0;
+                $filerorecord->id = $DB->insert_record("assignsubmission_filero", $filerorecord);
             }
             $numfiles = $DB->get_records('assignsubmission_filero_file', array('submission' => $submission->id));
             if (is_countable($numfiles)) {
                 $count = count($numfiles);
             }
-            $assignsubmission_filero->numfiles = $count;
-            $assignsubmission_filero->filerocode = $fileroRes->filerocode;
-            $assignsubmission_filero->fileroid = $fileroRes->fileroid;
-            $assignsubmission_filero->userid = $submission->userid;
-            $assignsubmission_filero->feedbacktimecreated = $fileroRes->filerotimecreated;
-            $assignsubmission_filero->feedbacktimemodified = $fileroRes->filerotimemodified;
-            $assignsubmission_filero->filerovalidated = $fileroRes->filerovalidated;
-            $DB->update_record('assignsubmission_filero', $assignsubmission_filero);
+            $filerorecord->numfiles = $count;
+            $filerorecord->filerocode = $fileroRes->filerocode;
+            $filerorecord->lasterrormsg = $fileroRes->fileromsg;
+            $filerorecord->fileroid = $fileroRes->fileroid;
+            $filerorecord->userid = $submission->userid;
+            $filerorecord->feedbacktimecreated = $fileroRes->filerotimecreated;
+            $filerorecord->feedbacktimemodified = $fileroRes->filerotimemodified;
+            $filerorecord->filerovalidated = $fileroRes->filerovalidated;
+            $DB->update_record('assignsubmission_filero', $filerorecord);
             if (isset($fileroRes->validated_files) and is_countable($fileroRes->validated_files)) {
                 $submittedfiles = new stdClass();
                 $submittedfiles->fileroid = $fileroRes->fileroid;

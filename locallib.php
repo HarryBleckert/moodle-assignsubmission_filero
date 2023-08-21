@@ -97,8 +97,7 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             $filerorecord->userid = $submission->userid;
             $filerorecord->statement_accepted = $statement_accepted;
-            $filerorecord->filerocode = $filerorecord->fileroid
-                    = $filerorecord->numfiles = 0;
+            $filerorecord->filerocode = $filerorecord->fileroid = $filerorecord->numfiles = 0;
             $filerorecord->id = $DB->insert_record("assignsubmission_filero", $filerorecord);
         }
         $filerorecord->statement_accepted = $statement_accepted;
@@ -136,6 +135,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $filerorecord->userid = $submission->userid;
             $filerorecord->numfiles = $count;
             $filerorecord->filerocode = $fileroRes->filerocode;
+            $filerorecord->fileromsg = $fileroRes->fileromsg;
             $filerorecord->fileroid = $fileroRes->fileroid;
             $filerorecord->statement_accepted = $statement_accepted;
             $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
@@ -742,10 +742,15 @@ class assign_submission_filero extends assign_submission_plugin {
 
             $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
             // requiresubmissionstatement has been provided and logged
+            // show last error msg if any
+            if (!empty($filero->lasterrormsg) AND !$filero->filerovalidated AND (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
+                $info .= "Fehlermeldung der letzten Archivierung: " .$filero->lasterrormsg . "<br><br>";
+            }
+
             if ($filero->statement_accepted) {
                 $info .= $this->show_statement_accepted($submission) . "<br><br>";
             }
-                $filearea = "none";
+            $filearea = "none";
             $cnt = $feedbackfiles = 0;
             foreach ($files as $file) {
                 if (empty($file->timecreated)) {
