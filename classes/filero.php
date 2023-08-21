@@ -498,14 +498,15 @@ class assignsubmission_filero_filero {
                 "\n\n";
         */
         $SubmissionResult = $response_param->DeleteMoodleAssignmentSubmissionResult;
-        $deletionresult = "Fehler beim Löschen des FILERO Archivs der lezten Abgabe mit submisssion ID $this->submission->id";
+        $deletionresult = "Fehler beim Löschen des FILERO Archivs der lezten Abgabe mit submisssion ID ".$this->submission->id;
         if ( isset($SubmissionResult->msg)){
                 if ( stristr($SubmissionResult->msg, " null") ) {
                     $deletionresult = "Das FILERO Archiv der letzten Abgabe mit submisssion ID "
                             . $this->submission->id . " wurde erfolgreich gelöscht.";
                 }
                 else{
-                    $deletionresult .= "\nFILERO Fehlermeldung: ".$SubmissionResult->msg;
+                    $deletionresult .= "\nFILERO Fehlermeldung bei Archivierung der der lezten Abgabe mit Submisssion ID "
+                            .$this->submission->id . ": ". $SubmissionResult->msg;
                 }
         }
 
