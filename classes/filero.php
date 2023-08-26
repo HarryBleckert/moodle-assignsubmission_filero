@@ -817,27 +817,28 @@ class assignsubmission_filero_filero {
             $fileSpecs->ReferenceFileId = $fileRec->referencefileid;
             $fileSpecs->Filesize = $fileRec->filesize;
             $fileSpecs->Filename = $fileRec->filename;
-            // rename commented submission file combined.pdf
-            // by default Moodle builds download file names from Scheme:
+            // no rename for annotated pdf file combined.pdf. By default Moodle builds download file names from Scheme:
             // <filename of first submitted file>_user_enrolments->id_user_enrolments->status.
             // Makes no sense to me, thus the custom rename.
-            if ($fileRec->filename == "combined.pdf" and $fileRec->filearea == "combined") {
-                $fileSpecs->Filename = "combined_submission_files.pdf";
-                /*
-                $grader = core_user::get_user($this->grade->grader);
-                $student = core_user::get_user($this->submission->userid);
-                if ($grader and $student) {
-                    $gfullname = $grader->firstname . " " . $grader->lastname;
-                    $sfullname = $student->firstname . " " . $student->lastname;
-                    $fileSpecs->Filename = str_replace(" " , "_", "Kommentierte PDF Abgabedatei"
-                            . (count($fileRecs)>1 ?"en" :"")
-                            .". Bewerter in ist "
-                            . $gfullname . ". Student_in ist_"
-                            . $sfullname . ".pdf");
-                }
-                */
+            /*
+            $grader = core_user::get_user($this->grade->grader);
+            $student = core_user::get_user($this->submission->userid);
+            if ($grader and $student) {
+                $gfullname = $grader->firstname . " " . $grader->lastname;
+                $sfullname = $student->firstname . " " . $student->lastname;
+                $fileSpecs->Filename = str_replace(" " , "_", "Kommentierte PDF Abgabedatei"
+                        . (count($fileRecs)>1 ?"en" :"")
+                        .". Bewerter in ist "
+                        . $gfullname . ". Student_in ist_"
+                        . $sfullname . ".pdf");
             }
+            */
+            // rename combined pdf + ppt submission file combined.pdf
+            /*if ($fileRec->filename == "combined.pdf" and $fileRec->filearea == "combined") {
+                $fileSpecs->Filename = "combined_submission_files.pdf";
 
+            }
+            */
             $fileSpecs->Filepath = $fileRec->filepath;
             $fileSpecs->Source = base64_encode($Source);
             unset($Source);
