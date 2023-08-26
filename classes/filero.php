@@ -22,7 +22,7 @@
  * @package assignsubmission_filero
  * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
  * @copyright 2023 DHBW {@link https://DHBW.de/}
- * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
+ * @license   https://gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
 
@@ -561,7 +561,7 @@ class assignsubmission_filero_filero {
         $query = "SELECT * FROM {files} WHERE contextid = " . $context->id
                 . " AND itemid = " . $grade->id
                 . " AND CHAR_LENGTH(filename)>2 AND filesize>0"
-                . " AND filearea IN('" . $this->filearea . "','combined')"
+                . " AND filearea IN('" . $this->filearea . "','combined','download')"
                 . " AND component like 'assignfeedback_%' ORDER by id ASC";
         $AssignFiles = new stdClass();
         list($Files, $submittedFiles, $totalfilesize) = $this->create_files_obj($query, $this->filearea);
@@ -822,6 +822,8 @@ class assignsubmission_filero_filero {
             // <filename of first submitted file>_user_enrolments->id_user_enrolments->status.
             // Makes no sense to me, thus the custom rename.
             if ($fileRec->filename == "combined.pdf" and $fileRec->filearea == "combined") {
+                $fileSpecs->Filename = "combined_submission_files.pdf";
+                /*
                 $grader = core_user::get_user($this->grade->grader);
                 $student = core_user::get_user($this->submission->userid);
                 if ($grader and $student) {
@@ -833,6 +835,7 @@ class assignsubmission_filero_filero {
                             . $gfullname . ". Student_in ist_"
                             . $sfullname . ".pdf");
                 }
+                */
             }
 
             $fileSpecs->Filepath = $fileRec->filepath;
@@ -842,12 +845,8 @@ class assignsubmission_filero_filero {
             $fileSpecs->TimeModified = $fileRec->timemodified;
             $Files->File[] = $fileSpecs;
             $totalfilesize += $fileRec->filesize;
-
             // $this->output .= "\n\n" ."Sample fileSpecs Data: " .rmFileContent(var_export($fileSpecs,true))."\n";
         }
-        /*if (!isset($Files->File)){
-            $Files = array();
-        }*/
         return array($Files, $submittedFiles, $totalfilesize);
     }
 
