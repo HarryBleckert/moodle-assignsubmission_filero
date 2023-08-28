@@ -780,7 +780,7 @@ class assign_submission_filero extends assign_submission_plugin {
                         $gfullname = " von " . $grader->firstname . " " . $grader->lastname;
                     }
                 }
-                $info .= "<br><b>" . (($is_submission ? "Dateiabgabe" : "Feedback") . "</b>" . $gfullname . ": "
+                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>" . $gfullname . ": "
                         . $file->filename
                         . " - Hochgeladen am: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
                         . " - Größe: " . number_format($file->filesize, 0)
