@@ -561,7 +561,7 @@ class assignsubmission_filero_filero {
         $query = "SELECT * FROM {files} WHERE contextid = " . $context->id
                 . " AND itemid = " . $grade->id
                 . " AND CHAR_LENGTH(filename)>2 AND filesize>0"
-                . " AND filearea IN('" . $this->filearea . "','combined'','download')"
+                . " AND filearea IN('" . $this->filearea . "','combined','download')"
                 . " AND component like 'assignfeedback_%' ORDER by id ASC";
         $AssignFiles = new stdClass();
         list($Files, $submittedFiles, $totalfilesize) = $this->create_files_obj($query, $this->filearea);
