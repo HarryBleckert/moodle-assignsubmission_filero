@@ -724,6 +724,9 @@ class assign_submission_filero extends assign_submission_plugin {
         $this->assignsubmission_filero_validate_settings($submission->assignment);
         $files = $this->get_archived_files($submissionid);
         $filero = $this->get_filero_submission($submissionid);
+        $grade = $DB->get_record('assign_grades',
+                array('assignment' => $submission->assignment, "userid" => $submission->userid));
+
         if ($filero AND is_countable($files) AND count($files)) {
             $numfiles = count($files);
             $LogfilePath = assignsubmission_filero_filero::LogfilePath($submission->id);
@@ -770,8 +773,9 @@ class assign_submission_filero extends assign_submission_plugin {
                 }
                 $cnt++;
                 $gfullname = "";
-                if ($file->grade and (!$is_submission = $file->filearea == assignsubmission_file_FILEAREA)) {
-                    $grader = core_user::get_user($file->grade);
+                $is_submission = $file->filearea == assignsubmission_file_FILEAREA;
+                if (!$is_submission and $grade and !empty($grade->grader)) {
+                    $grader = core_user::get_user($grade->grader);
                     if ($grader) {
                         $gfullname = " " . get_string("by") . " " . $grader->firstname . " " . $grader->lastname . ")";
                     }
