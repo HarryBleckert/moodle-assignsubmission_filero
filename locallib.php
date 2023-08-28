@@ -770,7 +770,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 }
                 $cnt++;
                 $gfullname = "";
-                if ($file->grade and !$is_submission = $file->filearea == assignsubmission_file_FILEAREA) {
+                if ($file->grade and (!$is_submission = $file->filearea == assignsubmission_file_FILEAREA)) {
                     $grader = core_user::get_user($file->grade);
                     if ($grader) {
                         $gfullname = " " . get_string("by") . " " . $grader->firstname . " " . $grader->lastname . ")";
