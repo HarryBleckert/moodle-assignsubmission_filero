@@ -769,8 +769,14 @@ class assign_submission_filero extends assign_submission_plugin {
                             . date('d.m.Y \u\m H:i:s', $fileromodified) . "</b>";
                 }
                 $cnt++;
-                $is_submission = $file->filearea == assignsubmission_file_FILEAREA;
-                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>: "
+                $gfullname = "";
+                if ($file->grade and !$is_submission = $file->filearea == assignsubmission_file_FILEAREA) {
+                    $grader = core_user::get_user($file->grade);
+                    if ($grader) {
+                        $gfullname = " " . get_string("by") . " " . $grader->firstname . " " . $grader->lastname . ")";
+                    }
+                }
+                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>" . $gfullname . ": "
                         . $file->filename
                         . " - Hochgeladen am: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
                         . " - Größe: " . number_format($file->filesize, 0)
