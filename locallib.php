@@ -777,7 +777,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 if (!$is_submission and $grade and !empty($grade->grader)) {
                     $grader = core_user::get_user($grade->grader);
                     if ($grader) {
-                        $gfullname = " " . get_string("by") . " " . $grader->firstname . " " . $grader->lastname . ")";
+                        $gfullname = " von " . $grader->firstname . " " . $grader->lastname . ")";
                     }
                 }
                 $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>" . $gfullname . ": "
