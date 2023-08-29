@@ -772,18 +772,25 @@ class assign_submission_filero extends assign_submission_plugin {
                             . date('d.m.Y \u\m H:i:s', $fileromodified) . "</b>";
                 }
                 $cnt++;
+                $is_combined = ($file->filearea == 'combined');
+                $is_submission = ($file->filearea == assignsubmission_file_FILEAREA or $is_combined);
+                $uploaded_or_created = get_string("uploaded", 'assignsubmission_filero');
                 $gfullname = "";
-                $is_submission = ($file->filearea == assignsubmission_file_FILEAREA or $file->filearea == 'combined');
+                $area_tag = get_string("filesubmission", 'assignsubmission_filero');
                 if (!$is_submission and $grade and !empty($grade->grader)) {
+                    $area_tag = get_string("feedback", 'assignsubmission_filero');
                     $grader = core_user::get_user($grade->grader);
                     if ($grader) {
                         $gfullname = " von " . $grader->firstname . " " . $grader->lastname;
                     }
+                } else if ($is_combined) {
+                    $uploaded_or_created = get_string("autocreated", 'assignsubmission_filero');
                 }
-                $info .= "<br><b>" . ($is_submission ? "Dateiabgabe" : "Feedback") . "</b>" . $gfullname . ": "
+                $size_tag = get_string("size");
+                $info .= "<br><b>" . $area_tag . "</b>" . $gfullname . ": "
                         . $file->filename
-                        . " - Hochgeladen am: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
-                        . " - Größe: " . number_format($file->filesize, 0)
+                        . " - $uploaded_or_created: " . date('d.m.Y \u\m H:i:s', $file->timecreated)
+                        . " - " . $size_tag . ": " . number_format($file->filesize, 0)
                         . " Bytes"
                         . "<br>ContentHash: " . $file->contenthashsha1 . "<br>";
                 /*. "SHA512: "

@@ -48,6 +48,11 @@ $string['grader_roles_help'] = 'Please select possible roles of graders';
 $string['archive_feedback_after_grading'] = 'Archive grader feedbacks after grading';
 $string['archive_feedback_after_grading_help'] = 'If enabled, grader feedbacks will only be archived after the submission has been graded.';
 
+$string['uploaded'] = 'Uploaded on';
+$string['autocreated'] = 'Autom. created on';
+$string['annotated_submissions'] = 'Annotated submission file(s). Last changed saved on';
+$string['filesubmission'] = 'File submission';
+$string['filefeedback'] = 'Feedback';
 
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';
@@ -63,4 +68,4 @@ $string['filerofilename'] = 'filero.html';
 $string['filerosubmission'] = 'Allow archiving with Filero';
 $string['numfilesforlog'] = 'Number of files: {$a}.';
 $string['pluginname'] = 'FILERO archiving';
-$string['submissionfilearea'] = 'Uploaded submission and feedback files';
+

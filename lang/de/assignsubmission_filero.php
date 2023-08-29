@@ -51,11 +51,15 @@ $string['grader_roles_help'] = 'Bitte wählen Sie eine oder mehrere Rollen für 
 $string['archive_feedback_after_grading'] = 'Feedbacks erst nach Bewertung archivieren';
 $string['archive_feedback_after_grading_help'] = 'Wenn aktiviert, dann werden Feedbacks des Bewerters erst nach Bewertung der Abgabe archiviert.';
 
+$string['uploaded'] = 'Hochgeladen am';
+$string['autocreated'] = 'Autom. angelegt am';
+$string['annotated_submissions'] = 'Annotierte Abgabedatei, letzte Änderung gespeichert am';
+$string['filesubmission'] = 'File submission';
+$string['feedback'] = 'Feedback';
 
 $string['countfiles'] = '{$a} Dateien';
 $string['default'] = 'Standardmäßig aktiviert';
 $string['default_help'] = 'Wenn festgelegt, wird diese Abgabemethode standardmäßig für alle neuen Aufgaben aktiviert.';
-$string['defaultacceptedfiletypes'] = 'Standardmäßig akzeptierte Dateitypen';
 $string['enabled'] = 'Archivierung';
 $string['enabled_help'] = 'Wenn aktiviert werden Daten und Dateien von Abgaben und Feedbacks rechtssicher archiviert.';
 $string['eventfileroarchived'] = 'Eine Datei wurde mit FILERO archiviert.';
@@ -66,5 +70,4 @@ $string['filerofilename'] = 'FILERO.html';
 $string['numfilesforlog'] = 'Anzahl der Dateien: {$a}.';
 $string['pluginname'] = 'FILERO Archivierung';
 $string['privacy:metadata:filepurpose'] = 'Die für diese Aufgabe geladenen Dateien';
-$string['siteuploadlimit'] = 'Site-Upload-Limit';
-$string['submissionfilearea'] = 'Zur Abgabe hochgeladene Dateien';
+
