@@ -54,7 +54,7 @@ $string['archive_feedback_after_grading_help'] = 'Wenn aktiviert, dann werden Fe
 $string['uploaded'] = 'Hochgeladen am';
 $string['autocreated'] = 'Autom. angelegt am';
 $string['annotated_submissions'] = 'Annotierte Abgabedatei(en). Letzte Änderung gespeichert am';
-$string['filesubmission'] = 'File submission';
+$string['filesubmission'] = 'Dateiabgabe vom';
 $string['feedback'] = 'Feedback';
 
 $string['countfiles'] = '{$a} Dateien';

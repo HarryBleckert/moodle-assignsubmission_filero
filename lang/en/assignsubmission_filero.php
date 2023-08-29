@@ -52,7 +52,7 @@ $string['uploaded'] = 'Uploaded on';
 $string['autocreated'] = 'Autom. created on';
 $string['annotated_submissions'] = 'Annotated submission file(s). Last changed saved on';
 $string['filesubmission'] = 'File submission';
-$string['filefeedback'] = 'Feedback';
+$string['feedback'] = 'Feedback';
 
 $string['countfiles'] = '{$a} files';
 $string['default'] = 'Enabled by default';
