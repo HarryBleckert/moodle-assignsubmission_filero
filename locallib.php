@@ -773,10 +773,12 @@ class assign_submission_filero extends assign_submission_plugin {
                 }
                 $cnt++;
                 $is_combined = ($file->filearea == 'combined');
+
                 $is_submission = ($file->filearea == assignsubmission_file_FILEAREA or $is_combined);
                 $uploaded_or_created = get_string("uploaded", 'assignsubmission_filero');
                 $gfullname = "";
                 $area_tag = get_string("filesubmission", 'assignsubmission_filero');
+
                 if (!$is_submission and $grade and !empty($grade->grader)) {
                     $area_tag = get_string("feedback", 'assignsubmission_filero');
                     $grader = core_user::get_user($grade->grader);
@@ -785,6 +787,9 @@ class assign_submission_filero extends assign_submission_plugin {
                     }
                 } else if ($is_combined) {
                     $uploaded_or_created = get_string("autocreated", 'assignsubmission_filero');
+                }
+                if ($file->filearea == 'download') {
+                    $uploaded_or_created = get_string("annotated_submissions", 'assignsubmission_filero');
                 }
                 $size_tag = get_string("size");
                 $info .= "<br><b>" . $area_tag . "</b>" . $gfullname . ": "
