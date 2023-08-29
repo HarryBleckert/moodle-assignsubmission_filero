@@ -944,6 +944,7 @@ class assignsubmission_filero_filero {
         }
         print nl2br("<head><title>$title</title></head><html><body><h2 title='Log file: $logfile'><b>$title</b></h2>"
                         . preg_replace("|\n(.*?):|", "\n<b>$1</b>:", strip_tags($this->output))) . "\n</body></html>";
+        print "<script>window.scroll(0, document.body.scrollHeight);</script>";
         return true;
     }
 
