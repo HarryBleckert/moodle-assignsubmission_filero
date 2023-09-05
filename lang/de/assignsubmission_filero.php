@@ -50,6 +50,7 @@ $string['grader_roles'] = 'Zulässige Rollen für Gutachter_innen/Bewerter_innen
 $string['grader_roles_help'] = 'Bitte wählen Sie eine oder mehrere Rollen für Gutachter_innen/Bewerter_innen';
 $string['archive_feedback_after_grading'] = 'Feedbacks erst nach Bewertung archivieren';
 $string['archive_feedback_after_grading_help'] = 'Wenn aktiviert, dann werden Feedbacks des Bewerters erst nach Bewertung der Abgabe archiviert.';
+$string['submission_statement'] = 'Eigenständigkeitserklärung';
 
 $string['uploaded'] = 'Hochgeladen am';
 $string['autocreated'] = 'Autom. angelegt am';

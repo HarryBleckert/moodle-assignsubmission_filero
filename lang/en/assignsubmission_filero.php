@@ -47,6 +47,7 @@ $string['grader_roles'] = 'Allowed grader roles';
 $string['grader_roles_help'] = 'Please select possible roles of graders';
 $string['archive_feedback_after_grading'] = 'Archive grader feedbacks after grading';
 $string['archive_feedback_after_grading_help'] = 'If enabled, grader feedbacks will only be archived after the submission has been graded.';
+$string['submission_statement'] = 'Submission statement';
 
 $string['uploaded'] = 'Uploaded on';
 $string['autocreated'] = 'Autom. created on';

@@ -831,7 +831,8 @@ class assign_submission_filero extends assign_submission_plugin {
         // global $DB;
         $filero = $this->get_filero_submission($submission->id);
         $statement_accepted = $filero->statement_accepted;
-        // $statement_tag = get_string();
+        $statement_tag = get_string('submission_statement', 'assignsubmission_filero');
+        $statement_accepted = str_replace($statement_tag, "<b>" . $statement_tag . "</b>", $statement_accepted);
         return $statement_accepted;
     }
 
