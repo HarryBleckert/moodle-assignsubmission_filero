@@ -204,8 +204,9 @@ class assignsubmission_filero_observer {
         $submissionstatement = $configassign->submissionstatement;
         $statement_accepted = $fullname ." hat mit der Abgabe am "
                 . date('d.m.Y \u\m H:i:s', $submission->timemodified)
-                . " diese Eigenständigkeitserklärung abgegeben."
                 . (isset($_SERVER['REMOTE_ADDR']) ? " (IP: " . $_SERVER['REMOTE_ADDR'] . ")" : "")
+                . " diese Eigenständigkeitserklärung abgegeben"
+
                 . ': "' . $submissionstatement . '"';
         return $statement_accepted;
     }
