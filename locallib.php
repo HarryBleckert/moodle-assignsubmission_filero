@@ -806,7 +806,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     $feedbackfiles++;
                 }
             }
-            if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
+            if (!isset($_REQUEST['grader']) and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
                 // show info regarding $_SESSION['filero_archive_feedback_after_grading']
                 if ($grade = $DB->get_record('assign_grades',
                         array('assignment' => $submission->assignment, 'userid' => $submission->userid))) {
