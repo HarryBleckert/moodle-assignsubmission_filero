@@ -806,8 +806,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     $feedbackfiles++;
                 }
             }
-            if (isset($_REQUEST['action']) and $_REQUEST['action'] != "grader"
-                    and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
+            if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
                 // show info regarding $_SESSION['filero_archive_feedback_after_grading']
                 if ($grade = $DB->get_record('assign_grades',
                         array('assignment' => $submission->assignment, 'userid' => $submission->userid))) {
@@ -857,12 +856,13 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     public function view(stdClass $submission) {
-        global $DB, $USER;
+        global $USER;
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission) {
             $fileroRes = $this->get_archived_files_info($submission);
-            if (is_siteadmin() or !user_has_role_assignment($USER->id, 5)) {
+            if (isset($_REQUEST['action']) and $_REQUEST['action'] != "grader"
+                    and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
                 $cm = context_module::instance($this->assignment->get_course_module()->id);
                 $pluginfo = assign_submission_filero::get_plugin_version();
                 $info = "\n\n".$this->get_name()." Plugin Version: ".$pluginfo->version." - Release: "
