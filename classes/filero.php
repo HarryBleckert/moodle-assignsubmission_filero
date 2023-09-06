@@ -228,7 +228,8 @@ class assignsubmission_filero_filero {
             }
             if (isset($_SESSION['ticket']) and !empty($_SESSION['ticket'])) {
                 $ticket = $_SESSION['ticket'];
-                $this->output .= "\nLogin Ticket: $ticket\nExpiry: "
+                // $this->output .= "\nLogin Ticket: $ticket\nExpiry: "
+                $this->output .= "\nLogin ticket expiration: "
                         . date($this->fileroDateFormat, $_SESSION['ticketTimeOut']) . "\n\n";
                 return true;
             } else {
