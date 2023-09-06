@@ -232,7 +232,7 @@ class assignsubmission_filero_filero {
                 $ticket = $_SESSION['ticket'];
                 // $this->output .= "\nLogin Ticket: $ticket\nExpiry: "
                 $this->output .= "\nLogin ticket expiration: "
-                        . date($this->fileroDateFormat, $_SESSION['ticketTimeOut']) . "\n\n";
+                        . date($this->fileroDateFormat, $_SESSION['ticketTimeOut']) . "\n";
                 return true;
             } else {
                 $this->output .= "\nLogin Error: " . var_export($Login, true) . "\n\n";
