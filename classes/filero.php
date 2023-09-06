@@ -218,7 +218,9 @@ class assignsubmission_filero_filero {
                 // $response_param = $this->client->__soapCall('Login', array($Login));
                 // $this->output .=  "\nLogin:\n" . var_export($Login, true) . "\n\n";
                 $response_param = $this->client->Login($Login);
-                $this->output .= "\nLogin Response:\n" . var_export($response_param, true) . "\n\n";
+                if ($this->debug) {
+                    $this->output .= "\nLogin Response:\n" . var_export($response_param, true) . "\n\n";
+                }
                 $LoginResult = $response_param->LoginResult;
                 if (isset($LoginResult->ticket)) {
                     $_SESSION['ticket'] = $LoginResult->ticket;
