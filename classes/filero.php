@@ -909,11 +909,11 @@ class assignsubmission_filero_filero {
 
             // show log
     public function showLog($submissionid, $filerotimemodified = false) {
-        global $CFG, $PAGE, $OUTPUT;
+        global $CFG, $PAGE, $OUTPUT, $id;
         $title = "FILERO Log of submissions and grades for submission #" . $submissionid;
-        // $url = new moodle_url('/mod/evaluation/view.php', array('id' => $id));
+        $url = new moodle_url($_SERVER['REQUEST_URI'], array('id' => $id));
         $PAGE->set_pagelayout("popup");  // report	incourse	popup	base	standard
-        // $PAGE->set_url($url);
+        $PAGE->set_url($url);
         $PAGE->set_title($title);
         $PAGE->set_heading($title);
         echo $OUTPUT->header();
