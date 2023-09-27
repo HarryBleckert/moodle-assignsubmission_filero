@@ -71,7 +71,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return boolean
      */
     public function submit_for_grading($submission) {
-        global $USER, $DB;
+        global $CFG, $USER, $DB;
         //$_SESSION["debugfilero"] = true;
         if ( !$coursemodule = get_coursemodule_from_instance('assign', $submission->assignment)){
             assignsubmission_filero_observer::observer_log(
@@ -200,9 +200,13 @@ class assign_submission_filero extends assign_submission_plugin {
             if ($assign->blindmarking) {
                 $params['anonymous'] = 1;
             }
-            $event = @submitted_file_archived::create($params);
+            // need to fix debug message regarding missing #this->assign instance.
+            $debugusers = $CFG->debugusers;
+            $CFG->debugusers = '';
+            $event = submitted_file_archived::create($params);
             $event->set_legacy_files($files);
             $event->trigger();
+            $CFG->debugusers = $debugusers;
         }
         if (!isset($_SESSION['filero_submit_for_grading_'.$submission->id])){
             $this->grader_submissions($submission,"duplicate");
