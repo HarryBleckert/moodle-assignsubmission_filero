@@ -885,7 +885,8 @@ class assign_submission_filero extends assign_submission_plugin {
                         . $filesubmission->submissiontimemodified . '">
                             <button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
-
+                        . "</form>\n"
+                        . '<form method="POST" style="font-size:81%;display:inline;">'
                         . '<button name="assignsubmission_filero_archive" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
 
