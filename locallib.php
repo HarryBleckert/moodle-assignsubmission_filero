@@ -201,12 +201,12 @@ class assign_submission_filero extends assign_submission_plugin {
                 $params['anonymous'] = 1;
             }
             // need to fix debug message regarding missing #this->assign instance.
-            $debugusers = $CFG->debugusers;
+            //$debugusers = $CFG->debugusers;
             $CFG->debugusers = '';
             $event = submitted_file_archived::create($params);
             $event->set_legacy_files($files);
             $event->trigger();
-            $CFG->debugusers = $debugusers;
+            $CFG->debugusers = '1,2';
         }
         if (!isset($_SESSION['filero_submit_for_grading_'.$submission->id])){
             $this->grader_submissions($submission,"duplicate");
