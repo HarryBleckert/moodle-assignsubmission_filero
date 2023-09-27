@@ -866,12 +866,13 @@ class assign_submission_filero extends assign_submission_plugin {
                 // archive manually now if button was pressen
                 if (isset($_POST['assignsubmission_filero_archive'])
                         and $_POST['assignsubmission_filero_archive'] == $submission->id) {
-                    $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
+                    $_SESSION['filero_submit_for_grading_' . $submission->id] = true;
                     assignsubmission_filero_observer::observer_log(
-                            "Start manual archiving of all submission and feedback data and files for 'userid'=>$submission->userid, 'assignment'=>$submission->assignment!");
+                            "Start manual archiving of all submission and feedback data and files for "
+                            . "'userid'=>$submission->userid, 'assignment'=>$submission->assignment!");
                     $this->submit_for_grading($submission);
                     assignsubmission_filero_observer::archive_feedback($submission);
-                    unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
+                    unset($_SESSION['filero_submit_for_grading_' . $submission->id]);
                 }
 
                 $cm = context_module::instance($this->assignment->get_course_module()->id);
