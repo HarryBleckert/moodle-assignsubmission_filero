@@ -179,9 +179,15 @@ class assignsubmission_filero_observer {
         return true;
     }
 
-    public static function observer_log($txt) {
+    public static function get_observer_logfilename() {
         global $CFG;
         $logfile = $CFG->dataroot . "/filero/observer.log";
+        //print nl2br($txt);
+        return $logfile;
+    }
+
+    public static function observer_log($txt) {
+        $logfile = assignsubmission_filero_observer::get_observer_logfilename();
         file_put_contents($logfile, (date("Y-m-d H:i:s") . " " . $txt . "\n"), FILE_APPEND);
         //print nl2br($txt);
         return true;

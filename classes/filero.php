@@ -918,15 +918,26 @@ class assignsubmission_filero_filero {
             // show log
     public function showLog($submissionid, $filerotimemodified = false) {
         global $CFG, $PAGE, $OUTPUT, $id;
-        $title = "FILERO Log of submissions and grades for submission #" . $submissionid;
+        if ($submissionid == "observer") {
+            $logfile = $CFG->dataroot . "/filero/observer.log";
+            $title = "FILERO Observer Log archiving and other plugin activities";
+        } else {
+            $logfile = $CFG->dataroot . "/filero/submission_" . $submissionid . ".log";
+            $title = "FILERO Log of submissions and grades for submission #" . $submissionid;
+        }
+
         $url = new moodle_url($_SERVER['REQUEST_URI'], array('id' => $id));
         $PAGE->set_pagelayout("popup");  // report	incourse	popup	base	standard
         $PAGE->set_url($url);
         $PAGE->set_title($title);
         $PAGE->set_heading($title);
         echo $OUTPUT->header();
-
-        $logfile = assignsubmission_filero_LOG_FOLDER . "/submission_" . $submissionid . ".log";
+        if (is_siteadmin() and $submissionid != "observer") {
+            print '<form method="POST" target="showObserverLog" style="font-size:81%;display:inline;">
+                    <button name="assignsubmission_filero_showLog" value="observer" 
+                             title="Studierende sehen diesen Button nicht!' . $info . '">Observer Log anzeigen</button>'
+                    . "</form>\n";
+        }
         $needle = "\nSubmission ID: " . trim($submissionid) . "\n";
         $needlet = $needle . "Date: ";
         if ( is_file($logfile) AND is_writable($logfile) AND (filesize($logfile)/1024)>600 ){
