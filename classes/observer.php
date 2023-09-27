@@ -239,7 +239,7 @@ class assignsubmission_filero_observer {
         $cm = get_coursemodule_from_instance('assign', $assign->id, $assign->course);
         $context = context_module::instance($cm->id);
         $course = get_course($assign->course);
-        if (!$grade or !$grade = $DB->get_record('assign_grades',
+        if (!$grade and !$grade = $DB->get_record('assign_grades',
                         array('assignment' => $submission->assignment, "userid" => $submission->userid))
         ) {
             assignsubmission_filero_observer::observer_log("No assign_grades with 'assignment'=>$submission->assignment, 'userid' => $submission->userid!");
