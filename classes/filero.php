@@ -940,6 +940,7 @@ class assignsubmission_filero_filero {
         }
         $needle = "\nSubmission ID: " . trim($submissionid) . "\n";
         $needlet = $needle . "Date: ";
+        $filesize = 0;
         if ( is_file($logfile) AND is_writable($logfile) AND (filesize($logfile)/1024)>600 ){
             $tmp = file_get_contents($logfile);
             $tmp = substr($tmp,0,120000);
@@ -950,6 +951,7 @@ class assignsubmission_filero_filero {
             }
         }
         if (is_readable($logfile)) {
+            $filesize = filesize($logfile);
             $this->output = file_get_contents($logfile);
             /*
 
@@ -969,7 +971,8 @@ class assignsubmission_filero_filero {
             $this->output = "Datei $logfile für Abgabe id $submissionid kann nicht gelesen werden!";
             // return false;
         }
-        print nl2br("<h2 title='Log file: $logfile'><b>$title</b></h2>"
+        print nl2br('<h2 title="Log file: ' . $logfile . ' - Size: ' . (number_format($filesize / 1024, 0))
+                        . ' KB"><b>' . $title . '</b></h2>'
                         . preg_replace("|\n(.*?):|", "\n<b>$1</b>:", strip_tags($this->output)))
                 . "\n</body></html>";
         print "<script>window.scroll(0, document.body.scrollHeight);</script>";
