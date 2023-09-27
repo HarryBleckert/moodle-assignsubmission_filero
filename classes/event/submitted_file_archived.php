@@ -71,7 +71,7 @@ class submitted_file_archived extends submission_updated { // \core\event\assess
      * @return void
      */
     protected function init() {
-        if (!isset($this->assign)) {
+        if (false) { // !isset($this->assign)) {
             // debugging('assign property should be initialised in each event', DEBUG_DEVELOPER);
             global $CFG;
             require_once($CFG->dirroot . '/mod/assign/locallib.php');
