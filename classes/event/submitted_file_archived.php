@@ -71,6 +71,14 @@ class submitted_file_archived extends submission_updated { // \core\event\assess
      * @return void
      */
     protected function init() {
+        if (!isset($this->assign)) {
+            // debugging('assign property should be initialised in each event', DEBUG_DEVELOPER);
+            global $CFG;
+            require_once($CFG->dirroot . '/mod/assign/locallib.php');
+            $cm = get_coursemodule_from_id('assign', $this->contextinstanceid, 0, false, MUST_EXIST);
+            $course = get_course($cm->course);
+            $this->assign = new \assign($this->get_context(), $cm, $course);
+        }
         parent::init();
         $this->data['objecttable'] = 'assign_submission';
     }
