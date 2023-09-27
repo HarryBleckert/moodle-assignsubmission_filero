@@ -873,7 +873,6 @@ class assign_submission_filero extends assign_submission_plugin {
                     assignsubmission_filero_observer::archive_feedback($submission);
                     unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
                 }
-            }
 
                 $cm = context_module::instance($this->assignment->get_course_module()->id);
                 $pluginfo = assign_submission_filero::get_plugin_version();
@@ -886,10 +885,10 @@ class assign_submission_filero extends assign_submission_plugin {
                             <button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
                         . "</form>\n"
+
                         . '<form method="POST" style="font-size:81%;display:inline;">'
                         . '<button name="assignsubmission_filero_archive" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
-
                         ."</form>\n";
             }
         }
