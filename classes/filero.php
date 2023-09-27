@@ -935,7 +935,7 @@ class assignsubmission_filero_filero {
         if (is_siteadmin() and $submissionid != "observer") {
             print '<form method="POST" target="showObserverLog" style="font-size:81%;display:inline;">
                     <button name="assignsubmission_filero_showLog" value="observer" 
-                             title="Studierende sehen diesen Button nicht!' . $info . '">Observer Log anzeigen</button>'
+                             title="Studierende sehen diesen Button nicht!">Observer Log anzeigen</button>'
                     . "</form>\n";
         }
         $needle = "\nSubmission ID: " . trim($submissionid) . "\n";
