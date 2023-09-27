@@ -863,6 +863,18 @@ class assign_submission_filero extends assign_submission_plugin {
             $fileroRes = $this->get_archived_files_info($submission);
             if (isset($_REQUEST['action']) and $_REQUEST['action'] != "grader"
                     and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
+                // archive manually now if button was pressen
+                if (isset($_POST['assignsubmission_filero_archive'])
+                        and $_POST['assignsubmission_filero_archive'] == $submission->id) {
+                    $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
+                    assignsubmission_filero_observer::observer_log(
+                            "Start manual archiving of all submission and feedback data and files for 'userid'=>$submission->userid, 'assignment'=>$submission->assignment!");
+                    $this->submit_for_grading($submission);
+                    assignsubmission_filero_observer::archive_feedback($submission);
+                    unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
+                }
+            }
+
                 $cm = context_module::instance($this->assignment->get_course_module()->id);
                 $pluginfo = assign_submission_filero::get_plugin_version();
                 $info = "\n\n".$this->get_name()." Plugin Version: ".$pluginfo->version." - Release: "
@@ -871,8 +883,12 @@ class assign_submission_filero extends assign_submission_plugin {
                             <input type="hidden" name="id" value="' . $cm->instanceid . '">
                             <input type="hidden" name="submissiontimemodified" value="'
                         . $filesubmission->submissiontimemodified . '">
-                            <span><button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
-                             title="Studierende sehen diesen Button nicht!'.$info.'">Log anzeigen</span></button>'
+                            <button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
+                             title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
+
+                        . '<button name="assignsubmission_filero_archive" value="' . $submission->id . '" 
+                             title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
+
                         ."</form>\n";
             }
         }
