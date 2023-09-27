@@ -345,6 +345,9 @@ class assignsubmission_filero_filero {
         $AssignSubmission->StatementAccepted = $this->show_statement_accepted($this->submission);
         $AssignSubmission->TimeModified = $this->submission->timemodified;
         $AssignSubmission->TimeCreated = $this->submission->timecreated;
+        if (empty($this->submission->timestarted)) {
+            $this->submission->timestarted = $this->submission->timecreated;
+        }
         $AssignSubmission->TimeStarted = $this->submission->timestarted;
         $AssignSubmission->Groupid = $this->submission->groupid;
         $AssignSubmission->AttemptNumber = $this->submission->attemptnumber;
