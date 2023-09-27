@@ -200,7 +200,7 @@ class assign_submission_filero extends assign_submission_plugin {
             if ($assign->blindmarking) {
                 $params['anonymous'] = 1;
             }
-            $event = submitted_file_archived::create($params);
+            $event = @submitted_file_archived::create($params);
             $event->set_legacy_files($files);
             $event->trigger();
         }
