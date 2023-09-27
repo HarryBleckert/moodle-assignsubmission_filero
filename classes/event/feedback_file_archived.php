@@ -56,7 +56,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
  */
-class feedback_file_archived extends submission_graded { // \core\event\assessable_submitted {
+abstract class feedback_file_archived extends submission_graded { // \core\event\assessable_submitted {
 
     /**
      * Legacy event files.
