@@ -345,13 +345,15 @@ class assignsubmission_filero_filero {
         $AssignSubmission->StatementAccepted = $this->show_statement_accepted($this->submission);
         $AssignSubmission->TimeModified = $this->submission->timemodified;
         $AssignSubmission->TimeCreated = $this->submission->timecreated;
-        if (empty($this->submission->timestarted)) {
-            $this->submission->timestarted = $this->submission->timecreated;
+        if (isset($this->submission->timestarted)) {
+            $AssignSubmission->TimeStarted = $this->submission->timestarted;
+            $AssignSubmission->Groupid = $this->submission->groupid;
+            $AssignSubmission->AttemptNumber = $this->submission->attemptnumber;
+            $AssignSubmission->Latest = $this->submission->latest;
+        } else {
+            $this->submission->timestarted = $AssignSubmission->Groupid = $AssignSubmission->AttemptNumber
+                    = $AssignSubmission->Latest = 0;
         }
-        $AssignSubmission->TimeStarted = $this->submission->timestarted;
-        $AssignSubmission->Groupid = $this->submission->groupid;
-        $AssignSubmission->AttemptNumber = $this->submission->attemptnumber;
-        $AssignSubmission->Latest = $this->submission->latest;
         $AssignSubmission->AssignFiles = $AssignFiles;
         $AssignSubmission->SubmissionOnlinetext = $SubmissionOnlinetext;
         unset($AssignFiles);

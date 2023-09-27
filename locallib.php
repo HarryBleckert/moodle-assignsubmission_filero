@@ -377,7 +377,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $destsubmission->status = "submitted";
                 $destsubmission->timecreated = $currentsubmission->timecreated;
                 $destsubmission->timemodified = $currentsubmission->timemodified;
-                if (empty($this->submission->timestarted)) {
+                if (!isset($currentsubmission->timestarted)) {
                     $currentsubmission->timestarted = $currentsubmission->timecreated;
                 }
                 $destsubmission->timestarted = $currentsubmission->timestarted;
