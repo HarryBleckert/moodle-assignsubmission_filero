@@ -612,10 +612,10 @@ class assignsubmission_filero_filero {
         $AssignGrades = new stdClass();
         $AssignGrades->AssignGradeId = $grade->id;
         $AssignGrades->Assign = $Assign;
+        $AssignGrades->AssignSubmissionId = $this->submission->id;
         $AssignGrades->GradeId = $grade->id;
         $AssignGrades->AssignGradeUserId = $grade->userid;
         $AssignGrades->StatementAccepted = $this->show_statement_accepted($this->submission);
-        // $AssignGrades->SubmissionId = $this->submission->id;
         $AssignGrades->Grader = $grade->grader;
         $AssignGrades->Grade = $grade->grade;
         $AssignGrades->TimeModified = $grade->timemodified;
