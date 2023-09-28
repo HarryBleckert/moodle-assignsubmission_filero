@@ -902,7 +902,8 @@ class assignsubmission_filero_filero {
     * remove file source from displayed and logged values
     */
     private function hideFileContent($string) {
-        return preg_replace("|'Source' => '.*?',|i", "'Source' => 'verborgen - base64_encoded -',", $string);
+        $string = preg_replace("|'Source' => '.*?',|i", "'Source' => 'verborgen - base64_encoded -',", $string);
+        return reg_replace("|'ticket' => '.*?',|i", "'ticket' => '-verborgen-',", $string);
     }
 
     // check if log file exists
