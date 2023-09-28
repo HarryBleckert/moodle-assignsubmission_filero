@@ -903,7 +903,7 @@ class assignsubmission_filero_filero {
     */
     private function hideFileContent($string) {
         $string = preg_replace("|'Source' => '.*?',|i", "'Source' => 'verborgen - base64_encoded -',", $string);
-        return reg_replace("|'ticket' => '.*?',|i", "'ticket' => '-verborgen-',", $string);
+        return preg_replace("|'ticket' => '.*?',|i", "'ticket' => '-verborgen-',", $string);
     }
 
     // check if log file exists
