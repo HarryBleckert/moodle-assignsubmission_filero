@@ -60,7 +60,6 @@ function assignsubmission_filero_pluginfile($course,
     $groupid = $record->groupid;
 
     require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
     $assign = new assign($context, $cm, $course);
     // print nl2br("\n\$assign:\n" .var_export($assign,true));exit;
 
