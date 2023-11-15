@@ -256,12 +256,14 @@ class assignsubmission_filero_observer {
                 'id',
                 false);
 
+        /* removed on Nov 14 because DHBW doesn't need this
         $files += $fs->get_area_files($context->id,
                 'assignfeedback_editpdf',
                 'combined',
                 $grade->id,
                 'id',
                 false);
+        */
         //assignsubmission_filero_observer::observer_log("Files: " . print_r($files,true));
         $count = ($files ? count($files) : 0);
         if (empty($count)) {

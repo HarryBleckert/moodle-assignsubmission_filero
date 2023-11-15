@@ -9,24 +9,26 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="submission" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The user id of the student who submitted."/>
-                <FIELD NAME="numfiles" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The number of files the student submitted."/>
-                <FIELD NAME="filerocode" TYPE="int" LENGTH="5" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Filero archiving result status code."/>
-                <FIELD NAME="fileroid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Filero archive object id."/>
+                <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The user id of the student who submitted."/>
+                <FIELD NAME="numfiles" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The number of files the student submitted."/>
+                <FIELD NAME="filerocode" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Filero archiving result status code."/>
+                <FIELD NAME="fileroid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Filero archive object id."/>
                 <FIELD NAME="feedbacktimecreated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="feedbacktimemodified" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="submissiontimecreated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="submissiontimemodified" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="filerovalidated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Filero validation confirmed."/>
+                <FIELD NAME="submissiontimecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="submissiontimemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="filerovalidated" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Filero validation confirmed."/>
                 <FIELD NAME="statement_accepted" TYPE="char" LENGTH="420" NOTNULL="false" SEQUENCE="false" COMMENT="Even description of accepted statement"/>
                 <FIELD NAME="lasterrormsg" TYPE="char" LENGTH="420" NOTNULL="false" SEQUENCE="false" COMMENT="Text of last FILERO error message"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this submission info."/>
-                <KEY NAME="assignment" TYPE="foreign" FIELDS="assignment" REFTABLE="assign" REFFIELDS="id" COMMENT="The assignment instance this submission relates to"/>
-                <KEY NAME="submission" TYPE="foreign" FIELDS="submission" REFTABLE="assign_submission" REFFIELDS="id" COMMENT="The submission this file submission relates to."/>
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="assignment" UNIQUE="false" FIELDS="assignment"/>
+                <INDEX NAME="submission" UNIQUE="false" FIELDS="submission"/>
+            </INDEXES>
         </TABLE>
 
 
@@ -34,22 +36,26 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The user id of the student who submitted."/>
-                <FIELD NAME="fileroid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="submission" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="filesid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The id in Moodle files table."/>
-                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The name of archived file."/>
-                <FIELD NAME="filesize" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The file size in bytes."/>
-                <FIELD NAME="contenthashsha1" TYPE="char" LENGTH="40" NOTNULL="false" SEQUENCE="false" COMMENT="SHA1 content hash."/>
-                <FIELD NAME="contenthashsha512" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="SHA512 content hash."/>
-                <FIELD NAME="filearea" TYPE="char" LENGTH="42" NOTNULL="false" SEQUENCE="false" COMMENT="The type of archived file: submission or feedback."/>
+                <FIELD NAME="fileroid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="submission" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="filesid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The id in Moodle files table."/>
+                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of archived file."/>
+                <FIELD NAME="filesize" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The file size in bytes."/>
+                <FIELD NAME="contenthashsha1" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" COMMENT="SHA1 content hash."/>
+                <FIELD NAME="contenthashsha512" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="SHA512 content hash."/>
+                <FIELD NAME="filearea" TYPE="char" LENGTH="42" NOTNULL="true" SEQUENCE="false" COMMENT="The type of archived file: submission or feedback."/>
                 <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-                <FIELD NAME="timemcreated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="The unique id for this file info."/>
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="assignment" UNIQUE="false" FIELDS="assignment"/>
+                <INDEX NAME="submission" UNIQUE="false" FIELDS="submission"/>
+            </INDEXES>
         </TABLE>
 
     </TABLES>

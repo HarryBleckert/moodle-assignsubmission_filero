@@ -388,9 +388,11 @@ class assign_submission_filero extends assign_submission_plugin {
                         . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
                         . $currentsubmission->id . " of assignment " . $assignmentname);
 
+                /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
                 $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
                 $this->submit_for_grading($destsubmission);
+                */
 
                 /* Not working when calling via new assign class, but maybe usefull for notifications
                  * if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
@@ -401,8 +403,10 @@ class assign_submission_filero extends assign_submission_plugin {
                 $coursemodulecontext = context_module::instance($coursemodule->id);
                 $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
                 $assign_g->submit_for_grading($destsubmission,[]);
-                */
+
+                /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
                 unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
+                */
             }
         }
         //unset($_SESSION['filero_statement_accepted']);

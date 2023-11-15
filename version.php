@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023092800;
-$plugin->release = "v1.0.1-rc";
+$plugin->version = 2023111400;
+$plugin->release = "v1.0.2";
 $plugin->component = 'assignsubmission_filero';
 $plugin->requires = 2021051700;
 
@@ -37,7 +37,7 @@ $plugin->requires = 2021051700;
 // $plugin->maturity = MATURITY_BETA;
 
 // The plugin is a release candidate version.
-$plugin->maturity = MATURITY_RC;
+// $plugin->maturity = MATURITY_RC;
 
 // The plugin is a stable version.
-// $plugin->maturity = MATURITY_STABLE;
+$plugin->maturity = MATURITY_STABLE;
