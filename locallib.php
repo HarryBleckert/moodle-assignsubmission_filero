@@ -509,17 +509,35 @@ class assign_submission_filero extends assign_submission_plugin {
         return $this->grader_submissions($submission, "remove");
     }
 
-    private function is_graders_submission($submission){
+    private function is_graders_submission($submission) {
         global $DB;
-        if ( !$this->init_multiple_graders($submission)){
+        if (!$this->init_multiple_graders($submission)) {
             return false;
         }
         $multiple_graders = $_SESSION['filero_multiple_graders'];
         $grading_title_tag = $_SESSION['filero_grading_title_tag'];
         $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
-        if ($multiple_graders AND stristr($assignment->name, $grading_title_tag)){
+        if ($multiple_graders and stristr($assignment->name, $grading_title_tag)) {
             assignsubmission_filero_observer::observer_log("is_graders_submissions: "
-                    ."Assignment " .$assignment->name." is a grader assignment");
+                    . "Assignment " . $assignment->name . " is a grader assignment");
+            return true;
+        }
+        return false;
+    }
+
+
+    private function is_student_submission($submission) {
+        global $DB;
+        if (!$this->init_multiple_graders($submission)) {
+            return false;
+        }
+        $multiple_graders = $_SESSION['filero_multiple_graders'];
+        //$grading_title_tag = $_SESSION['filero_grading_title_tag'];
+        $submission_title_tag = $_SESSION['filero_submission_title_tag']
+        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        if ($multiple_graders and stristr($assignment->name, $submission_title_tag)) {
+            assignsubmission_filero_observer::observer_log("is_student_submission: "
+                    . "Assignment " . $assignment->name . " is a Student assignment");
             return true;
         }
         return false;
@@ -885,7 +903,10 @@ class assign_submission_filero extends assign_submission_plugin {
                             "Start manual archiving of all submission and feedback data and files for "
                             . "'userid'=>$submission->userid, 'assignment'=>$submission->assignment!");
                     $this->submit_for_grading($submission);
-                    assignsubmission_filero_observer::archive_feedback($submission);
+                    // disable archiving for non-grader feedeback
+                    if ( !$this->is_student_submission($submission)) {
+                        assignsubmission_filero_observer::archive_feedback($submission);
+                    }
                     unset($_SESSION['filero_submit_for_grading_' . $submission->id]);
                 }
 
