@@ -72,6 +72,11 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     public function submit_for_grading($submission) {
         global $USER, $DB;
+
+        // disable submissions for graders
+        if ( $this->is_graders_submission($submission)){
+            return false;
+        }
         //$_SESSION["debugfilero"] = true;
         if ( !$coursemodule = get_coursemodule_from_instance('assign', $submission->assignment)){
             assignsubmission_filero_observer::observer_log(
@@ -751,7 +756,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     . '&nbsp;<i class="fa fa-angle-down" aria-hidden="true" style="font-weight:bolder;color:darkgreen;"></i>'
                     . "</span>\n";
 
-            $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;" >';
+            $info .= "\n" . '<div id="FileroFiles_'.$submissionid.'" style="display:none;border:2px solid darkgreen;margin:6px;">';
             // requiresubmissionstatement has been provided and logged
             // show last error msg if any
             if (!empty($filero->lasterrormsg) AND !$filero->filerovalidated AND (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
@@ -759,7 +764,8 @@ class assign_submission_filero extends assign_submission_plugin {
                         ."</b><br><br>";
             }
 
-            if ($filero->statement_accepted) {
+            if (!empty($filero->statement_accepted)) {
+                $statement_accepted = $this->show_statement_accepted($submission);
                 $info .= $this->show_statement_accepted($submission) . "<br><br>";
             }
             $filearea = "none";

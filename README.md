@@ -8,13 +8,13 @@ FILERO archiving of Moodle assignments
 It also features a multiple graders mode allowing to define assignments either exclusively allowing submissions and syncing them with graders assignments 
 or exlusively allow grader feedback and disabling submissions.** 
 * @package assignsubmission_filero
-* @copyright 2023 DHBW (https://DHBW.de/)
+* @copyright 2023 onwards DHBW (https://DHBW.de/)
 * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
 * @author    Harry@Bleckert.com for LIB-IT DMS GmbH (https://www.lib-it.de/)
 
 Requirements
 ------------
-Moodle 4.0, 4.1, 4.2
+Moodle 4.0, 4.1, 4.2, 4.3
 
 Installation
 ------------

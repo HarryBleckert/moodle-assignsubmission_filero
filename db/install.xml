@@ -19,7 +19,7 @@
                 <FIELD NAME="submissiontimecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="submissiontimemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="filerovalidated" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Filero validation confirmed."/>
-                <FIELD NAME="statement_accepted" TYPE="char" LENGTH="420" NOTNULL="false" SEQUENCE="false" COMMENT="Even description of accepted statement"/>
+                <FIELD NAME="statement_accepted" TYPE="char" LENGTH="420" NOTNULL="false" SEQUENCE="false" COMMENT="Event description of accepted statement"/>
                 <FIELD NAME="lasterrormsg" TYPE="char" LENGTH="420" NOTNULL="false" SEQUENCE="false" COMMENT="Text of last FILERO error message"/>
             </FIELDS>
             <KEYS>
@@ -57,6 +57,5 @@
                 <INDEX NAME="submission" UNIQUE="false" FIELDS="submission"/>
             </INDEXES>
         </TABLE>
-
     </TABLES>
 </XMLDB>

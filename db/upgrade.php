@@ -39,12 +39,12 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
         $table = new xmldb_table('assignsubmission_filero_file');
         if (!$dbman->table_exists($table)) {
             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-            $table->add_field('fileroid', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
-            $table->add_field('filesid', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
-            $table->add_field('filename', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-            $table->add_field('filesize', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
-            $table->add_field('contenthashsha1', XMLDB_TYPE_CHAR, '128', null, null, null, null);
-            $table->add_field('contenthashsha512', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+            $table->add_field('fileroid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('filesid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('filename', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('filesize', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('contenthashsha1', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('contenthashsha512', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
             // Adding keys
             $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
             // Adding indexes
@@ -58,11 +58,11 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
     $newversion = 2023062100;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('assignsubmission_filero_file');
-        $contanthashsha1 = new xmldb_field('contanthashsha1', XMLDB_TYPE_CHAR, '128', null, null, null, null);
+        $contanthashsha1 = new xmldb_field('contanthashsha1', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL, null, null);
         if ($dbman->field_exists($table, $contanthashsha1)) {
             $dbman->rename_field($table, $contanthashsha1, "contenthashsha1");
             $contanthashsha512 =
-                    new xmldb_field('contanthashsha512', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+                    new xmldb_field('contanthashsha512', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
             $dbman->rename_field($table, $contanthashsha512, "contenthashsha512");
         }
         upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
@@ -71,7 +71,7 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
     $newversion = 2023070302;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('assignsubmission_filero_file');
-        $field = new xmldb_field('filearea', XMLDB_TYPE_CHAR, '42', null, null, null, "");
+        $field = new xmldb_field('filearea', XMLDB_TYPE_CHAR, '42', null, XMLDB_NOTNULL, null, "");
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -81,25 +81,25 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
     $newversion = 2023070600;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('assignsubmission_filero');
-        $field = new xmldb_field('filerosubmissionid', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('filerosubmissionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if ($dbman->field_exists($table, $field)) {
             $dbman->rename_field($table, $field, "fileroid");
         }
-        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
         $table = new xmldb_table('assignsubmission_filero_file');
-        $field = new xmldb_field('assignment', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('assignment', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        $field = new xmldb_field('submission', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('submission', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -124,11 +124,11 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        $field = new xmldb_field('filerotimecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('filerotimecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if ($dbman->field_exists($table, $field)) {
             $dbman->rename_field($table, $field, "submissiontimecreated");
         }
-        $field = new xmldb_field('filerotimemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, 0);
+        $field = new xmldb_field('filerotimemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         if ($dbman->field_exists($table, $field)) {
             $dbman->rename_field($table, $field, "submissiontimemodified");
         }
@@ -158,12 +158,25 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
     }
+
+
     $newversion = 2023082101;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('assignsubmission_filero');
         $field = new xmldb_field('lasterrormsg', XMLDB_TYPE_CHAR, '420', null, null, null, '');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
+        }
+        upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
+    }
+
+
+    $newversion = 2023111601;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('assignsubmission_filero_file');
+        $field = new xmldb_field('contenthashsha1', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_precision($table, $field, true, true);
         }
         upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
     }
