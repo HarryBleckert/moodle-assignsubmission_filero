@@ -533,7 +533,7 @@ class assign_submission_filero extends assign_submission_plugin {
         }
         $multiple_graders = $_SESSION['filero_multiple_graders'];
         //$grading_title_tag = $_SESSION['filero_grading_title_tag'];
-        $submission_title_tag = $_SESSION['filero_submission_title_tag']
+        $submission_title_tag = $_SESSION['filero_submission_title_tag'];
         $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
         if ($multiple_graders and stristr($assignment->name, $submission_title_tag)) {
             assignsubmission_filero_observer::observer_log("is_student_submission: "
