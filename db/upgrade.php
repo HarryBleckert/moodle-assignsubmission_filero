@@ -171,7 +171,7 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
     }
 
 
-    $newversion = 2023111601;
+    $newversion = 2023111602;
     if ($oldversion < $newversion) {
         $table = new xmldb_table('assignsubmission_filero_file');
         $field = new xmldb_field('contenthashsha1', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL, null, null);
