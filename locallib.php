@@ -1197,10 +1197,10 @@ class assign_submission_filero extends assign_submission_plugin {
                     assignsubmission_filero_observer::observer_log(
                             "validate_settings: Updated assignment '$assign->name' with id $assign->id");
                 }
-                else {
+                /*else {
                     assignsubmission_filero_observer::observer_log(
-                            "avalidate_settings: No update required for assignment '$assign->name' with id $assign->id");
-                }
+                            "validate_settings: No update required for assignment '$assign->name' with id $assign->id");
+                }*/
             }
             else{
                 assignsubmission_filero_observer::observer_log(
