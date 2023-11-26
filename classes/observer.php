@@ -67,7 +67,6 @@ class assignsubmission_filero_observer {
             assignsubmission_filero_observer::observer_log("No assign_grades record with id $event->objectid!");
             return;
         }
-
         // Task: Only archive feedbacks if submission has been graded!
         $config = get_config('assignsubmission_filero');
         if ( !($grade->grade >0) AND $config->archive_feedback_after_grading ){
@@ -79,9 +78,17 @@ class assignsubmission_filero_observer {
         /* id assignment userid timecreated timemodified timestarted status groupid attemptnumber latest */
         if (!$submission = $DB->get_record('assign_submission',
                 array('userid' => $grade->userid, 'assignment' => $grade->assignment))) {
-            assignsubmission_filero_observer::observer_log("No submission with 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
+            assignsubmission_filero_observer::observer_log("No archiving with 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
             return;
         }
+
+        // no archiving if multiple graders and student assignmend
+        if (assign_submission_filero::is_student_assignment($submission)){
+            assignsubmission_filero_observer::delete_filero_file_grade_records($grade->id);
+            assignsubmission_filero_observer::observer_log("No feedback archiving for assignment $grade->assignment: This is a student assignment.");
+            return;
+        }
+
         assignsubmission_filero_observer::observer_log(
                 "Start archiving of feedback for 'userid'=>$grade->userid,'assignment'=>$grade->assignment!");
         assignsubmission_filero_observer::archive_feedback($submission, $grade);
@@ -96,6 +103,15 @@ class assignsubmission_filero_observer {
      * @param statement_accepted $event
      */
 
+    public static function delete_filero_file_grade_records($gradeid){
+        global $DB;
+        if (!empty($DB->get_records('assignsubmission_filero_file',
+                array('grade' => $gradeid)))
+        ) {
+            $DB->delete_records('assignsubmission_filero_file',
+                    array('grade' => $gradeid));
+        }
+    }
     public static function process_submission_statement_accepted(statement_accepted $event) {
         global $DB;
         assignsubmission_filero_observer::observer_log("\nObserver for submission_statement_accepted has been called by event handler");
@@ -269,12 +285,7 @@ class assignsubmission_filero_observer {
         if (empty($count)) {
             $_SESSION["debugfilero"] = false;
             assignsubmission_filero_observer::observer_log("observer: archive_feedback: No feedback files!");
-            if (!empty($DB->get_records('assignsubmission_filero_file',
-                    array('grade' => $grade->id)))
-            ) {
-                $DB->delete_records('assignsubmission_filero_file',
-                        array('grade' => $grade->id));
-            }
+            assignsubmission_filero_observer::delete_filero_file_grade_records($grade->id);
             // return;
         }
 
@@ -327,12 +338,7 @@ class assignsubmission_filero_observer {
                 $submittedfiles->submission = $submission->id;
                 $submittedfiles->userid = $submission->userid;
                 $submittedfiles->grade = $grade->id ?:0;
-                if (!empty($DB->get_records('assignsubmission_filero_file',
-                        array('grade' => $grade->id)))
-                ) {
-                    $DB->delete_records('assignsubmission_filero_file',
-                            array('grade' => $grade->id));
-                }
+                assignsubmission_filero_observer::delete_filero_file_grade_records($grade->id);
                 foreach ($fileroRes->validated_files as $validated_file) {
                     $submittedfiles->filesid = $validated_file['filesid'];
                     $submittedfiles->filename = $validated_file['filename'];

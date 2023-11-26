@@ -1,12 +1,12 @@
-FILERO archiving of Moodle assignments
+FILERO archiving of Moodle assignment data and files
 ==========
-[Build Status](https://github.com/HarryBleckert/filero/?branch=master)
-[Open Issues](https://github.com/HarryBleckert/filero/issues)
+[Build Status](https://github.com/HarryBleckert/moodle-assignsubmission_filero/?branch=master)
+[Open Issues](https://github.com/HarryBleckert/moodle-assignsubmission_filero/issues)
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **This plugin archives assignment submission and feedback data and files to FILERO DMS.
 It also features a multiple graders mode allowing to define assignments either exclusively allowing submissions and syncing them with graders assignments 
-or exlusively allow grader feedback and disabling submissions.** 
+or exclusively allow grader feedback and disabling submissions.** 
 * @package assignsubmission_filero
 * @copyright 2023 onwards DHBW (https://DHBW.de/)
 * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
@@ -20,9 +20,9 @@ Installation
 ------------
 **From gitHub:**
 
-1. Download the latest version of the plugin from the [Releases](https://github.com/HarryBleckert/filero/releases) page.
+1. Download the latest version of the plugin from the [Releases](https://github.com/HarryBleckert/moodle-assignsubmission_filero/releases) page.
 2. Move to Moodle folder /mod/assign/submissions.
-3. Use "git clone https://github.com/HarryBleckert/filero.git".
+3. Use "git clone https://github.com/HarryBleckert/moodle-assignsubmission_filero.git".
 4. OR: Extract the directory from the zip file or tar file you downloaded and rename it to 'filero' if it is not already named as such.
 5.     Then place the 'filero' folder into your Moodle site's /mod/assign/submission/* directory.
 6. OR: as Moodle Admin, install plugin from file.
@@ -33,12 +33,12 @@ Installation
 
 License
 -------
-https://www.gnu.org/licenses/gpl-3.0
+https://gnu.org/licenses/gpl-3.0
 
 Support
 -------
 If you need any help using this plugin, or wish to report a bug or feature request, please use the issue tracking system:
-https://github.com/HarryBleckert/filero/issues
+https://github.com/HarryBleckert/moodle-assignsubmission_filero/issues
 
 Screenshots
 -----------
