@@ -757,7 +757,7 @@ class assign_submission_filero extends assign_submission_plugin {
         $filero = $this->get_filero_submission($submissionid);
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $submission->assignment, "userid" => $submission->userid));
-
+        $info = "-";
         if ($filero AND is_countable($files) AND count($files)) {
             $numfiles = count($files);
             $LogfilePath = assignsubmission_filero_filero::LogfilePath($submission->id);
@@ -853,8 +853,6 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             $info .= "</div>";
 
-        } else {
-            $info = "-";
         }
         return $info;
     }
@@ -922,10 +920,12 @@ class assign_submission_filero extends assign_submission_plugin {
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
                         . "</form>\n"
 
-                        . '<form method="POST" style="font-size:81%;display:inline;">'
-                        . '<button name="assignsubmission_filero_archive" value="' . $submission->id . '" 
-                             title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
-                        ."</form>\n";
+                        . (strlen($fileroRes)>30
+                                ?'<form method="POST" style="font-size:81%;display:inline;">'
+                            . '<button name="assignsubmission_filero_archive" value="' . $submission->id
+                            . '" title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
+                            ."</form>\n"
+                                :'');
             }
         }
         return $fileroRes;
