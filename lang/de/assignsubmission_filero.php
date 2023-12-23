@@ -42,7 +42,7 @@ $string['exam_grading'] = 'Prüfungsbewertung';
 $string['submission_title_tag'] = 'Bitte geben Sie ein Text-Tag für Prüfungsabgaben ein';
 $string['submission_title_tag_help'] =
          'Aufgaben für Prüfungsabgaben können nicht bewertet werden. Alle Prüfungsabgaben werden in bestehende Bewerteraufgaben dupliziert';
-$string['grading_title_tag'] = 'Bitte geben Sie einen Text-Tag für die Aufgaben zuir Prüfungsbewertung ein';
+$string['grading_title_tag'] = 'Bitte geben Sie einen Text-Tag für die Aufgaben zur Prüfungsbewertung ein';
 $string['grading_title_tag_help'] =
          'In Aufgaben zur Prüfungsbewertung sind keine Abgaben möglich. '
          .'Es werden Duplikate der Prüfungsabgaben aus der Aufgabe zur Prüfungsabgabe angzeigt';
