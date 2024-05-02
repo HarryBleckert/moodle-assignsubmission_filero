@@ -328,7 +328,8 @@ class assign_submission_filero extends assign_submission_plugin {
         
         foreach ($assignments AS $assignment ) {
             // loop if not grader assignment
-            if (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag)){
+            if (empty($assignment->name) OR
+                    (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag))){
                 //assignsubmission_filero_observer::observer_log("grader_submissions: "
                 //        ."Assignment " .$assignment->name." was ignored. It is not tagged with '$submission_title_tag' or '$grading_title_tag' in title");
                 continue;
