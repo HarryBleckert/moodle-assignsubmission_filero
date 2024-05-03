@@ -315,7 +315,8 @@ class assign_submission_filero extends assign_submission_plugin {
         }
         */
         // old version DiPa 1.1
-        // $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
+        $assignments = $DB->get_records('assign', array('course' => $assignmentcourse), 'id DESC');
+        /*
         if (!$course =$DB->get_record('course', array('id' => $assignmentcourse), '*')) {
             assignsubmission_filero_observer::observer_log(
                     "grader_submissions(): Course with id $assignmentcourse for assignment and submission id $currentsubmission->i not found.");
@@ -325,7 +326,7 @@ class assign_submission_filero extends assign_submission_plugin {
         $assignments = $DB->get_record_sql("SELECT * FROM {assign} WHERE 
                                 EXISTS (SELECT category FROM {course}
 		                        WHERE category=$course->category) ORDER BY id DESC");
-        
+        */
         foreach ($assignments AS $assignment ) {
             // loop if not grader assignment
             if (empty($assignment->name) OR
