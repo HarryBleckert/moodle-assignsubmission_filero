@@ -328,7 +328,7 @@ class assign_submission_filero extends assign_submission_plugin {
 		                        WHERE category=$course->category) ORDER BY id DESC");
 
         foreach ($assignments AS $assignment ) {
-            print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
+            // print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
             // loop if not grader assignment
             if (empty($assignment->name) OR
                     (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag))){
@@ -347,7 +347,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                         assignsubmission_filero_observer::observer_log(
                                 "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
-                        return;
+                        continue;
                     }
                     $coursemodulecontext = context_module::instance($coursemodule->id);
                     $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
