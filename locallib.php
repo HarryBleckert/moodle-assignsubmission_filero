@@ -323,7 +323,7 @@ class assign_submission_filero extends assign_submission_plugin {
             return;
         }
         
-        $assignments = $DB->get_record_sql("SELECT * FROM {assign} WHERE 
+        $assignments = $DB->get_records_sql("SELECT * FROM {assign} WHERE 
                                 EXISTS (SELECT category FROM {course}
 		                        WHERE category=$course->category) ORDER BY id DESC");
 
