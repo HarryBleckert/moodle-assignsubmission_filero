@@ -328,6 +328,7 @@ class assign_submission_filero extends assign_submission_plugin {
 		                        WHERE category=$course->category) ORDER BY id DESC");
 
         foreach ($assignments AS $assignment ) {
+            print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
             // loop if not grader assignment
             if (empty($assignment->name) OR
                     (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag))){
