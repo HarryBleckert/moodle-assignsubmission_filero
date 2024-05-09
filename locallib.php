@@ -74,7 +74,7 @@ class assign_submission_filero extends assign_submission_plugin {
         global $USER, $DB;
 
         // disable submissions for graders
-        if ( assign_submission_filero::is_graders_assignment($submission)){
+        if ( assign_submission_filero::is_graders_assignment($submission) || !assign_submission_filero::use_archiving($submission)){
             return false;
         }
         //$_SESSION["debugfilero"] = true;
@@ -572,6 +572,11 @@ class assign_submission_filero extends assign_submission_plugin {
         return $_SESSION['filero_multiple_graders'] ?:false;
     }
 
+    public static function use_archiving($submission): bool{
+        $config = get_config('assignsubmission_filero');
+        $_SESSION['filero_use_archiving'] = $config->use_archiving;
+        return $_SESSION['filero_use_archiving'] ?:false;
+    }
 
     /**
      * Carry out any extra processing required when the work reverted to draft.
@@ -598,6 +603,9 @@ class assign_submission_filero extends assign_submission_plugin {
             /*$DB->delete_records('assignsubmission_filero',
                             array('submission'=>$submission->id));
             */
+            if (!assign_submission_filero::use_archiving($submission)){
+                return true;
+            }
             // Delete Filero record of submission
             $filero = new assignsubmission_filero_filero($submission);
             $filero->DeleteMoodleAssignmentSubmission();
@@ -706,6 +714,10 @@ class assign_submission_filero extends assign_submission_plugin {
                     $DB->delete_records('assignsubmission_filero_file',
                             array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
                 }
+            }
+
+            if (!assign_submission_filero::use_archiving($submission)){
+                return true;
             }
             // Empty Filero record of submission
             $filero = new assignsubmission_filero_filero($submission);

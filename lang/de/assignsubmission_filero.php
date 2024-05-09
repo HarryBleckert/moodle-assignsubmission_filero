@@ -35,13 +35,13 @@ $string['productkey'] = 'FILERO product key';
 $string['productkey_help'] = 'Der sogenannte "product key" wird von FILERO vergeben';
 $string['multiple_graders'] = 'Mehrere Gutachter_innen';
 
-$string['multiple_graders_help'] = 'Wenn festgelegt, werden Einreichungen von Aufgaben mit dem Tag „Einreichungsaufgaben“ angezeigt.'
-         . 'wird in alle Aufgaben desselben Benutzers kopiert, die als Benotungsaufgaben markiert sind.';
+$string['multiple_graders_help'] = 'Wenn festgelegt, werden Abgaben für Aufgaben mit dem Tag „Prüfungsabgaben“ '
+         . 'in alle Aufgaben desselben Benutzers kopiert, die als "Gutachteraufgaben" getaggt sind.';
 $string['exam_submission'] = 'Prüfungsabgabe';
 $string['exam_grading'] = 'Prüfungsbewertung';
 $string['submission_title_tag'] = 'Bitte geben Sie ein Text-Tag für Prüfungsabgaben ein';
 $string['submission_title_tag_help'] =
-         'Aufgaben für Prüfungsabgaben können nicht bewertet werden. Alle Prüfungsabgaben werden in bestehende Bewerteraufgaben dupliziert';
+         'Aufgaben für Prüfungsabgaben können nicht bewertet werden. Alle Prüfungsabgaben werden in bestehende Bewerteraufgaben desselben Kurses oder Kursbereichs dupliziert';
 $string['grading_title_tag'] = 'Bitte geben Sie einen Text-Tag für die Aufgaben zur Prüfungsbewertung ein';
 $string['grading_title_tag_help'] =
          'In Aufgaben zur Prüfungsbewertung sind keine Abgaben möglich. '
@@ -51,6 +51,8 @@ $string['grader_roles_help'] = 'Bitte wählen Sie eine oder mehrere Rollen für 
 $string['archive_feedback_after_grading'] = 'Feedbacks erst nach Bewertung archivieren';
 $string['archive_feedback_after_grading_help'] = 'Wenn aktiviert, dann werden Feedbacks des Bewerters erst nach Bewertung der Abgabe archiviert.';
 $string['submission_statement'] = 'Eigenständigkeitserklärung';
+$string['use_archiving'] = 'Archivierung aktivieren';
+$string['use_archiving_help'] = 'FILERO Archivierung aktivieren/deaktivieren';
 
 $string['uploaded'] = 'Hochgeladen am';
 $string['autocreated'] = 'Autom. angelegt am';

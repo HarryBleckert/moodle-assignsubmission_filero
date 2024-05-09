@@ -27,6 +27,16 @@ $settings->add(new admin_setting_configcheckbox('assignsubmission_filero/default
         new lang_string('default', 'assignsubmission_filero'),
         new lang_string('default_help', 'assignsubmission_filero'), 0));
 
+
+// override assign settings if activated
+$name = new lang_string('use_archiving', 'assignsubmission_filero');
+$description = new lang_string('use_archiving_help', 'assignsubmission_filero');
+$element = new admin_setting_configcheckbox('assignsubmission_filero/use_archiving',
+        $name,
+        $description,
+        1);
+$settings->add($element);
+
 $element = new admin_setting_configtext('assignsubmission_filero/location',
         'location',
         new lang_string('location', 'assignsubmission_filero'),

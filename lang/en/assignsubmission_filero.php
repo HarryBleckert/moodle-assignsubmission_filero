@@ -39,7 +39,7 @@ $string['exam_submission'] = 'Exam submission';
 $string['exam_grading'] = 'Exam grading';
 $string['submission_title_tag'] = 'Please enter a text tag for submission assignments';
 $string['submission_title_tag_help'] =
-        'Submission assignments can\'t be graded and all submissions will be duplicated to existing grader assignments';
+        'Submission assignments can\'t be graded and all submissions will be duplicated to existing grader assignments inside the same course or course category';
 $string['grading_title_tag'] = 'Please enter a text tag for grading assignments';
 $string['grading_title_tag_help'] =
         'Grading assignments will not allow submissions, but receive duplicates of submissions from submission assignment';
@@ -48,6 +48,8 @@ $string['grader_roles_help'] = 'Please select possible roles of graders';
 $string['archive_feedback_after_grading'] = 'Archive grader feedbacks after grading';
 $string['archive_feedback_after_grading_help'] = 'If enabled, grader feedbacks will only be archived after the submission has been graded.';
 $string['submission_statement'] = 'Submission statement';
+$string['use_archiving'] = 'enable archiving';
+$string['use_archiving_help'] = 'Enable/disavle FILERO archiving';
 
 $string['uploaded'] = 'Uploaded on';
 $string['autocreated'] = 'Autom. created on';
