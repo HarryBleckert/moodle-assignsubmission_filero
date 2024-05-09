@@ -74,7 +74,7 @@ class assign_submission_filero extends assign_submission_plugin {
         global $USER, $DB;
 
         // disable submissions for graders
-        if ( assign_submission_filero::is_graders_assignment($submission) || !assign_submission_filero::use_archiving($submission)){
+        if ( assign_submission_filero::is_graders_assignment($submission)){
             return false;
         }
         //$_SESSION["debugfilero"] = true;
@@ -128,87 +128,88 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             return false;
         }
+        if (assign_submission_filero::use_archiving($submission)) {
+            $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
+            //$filero->showAssignment(); exit;
+            $fileroRes = $filero->PutMoodleAssignmentSubmission();
 
-        $filero = new assignsubmission_filero_filero($submission, $files, assignsubmission_file_FILEAREA);
-        //$filero->showAssignment(); exit;
-        $fileroRes = $filero->PutMoodleAssignmentSubmission();
-
-        if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
-            if ($numfiles = $this->get_archived_files($submission->id, ($count ?: 1))) {
-                $count = $numfiles;
-            }
-            $filerorecord->userid = $submission->userid;
-            $filerorecord->numfiles = $count;
-            $filerorecord->filerocode = $fileroRes->filerocode;
-            $filerorecord->lasterrormsg = $fileroRes->fileromsg;
-            $filerorecord->fileroid = $fileroRes->fileroid;
-            $filerorecord->statement_accepted = $statement_accepted;
-            $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
-            $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
-            $filerorecord->filerovalidated = $fileroRes->filerovalidated;
-            if ( isset($grade->id) ) {
-                $filerorecord->grade = $grade->id ?: 0;
-            }
-            $DB->update_record('assignsubmission_filero', $filerorecord);
-            if (isset($fileroRes->validated_files) and is_countable($fileroRes->validated_files)) {
-                $submittedfiles = new stdClass();
-                $submittedfiles->fileroid = $fileroRes->fileroid;
-                $submittedfiles->assignment = $submission->assignment;
-                $submittedfiles->submission = $submission->id;
-                $submittedfiles->userid = $submission->userid;
-                if (!empty($DB->get_records('assignsubmission_filero_file',
-                        array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA)))
-                ) {
-                    $DB->delete_records('assignsubmission_filero_file',
-                            array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
+            if (!empty($fileroRes) and isset($fileroRes->filerocode)) {
+                if ($numfiles = $this->get_archived_files($submission->id, ($count ?: 1))) {
+                    $count = $numfiles;
                 }
-                foreach ($fileroRes->validated_files as $validated_file) {
-                    $submittedfiles->filesid = $validated_file['filesid'];
-                    $submittedfiles->filename = $validated_file['filename'];
-                    $submittedfiles->filesize = $validated_file['filesize'];
-                    $submittedfiles->contenthashsha1 = $validated_file['contenthashsha1'];
-                    $submittedfiles->contenthashsha512 = $validated_file['contenthashsha512'];
-                    $submittedfiles->filearea = $validated_file['filearea'];
-                    $submittedfiles->timecreated = $validated_file['timecreated'];
-                    $submittedfiles->timemodified = $validated_file['timemodified'];
-                    $DB->insert_record('assignsubmission_filero_file', $submittedfiles);
+                $filerorecord->userid = $submission->userid;
+                $filerorecord->numfiles = $count;
+                $filerorecord->filerocode = $fileroRes->filerocode;
+                $filerorecord->lasterrormsg = $fileroRes->fileromsg;
+                $filerorecord->fileroid = $fileroRes->fileroid;
+                $filerorecord->statement_accepted = $statement_accepted;
+                $filerorecord->submissiontimecreated = $fileroRes->filerotimecreated;
+                $filerorecord->submissiontimemodified = $fileroRes->filerotimemodified;
+                $filerorecord->filerovalidated = $fileroRes->filerovalidated;
+                if (isset($grade->id)) {
+                    $filerorecord->grade = $grade->id ?: 0;
                 }
-            }
+                $DB->update_record('assignsubmission_filero', $filerorecord);
+                if (isset($fileroRes->validated_files) and is_countable($fileroRes->validated_files)) {
+                    $submittedfiles = new stdClass();
+                    $submittedfiles->fileroid = $fileroRes->fileroid;
+                    $submittedfiles->assignment = $submission->assignment;
+                    $submittedfiles->submission = $submission->id;
+                    $submittedfiles->userid = $submission->userid;
+                    if (!empty($DB->get_records('assignsubmission_filero_file',
+                            array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA)))
+                    ) {
+                        $DB->delete_records('assignsubmission_filero_file',
+                                array('submission' => $submission->id, 'filearea' => assignsubmission_file_FILEAREA));
+                    }
+                    foreach ($fileroRes->validated_files as $validated_file) {
+                        $submittedfiles->filesid = $validated_file['filesid'];
+                        $submittedfiles->filename = $validated_file['filename'];
+                        $submittedfiles->filesize = $validated_file['filesize'];
+                        $submittedfiles->contenthashsha1 = $validated_file['contenthashsha1'];
+                        $submittedfiles->contenthashsha512 = $validated_file['contenthashsha512'];
+                        $submittedfiles->filearea = $validated_file['filearea'];
+                        $submittedfiles->timecreated = $validated_file['timecreated'];
+                        $submittedfiles->timemodified = $validated_file['timemodified'];
+                        $DB->insert_record('assignsubmission_filero_file', $submittedfiles);
+                    }
+                }
 
-            $groupname = null;
-            $groupid = 0;
-            // Get the group name as other fields are not transcribed in the logs. This information is important.
-            if (empty($submission->userid) && !empty($submission->groupid)) {
-                $groupname = $DB->get_field('groups', 'name', array('id' => $submission->groupid), MUST_EXIST);
-                $groupid = $submission->groupid;
-            }
-            $params = array(
-                    'context' => $coursemodulecontext,
-                    'courseid' => $assign->course,
-                    'objectid' => $filerorecord->id,
-                    'other' => array(
-                            'content' => '',
-                            'submissionid' => $submission->id,
-                            'submissionattempt' => $submission->attemptnumber,
-                            'submissionstatus' => "submitted",  // $submission->status,
-                            'filesubmissioncount' => $count,
-                            'groupid' => $groupid,
-                            'groupname' => $groupname,
-                            'pathnamehashes' => array_keys($files),
-                            'fileroresults' => $fileroRes
-                    )
-            );
+                $groupname = null;
+                $groupid = 0;
+                // Get the group name as other fields are not transcribed in the logs. This information is important.
+                if (empty($submission->userid) && !empty($submission->groupid)) {
+                    $groupname = $DB->get_field('groups', 'name', array('id' => $submission->groupid), MUST_EXIST);
+                    $groupid = $submission->groupid;
+                }
+                $params = array(
+                        'context' => $coursemodulecontext,
+                        'courseid' => $assign->course,
+                        'objectid' => $filerorecord->id,
+                        'other' => array(
+                                'content' => '',
+                                'submissionid' => $submission->id,
+                                'submissionattempt' => $submission->attemptnumber,
+                                'submissionstatus' => "submitted",  // $submission->status,
+                                'filesubmissioncount' => $count,
+                                'groupid' => $groupid,
+                                'groupname' => $groupname,
+                                'pathnamehashes' => array_keys($files),
+                                'fileroresults' => $fileroRes
+                        )
+                );
 
-            if (!empty($submission->userid) && ($submission->userid != $USER->id)) {
-                $params['relateduserid'] = $submission->userid;
+                if (!empty($submission->userid) && ($submission->userid != $USER->id)) {
+                    $params['relateduserid'] = $submission->userid;
+                }
+                if ($assign->blindmarking) {
+                    $params['anonymous'] = 1;
+                }
+                // need to fix debug message regarding missing #this->assign instance.
+                $event = submitted_file_archived::create($params);
+                $event->set_legacy_files($files);
+                $event->trigger();
             }
-            if ($assign->blindmarking) {
-                $params['anonymous'] = 1;
-            }
-            // need to fix debug message regarding missing #this->assign instance.
-            $event = submitted_file_archived::create($params);
-            $event->set_legacy_files($files);
-            $event->trigger();
         }
         if (!isset($_SESSION['filero_submit_for_grading_'.$submission->id])){
             $this->grader_submissions($submission,"duplicate");
