@@ -55,6 +55,12 @@ class assignsubmission_filero_observer {
     public static function process_submission_graded(submission_graded $event) {
         // public static function process_submission_graded($event) {
         global $DB;
+        $config = get_config('assignsubmission_filero');
+
+        if (!$config->use_archiving){
+            return;
+        }
+
         assignsubmission_filero_observer::observer_log("\nObserver for submission_graded has been called by event handler");
         // catch looping calls of this observer class
         static $filero_feedback = 1;
@@ -68,7 +74,6 @@ class assignsubmission_filero_observer {
             return;
         }
         // Task: Only archive feedbacks if submission has been graded!
-        $config = get_config('assignsubmission_filero');
         if ( !($grade->grade >0) AND $config->archive_feedback_after_grading ){
             assignsubmission_filero_observer::observer_log("No archiving: Record assign_grades with id $event->objectid has not been graded yet.");
             return;
