@@ -374,15 +374,9 @@ class assign_submission_filero extends assign_submission_plugin {
                 // create new submission if not exists
                 if (!isset($destsubmission->id)) {
                     $destsubmission = clone $currentsubmission;
-                    //$destsubmission = new stdClass(); // $currentsubmission;
                     unset($destsubmission->id);
-                    //$destsubmission->userid = $currentsubmission->userid;
                     $destsubmission->assignment = $assignment->id;
-                    //$destsubmission->groupid = $currentsubmission->groupid;
-                    //$destsubmission->attemptnumber = $currentsubmission->attemptnumber;
-                    //$destsubmission->latest = $currentsubmission->latest;
                     $destsubmission->status = "submitted";
-                    //$destsubmission->status = "draft";
                     $destsubmission->id = $DB->insert_record('assign_submission', $destsubmission);
                     assignsubmission_filero_observer::observer_log("grader_submissions: New submission record inserted: "
                             ."Submission $destsubmission->id for assignment " .$assignment->name." from user id $submission->userid was inserted");
@@ -429,7 +423,6 @@ class assign_submission_filero extends assign_submission_plugin {
                 */
             }
         }
-        //unset($_SESSION['filero_statement_accepted']);
         return true;
     }
 
