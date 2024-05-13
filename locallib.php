@@ -909,7 +909,7 @@ class assign_submission_filero extends assign_submission_plugin {
         global $USER;
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
-        if ($filesubmission) {
+        if ($filesubmission AND assign_submission_filero::use_archiving($submission)) {
             $fileroRes = $this->get_archived_files_info($submission);
             if (isset($_REQUEST['action']) and $_REQUEST['action'] != "grader"
                     and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
