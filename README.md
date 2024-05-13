@@ -14,7 +14,7 @@ or exclusively allow grader feedback and disabling submissions.**
 
 Requirements
 ------------
-Moodle 4.0, 4.1, 4.2, 4.3
+Moodle 4.0, 4.1, 4.2, 4.3, 4.4
 
 Installation
 ------------
