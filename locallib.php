@@ -343,6 +343,9 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             $destsubmission = $DB->get_record('assign_submission',
                     array('assignment' => $assignment->id,'userid' => $submission->userid));
+            if (!check_enrolment($assignment->course, $submission->userid)){
+                continue;
+            }
             if ( isset($destsubmission->id)) {
                 if ( $action == "revert" OR $action == "remove") {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
@@ -1228,6 +1231,14 @@ class assign_submission_filero extends assign_submission_plugin {
             }
         }
         return $update;
+    }
+
+    function check_enrolment($courseid, $userid){
+        $enrolled = false;
+        if ( $context = get_context_instance(CONTEXT_COURSE, $courseid, MUST_EXIST)) {
+            $enrolled = is_enrolled($context, $userid, '', true);
+        }
+        return $enrolled;
     }
 }
 
