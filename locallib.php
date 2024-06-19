@@ -346,6 +346,8 @@ class assign_submission_filero extends assign_submission_plugin {
             if (!$this->check_enrolment($assignment->course, $submission->userid)){
                 continue;
             }
+            assignsubmission_filero_observer::observer_log("grader_submissions: Assignments loop: "
+                    ."Submission $destsubmission->id for assignment " .$assignment->name." (".$assignment->id . ") from user id $submission->userid");
             if ( isset($destsubmission->id)) {
                 if ( $action == "revert" OR $action == "remove") {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
