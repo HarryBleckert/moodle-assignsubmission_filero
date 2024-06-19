@@ -343,7 +343,7 @@ class assign_submission_filero extends assign_submission_plugin {
             }
             $destsubmission = $DB->get_record('assign_submission',
                     array('assignment' => $assignment->id,'userid' => $submission->userid));
-            if (!check_enrolment($assignment->course, $submission->userid)){
+            if (!$this->check_enrolment($assignment->course, $submission->userid)){
                 continue;
             }
             if ( isset($destsubmission->id)) {
