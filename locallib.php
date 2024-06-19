@@ -1237,7 +1237,7 @@ class assign_submission_filero extends assign_submission_plugin {
 
     function check_enrolment($courseid, $userid){
         $enrolled = false;
-        if ( $context = get_context_instance(CONTEXT_COURSE, $courseid, MUST_EXIST)) {
+        if ( $context = context_course::instance(CONTEXT_COURSE, $courseid)) {
             $enrolled = is_enrolled($context, $userid, '', true);
         }
         return $enrolled;
