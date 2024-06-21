@@ -323,11 +323,14 @@ class assign_submission_filero extends assign_submission_plugin {
                     "grader_submissions(): Course with id $assignmentcourse for assignment and submission id $currentsubmission->i not found.");
             return;
         }
-        
-        $assignments = $DB->get_records_sql("SELECT * FROM {assign} WHERE 
-                                EXISTS (SELECT category FROM {course}
-		                        WHERE category=$course->category) ORDER BY id DESC");
 
+	// SQL-Befehl funktioniert nicht; Es werden ALLE assignments gefunden und dort reingespielt.
+       	// $assignments = $DB->get_records_sql("SELECT * FROM {assign} WHERE 
+	//                       EXISTS (SELECT category FROM {course}
+	//	                        WHERE category=$course->category) ORDER BY id DESC");
+	    
+	$assignments = $DB->get_records_sql("SELECT a.* FROM {assign} as a inner join {course} as c on c.id = a.course WHERE c.category = $course->category ORDER BY a.id DESC");
+	    
         foreach ($assignments AS $assignment ) {
             // print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
             // loop if not grader assignment
