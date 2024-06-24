@@ -595,11 +595,17 @@ class assignsubmission_filero_filero {
         }
         $FeedbackComments = new stdClass();
         if (!empty($assignfeedback_comments)) {
-            $FeedbackComments->AssignFeedbackCommentId = $assignfeedback_comments->id;
-            $FeedbackComments->commenttext = $assignfeedback_comments->commenttext;
-            $FeedbackComments->AssignGradeId = $assignfeedback_comments->grade;
-            $FeedbackComments->Assignment = $assignfeedback_comments->assignment;
-            $FeedbackComments->CommentFormat = $assignfeedback_comments->commentformat;
+            foreach ($assignfeedback_comments as $comment) {      
+            
+                $AssignFeedbackComments = new stdClass();                
+                $AssignFeedbackComments->AssignFeedbackCommentId = $comment->id;
+                $AssignFeedbackComments->commenttext = $comment->commenttext;
+                $AssignFeedbackComments->AssignGradeId = $comment->grade;
+                $AssignFeedbackComments->Assignment = $comment->assignment;
+                $AssignFeedbackComments->CommentFormat = $comment->commentformat;
+
+                $FeedbackComments += $AssignFeedbackComments;
+            }
         }
 
         $Assign = new stdClass();
