@@ -407,6 +407,10 @@ class assign_submission_filero extends assign_submission_plugin {
                         . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
                         . $currentsubmission->id . " of assignment " . $assignmentname);
 
+                $coursemodulecontext = context_module::instance($coursemodule->id);
+                $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                $assign_g->notify_graders( $destsubmission);
+
                 /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
                 $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
@@ -430,6 +434,45 @@ class assign_submission_filero extends assign_submission_plugin {
         }
         return true;
     }
+
+    /**
+     * Send notifications to graders upon student submissions.
+     *
+     * @param stdClass $submission, $assignment, $coursemodule
+     * @return void
+     * /
+    protected function notify_graders( $submission, $assignment, $coursemodule) {
+        global $DB, $USER;
+
+        $coursemodulecontext = context_module::instance($coursemodule->id);
+        $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+
+        $instance = $assign_g->get_instance();
+
+        $late = $instance->duedate && ($instance->duedate < time());
+
+        if (!$instance->sendnotifications && !($late && $instance->sendlatenotifications)) {
+            // No need to do anything.
+            return;
+        }
+
+        if ($submission->userid) {
+            $user = $DB->get_record('user', array('id'=>$submission->userid), '*', MUST_EXIST);
+        } else {
+            $user = $USER;
+        }
+
+        if ($notifyusers = $assign_g->get_notifiable_users($user->id)) {
+            foreach ($notifyusers as $notifyuser) {
+                $assign_g->send_notification($user,
+                        $notifyuser,
+                        'gradersubmissionupdated',
+                        'assign_notification',
+                        $submission->timemodified);
+            }
+        }
+    }
+     */
 
 
     /**
