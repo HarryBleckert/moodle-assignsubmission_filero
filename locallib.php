@@ -290,7 +290,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return boolean
      */
     private function grader_submissions($submission,$action="duplicate") {
-        global $DB;
+        global $CFG, $DB;
 
         if ( !assign_submission_filero::init_multiple_graders($submission)){
             return false;
@@ -415,14 +415,17 @@ class assign_submission_filero extends assign_submission_plugin {
                     /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
-                $search=shell_exec( 'grep "function notify_graders" ../../../assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: ".$search);
-                if (stristr( $search, "protected")) {
-                    shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php");
+                $search=shell_exec( 'grep "function notify_graders" ' .$CFG->dataroot . '/mod../../../assign/locallib.php');
+                //$search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
+                assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
+                if (stristr( $search, "protected function notify_graders")) {
+                    shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
+                            . $CFG->dataroot . "/mod/assign/locallib.php");
                 }
-                $search=shell_exec( '/usr/bin/grep "function notify_graders" ../../../assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: ".$search);
-                if (!stristr($search, "protected")) {
+                $search=shell_exec( 'grep "function notify_graders" ' .$CFG->dataroot . '/mod../../../assign/locallib.php');
+                //$search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
+                assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
+                if (!stristr( $search, "protected function notify_graders")) {
                     $assign->notify_graders($destsubmission);
                 }
                 else{
