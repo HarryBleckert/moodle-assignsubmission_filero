@@ -416,10 +416,10 @@ class assign_submission_filero extends assign_submission_plugin {
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
                 $search=shell_exec( 'grep "function notify_graders" ../../../assign/locallib.php');
-                if (stristr($search, "protected ")){
-                    shell_exec( '/bin/sed -i "s/protected function notify_graders/function notify_graders/" ../../../assign/locallib.php');
+                if (stristr($search, "protected")){
+                    shell_exec( "/bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php");
                     $search=shell_exec( 'grep "function notify_graders" ../../../assign/locallib.php');
-                    if (!stristr($search, "protected ")) {
+                    if (!stristr($search, "protected")) {
                         $assign->notify_graders($destsubmission);
                     }
                     else{
