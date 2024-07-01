@@ -415,17 +415,26 @@ class assign_submission_filero extends assign_submission_plugin {
                     /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
-                $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot . '/mod/assign/locallib.php');
-                //$search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
+                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot
+                        . '/mod/assign/locallib.php');
+                $search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
                 if (stristr( $search, "protected function notify_graders")) {
                     shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
                             . $CFG->dataroot . "/mod/assign/locallib.php");
                 }
-                $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot . '/mod/assign/locallib.php');
-                //$search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
+                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot
+                        . '/mod/assign/locallib.php');
+                $search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
                 if (!stristr( $search, "protected function notify_graders")) {
+                    if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
+                        assignsubmission_filero_observer::observer_log(
+                                "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
+                        continue;
+                    }
+                    $coursemodulecontext = context_module::instance($coursemodule->id);
+                    $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
                     $assign->notify_graders($destsubmission);
                     assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: - "
                             . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
