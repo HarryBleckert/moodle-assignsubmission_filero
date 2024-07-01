@@ -324,12 +324,15 @@ class assign_submission_filero extends assign_submission_plugin {
             return;
         }
 
-        $assignments = $DB->get_records_sql("SELECT a.* FROM {assign} as a 
+        /* $assignments = $DB->get_records_sql("SELECT a.* FROM {assign} as a
  				inner join {course} as c on c.id = a.course 
      					WHERE c.category = $course->category ORDER BY a.id DESC");
+        */
+        $assignments = $DB->get_records_sql("SELECT a.* FROM {assign} as a,	{course} as c 
+     					WHERE c.id + a.course AND c.category = $course->category ORDER BY a.id DESC");
 
         foreach ($assignments AS $assignment ) {
-            // print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
+            print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
             // loop if not grader assignment
             if (empty($assignment->name) OR
                     (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag))){
