@@ -356,22 +356,22 @@ class assign_submission_filero extends assign_submission_plugin {
                         continue;
                     }
                     $coursemodulecontext = context_module::instance($coursemodule->id);
-                    $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                    $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
                 }
                 if ( $action == "revert"){
                     // avoid looping when assign_g->revert_to_draft is called on filero plugin
                     assignsubmission_filero_observer::observer_log("grader_submissions: revert: "
                             ."Submission $destsubmission->id for assignment " .$assignment->name." from user id $submission->userid was reverted to draft");
                     $_SESSION['filero_revert_to_draft_' . $destsubmission->id] = true;
-                    $assign_g->revert_to_draft($destsubmission->userid);
+                    $assign->revert_to_draft($destsubmission->userid);
                     unset($_SESSION['filero_revert_to_draft_' . $destsubmission->id]);
                 }
                 elseif ( $action == "remove"){
                     assignsubmission_filero_observer::observer_log("grader_submissions: remove: "
                             ."Submission $destsubmission->id for assignment " .$assignment->name." from user id $submission->userid was removed");
-                    // avoid looping when $assign_g->remove_submission is called on filero plugin
+                    // avoid looping when $assign->remove_submission is called on filero plugin
                     $_SESSION['filero_remove_submission_' . $destsubmission->id] = true;
-                    $assign_g->remove_submission($destsubmission->userid);
+                    $assign->remove_submission($destsubmission->userid);
                     unset($_SESSION['filero_remove_submission_' . $destsubmission->id]);
                 }
             }
@@ -416,14 +416,12 @@ class assign_submission_filero extends assign_submission_plugin {
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                //$search = file_get_contents($CFG->dirroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
                 if (stristr( $search, "protected function notify_graders")) {
                     shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
                             . $CFG->dirroot . "/mod/assign/locallib.php");
                 }
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                //$search = file_get_contents($CFG->dirroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
                 if (!stristr( $search, "protected function notify_graders")) {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
@@ -467,9 +465,9 @@ class assign_submission_filero extends assign_submission_plugin {
         global $DB, $USER;
 
         $coursemodulecontext = context_module::instance($coursemodule->id);
-        $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+        $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
 
-        $instance = $assign_g->get_instance();
+        $instance = $assign->get_instance();
 
         $late = $instance->duedate && ($instance->duedate < time());
 
@@ -484,9 +482,9 @@ class assign_submission_filero extends assign_submission_plugin {
             $user = $USER;
         }
 
-        if ($notifyusers = $assign_g->get_notifiable_users($user->id)) {
+        if ($notifyusers = $assign->get_notifiable_users($user->id)) {
             foreach ($notifyusers as $notifyuser) {
-                $assign_g->send_notification($user,
+                $assign->send_notification($user,
                         $notifyuser,
                         'gradersubmissionupdated',
                         'assign_notification',
