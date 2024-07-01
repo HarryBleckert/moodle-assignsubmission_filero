@@ -300,9 +300,9 @@ class assign_submission_filero extends assign_submission_plugin {
 
         $currentsubmission = $DB->get_record('assign_submission',
                 array('assignment' => $submission->assignment,'userid' => $submission->userid));
-        $assignment = $DB->get_record('assign', array('id' => $submission->assignment));
-        $assignmentname = $assignment->name;
-        $assignmentcourse = $assignment->course;
+        $currentassignment = $DB->get_record('assign', array('id' => $submission->assignment));
+        $assignmentname = $currentassignment->name;
+        $assignmentcourse = $currentassignment->course;
 
         // ignore assignments that don't have tag "abgabe" in name
         if ($action == "duplicate" AND !stristr($assignmentname, $submission_title_tag)){
@@ -328,7 +328,7 @@ class assign_submission_filero extends assign_submission_plugin {
  				inner join {course} as c on c.id = a.course 
      					WHERE c.category = $course->category ORDER BY a.id DESC");
         foreach ($assignments AS $assignment ) {
-            print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
+            // print "<br><br><hr>Assignment: " . print_r($assignment->name, true) ."<hr>";
             // loop if not grader assignment
             if (empty($assignment->name) OR
                     (!stristr($assignment->name, $submission_title_tag) AND !stristr($assignment->name, $grading_title_tag))){
