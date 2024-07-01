@@ -415,7 +415,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
-                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot
+                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot. '/mod/assign/locallib.php');
 
                 $search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
@@ -423,8 +423,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
                             . $CFG->dataroot . "/mod/assign/locallib.php");
                 }
-                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot
-                        . '/mod/assign/locallib.php');
+                //$search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dataroot. '/mod/assign/locallib.php');
                 $search = file_get_contents($CFG->dataroot . "/mod/assign/locallib.php");
                 assignsubmission_filero_observer::observer_log("Search: ".strlen($search));
                 if (!stristr( $search, "protected function notify_graders")) {
