@@ -407,35 +407,28 @@ class assign_submission_filero extends assign_submission_plugin {
                         . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
                         . $currentsubmission->id . " of assignment " . $assignmentname);
 
-
-                /*if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
-                    assignsubmission_filero_observer::observer_log(
-                            "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
-                    continue;
-                }
-                $coursemodulecontext = context_module::instance($coursemodule->id);
-                $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                /* notify_graders is a protected function in /mod/assign/locallib.php
+                    In order for grader notifications to be usable, locallib.php need to be patched and
+                    the function must be unprotected.
+                    Any other solution seems to be worse.
+                    grep "protected function notify_graders" ../../../assign/locallib.php
+                    /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
+                    grep "function notify_graders" ../../../assign/locallib.php
                 */
-                $assign->notify_graders( $destsubmission);
+                $search=shell_exec( 'grep "function notify_graders" ../../../assign/locallib.php');
+                if (stristr($search, "protected ")){
+                    $results = shell_exec( '/bin/sed -i "s/protected function notify_graders/function notify_graders/" ../../../assign/locallib.php');
+                    $search=shell_exec( 'grep "function notify_graders" ../../../assign/locallib.php');
+                    if (!stristr($search, "protected ")) {
+                        $assign->notify_graders($destsubmission);
+                    }
+                }
 
 
                 /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
                 $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
                 //$this->notify_student_submission_receipt($submission);  // not possible, protected function
                 $this->submit_for_grading($destsubmission);
-                */
-
-                /* Not working when calling via new assign class, but maybe usefull for notifications
-                 * if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
-                    assignsubmission_filero_observer::observer_log(
-                            "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
-                    return;
-                }
-                $coursemodulecontext = context_module::instance($coursemodule->id);
-                $assign_g = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-                $assign_g->submit_for_grading($destsubmission,[]);
-
-                /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
                 unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
                 */
             }
