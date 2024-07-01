@@ -422,6 +422,11 @@ class assign_submission_filero extends assign_submission_plugin {
                     if (!stristr($search, "protected ")) {
                         $assign->notify_graders($destsubmission);
                     }
+                    else{
+                        assignsubmission_filero_observer::observer_log("ERROR: grader_submissions: notify_graders can't be called. The function is protected. - "
+                                . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
+                                . $currentsubmission->id . " of assignment " . $assignmentname);
+                    }
                 }
 
 
