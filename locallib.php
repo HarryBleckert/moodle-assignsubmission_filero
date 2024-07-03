@@ -341,12 +341,13 @@ class assign_submission_filero extends assign_submission_plugin {
                 continue;
             }
             if (!$this->check_enrolment($assignment->course, $submission->userid)){
+                assignsubmission_filero_observer::observer_log("User $submission->userid is not enrolled in course $assignment->course");
                 continue;
             }
             $destsubmission = $DB->get_record('assign_submission',
                     array('assignment' => $assignment->id,'userid' => $submission->userid));
             assignsubmission_filero_observer::observer_log("grader_submissions: Assignments loop: "
-                    ."Submission $destsubmission->id for assignment " .$assignment->name." (".$assignment->id . ") from user id $submission->userid");
+                    ."Assignment " .$assignment->name." (".$assignment->id . ") from user id $submission->userid");
             if ( isset($destsubmission->id)) {
                 if ( $action == "revert" OR $action == "remove") {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
@@ -358,9 +359,9 @@ class assign_submission_filero extends assign_submission_plugin {
                     $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
                 }
                 if ( $action == "revert"){
-                    // avoid looping when assign_g->revert_to_draft is called on filero plugin
                     assignsubmission_filero_observer::observer_log("grader_submissions: revert: "
                             ."Submission $destsubmission->id for assignment " .$assignment->name." from user id $submission->userid was reverted to draft");
+                    // Session var to avoid looping when assign->revert_to_draft is called on filero plugin
                     $_SESSION['filero_revert_to_draft_' . $destsubmission->id] = true;
                     $assign->revert_to_draft($destsubmission->userid);
                     unset($_SESSION['filero_revert_to_draft_' . $destsubmission->id]);
@@ -368,7 +369,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 elseif ( $action == "remove"){
                     assignsubmission_filero_observer::observer_log("grader_submissions: remove: "
                             ."Submission $destsubmission->id for assignment " .$assignment->name." from user id $submission->userid was removed");
-                    // avoid looping when $assign->remove_submission is called on filero plugin
+                    // Session var to avoid looping when $assign->remove_submission is called on filero plugin
                     $_SESSION['filero_remove_submission_' . $destsubmission->id] = true;
                     $assign->remove_submission($destsubmission->userid);
                     unset($_SESSION['filero_remove_submission_' . $destsubmission->id]);
@@ -415,13 +416,13 @@ class assign_submission_filero extends assign_submission_plugin {
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: $search");
+                // assignsubmission_filero_observer::observer_log("Search: $search");
                 if (stristr( $search, "protected")) {
                     shell_exec("/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
                             . $CFG->dirroot . "/mod/assign/locallib.php");
                 }
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: $search");
+                // assignsubmission_filero_observer::observer_log("Search: $search");
                 if (!stristr( $search, "protected")) {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                         assignsubmission_filero_observer::observer_log(

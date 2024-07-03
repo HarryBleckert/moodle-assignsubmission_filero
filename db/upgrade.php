@@ -180,5 +180,14 @@ function xmldb_assignsubmission_filero_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, $newversion, 'assignsubmission', 'filero');
     }
-    return true;
+
+    $newversion = 2024070300;
+    if ($oldversion < $newversion) {
+        $table = new xmldb_table('assignsubmission_filero_file');
+        $field = new xmldb_field('timemcreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, "timecreated");
+        }
+    }
+        return true;
 }
