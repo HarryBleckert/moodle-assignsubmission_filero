@@ -328,11 +328,11 @@ class assignsubmission_filero_filero {
             */
             foreach ( $assignsubmission_onlinetext AS $onlinetext) {
                 $SubmissionOnlinetextA = new stdClass();
-                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $assignsubmission_onlinetext->id;
-                $SubmissionOnlinetextA->onlinetext = $assignsubmission_onlinetext->onlinetext;
-                $SubmissionOnlinetextA->SubmissionId = $assignsubmission_onlinetext->submission;
-                $SubmissionOnlinetextA->Assignment = $assignsubmission_onlinetext->assignment;
-                $SubmissionOnlinetextA->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
+                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $onlinetext->id;
+                $SubmissionOnlinetextA->onlinetext = $onlinetext->onlinetext;
+                $SubmissionOnlinetextA->SubmissionId = $onlinetext->submission;
+                $SubmissionOnlinetextA->Assignment = $onlinetext->assignment;
+                $SubmissionOnlinetextA->OnlineFormat = $onlinetext->onlineformat;
                 $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
             }
         }
