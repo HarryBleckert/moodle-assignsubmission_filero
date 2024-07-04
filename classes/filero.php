@@ -280,7 +280,7 @@ class assignsubmission_filero_filero {
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $this->submission->assignment, "userid" => $this->submission->userid));
         // id	assignment submission onlinetext onlineformat
-        $assignsubmission_onlinetext = $DB->get_record('assignsubmission_onlinetext',
+        $assignsubmission_onlinetext = $DB->get_records('assignsubmission_onlinetext',
                 array('submission' => $this->submission->id, "assignment" => $assign->id));
         $cm = get_coursemodule_from_instance('assign', $assign->id, $assign->course);
         $context = context_module::instance($cm->id);
@@ -319,11 +319,22 @@ class assignsubmission_filero_filero {
         if (!empty($assignsubmission_onlinetext)) {
             // $assignsubmission_onlinetext
             // id	assignment submission onlinetext onlineformat
+            /* before July 2024
             $SubmissionOnlinetext->AssignSubmissionOnlinetextId = $assignsubmission_onlinetext->id;
             $SubmissionOnlinetext->onlinetext = $assignsubmission_onlinetext->onlinetext;
             $SubmissionOnlinetext->SubmissionId = $assignsubmission_onlinetext->submission;
             $SubmissionOnlinetext->Assignment = $assignsubmission_onlinetext->assignment;
             $SubmissionOnlinetext->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
+            */
+            foreach ( $assignsubmission_onlinetext AS $onlinetext) {
+                $SubmissionOnlinetextA = new stdClass();
+                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $assignsubmission_onlinetext->id;
+                $SubmissionOnlinetextA->onlinetext = $assignsubmission_onlinetext->onlinetext;
+                $SubmissionOnlinetextA->SubmissionId = $assignsubmission_onlinetext->submission;
+                $SubmissionOnlinetextA->Assignment = $assignsubmission_onlinetext->assignment;
+                $SubmissionOnlinetextA->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
+                $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
+            }
         }
 
         $Assign = new stdClass();
