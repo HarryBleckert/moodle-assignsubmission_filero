@@ -416,13 +416,13 @@ class assign_submission_filero extends assign_submission_plugin {
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                // assignsubmission_filero_observer::observer_log("Search: $search");
+                assignsubmission_filero_observer::observer_log("Search: $search");
                 if (stristr( $search, "protected")) {
                     shell_exec("/usr/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
                             . $CFG->dirroot . "/mod/assign/locallib.php");
                 }
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                // assignsubmission_filero_observer::observer_log("Search: $search");
+                assignsubmission_filero_observer::observer_log("Search: $search");
                 if (!stristr( $search, "protected")) {
                     if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                         assignsubmission_filero_observer::observer_log(
