@@ -338,8 +338,9 @@ class assignsubmission_filero_filero {
             }
             */
         }
-        // $this->output = "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
+        /* $this->output = "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
                 . "\nSubmissionOnlinetext" . var_export($SubmissionOnlinetext,true) . "\n";
+        */
         $this->output = "\nSubmission ID: " . trim($this->submission->id) . "\n";
         $Assign = new stdClass();
         $Assign->AssignId = $assign->id;

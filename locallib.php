@@ -415,6 +415,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
                     grep "function notify_graders" ../../../assign/locallib.php
                 */
+                /* notify_graders with patch - disabled on July 5,2024
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
                 assignsubmission_filero_observer::observer_log("Search: $search");
                 if (stristr( $search, "protected")) {
@@ -441,7 +442,7 @@ class assign_submission_filero extends assign_submission_plugin {
                             . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
                             . $currentsubmission->id . " of assignment " . $assignmentname);
                 }
-
+                */
 
 
                 /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
