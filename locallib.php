@@ -404,7 +404,7 @@ class assign_submission_filero extends assign_submission_plugin {
                 $DB->update_record('assign_submission', $destsubmission);
                 $this->copy_submission_file($currentsubmission, $destsubmission);
                 assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
-                        . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
+                        . $destsubmission->id . " of assignment " . $assignment->name . " updated from submission "
                         . $currentsubmission->id . " of assignment " . $assignmentname);
 
                 /* notify_graders is a protected function in /mod/assign/locallib.php
