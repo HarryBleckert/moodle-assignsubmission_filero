@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version = 2024080700;
 $plugin->release = "v1.2-rc";
 $plugin->component = 'assignsubmission_filero';
-$plugin->requires = 2021051700;  // Moodle 4.x
+$plugin->requires = 2021051700;     // Moodle 4.x
 
 // The plugin is a pre-release version.
 // $plugin->maturity = MATURITY_ALPHA;
