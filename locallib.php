@@ -432,7 +432,7 @@ class assign_submission_filero extends assign_submission_plugin {
                     }
                     $coursemodulecontext = context_module::instance($coursemodule->id);
                     $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-                    $assign::notify_graders($destsubmission);
+                    // $assign::notify_graders($destsubmission);
                     assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: - "
                             . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
                             . $currentsubmission->id . " of assignment " . $assignmentname);
