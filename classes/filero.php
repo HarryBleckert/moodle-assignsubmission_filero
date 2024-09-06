@@ -374,8 +374,10 @@ class assignsubmission_filero_filero {
         $AssignSubmission->SubmissionOnlinetext = $SubmissionOnlinetext;
         unset($AssignFiles);
 
-        $this->output .= "Total file size: " . number_format($totalfilesize / 1024, 0)
-                . "KB - Memory used after processing files: " . round(memory_get_peak_usage(true) / 1024 / 1024) . "M\n";
+        $this->output .= "Date: " . date("Y-m-d H:i:s")
+                . " - Total file size: " . number_format($totalfilesize / 1024, 0)
+                . "KB - Memory used after processing files: "
+                . round(memory_get_peak_usage(true) / 1024 / 1024) . "M\n";
 
         $AssignSubmissionWTicket = new stdClass();
         $AssignSubmissionWTicket->ticket = $_SESSION['ticket'];
@@ -383,8 +385,8 @@ class assignsubmission_filero_filero {
         $AssignSubmissionWTicket->status = $this->status;
         unset($AssignSubmission);
 
-        $this->output .= "\n\n" . "AssignSubmission with ticket data: (Memory used: " .
-                round(memory_get_peak_usage(true) / 1024 / 1024) . "M)\n"
+        $this->output .= "\n\n" . "AssignSubmission with ticket data: (Memory used: "
+                . round(memory_get_peak_usage(true) / 1024 / 1024) . "M)\n"
                 . $this->hideFileContent(var_export($AssignSubmissionWTicket, true)) . "\n";
 
         try {
@@ -641,8 +643,10 @@ class assignsubmission_filero_filero {
         $AssignGrades->FeedbackComments = $FeedbackComments;
         unset($AssignFiles);
 
-        $this->output .= "Total file size: " . number_format(($totalfilesize / 1024), 0)
-                . "KB - Memory used after processing files: " . round(memory_get_peak_usage(true) / 1024 / 1024) . "M\n";
+        $this->output .= "Date: " . date("Y-m-d H:i:s")
+                . " - Total file size: " . number_format($totalfilesize / 1024, 0)
+                . "KB - Memory used after processing files: "
+                . round(memory_get_peak_usage(true) / 1024 / 1024) . "M\n";
 
         $AssignGradesWTicket = new stdClass();
         $AssignGradesWTicket->ticket = $_SESSION['ticket'];
