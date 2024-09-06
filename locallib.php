@@ -211,6 +211,10 @@ class assign_submission_filero extends assign_submission_plugin {
                 $event->trigger();
             }
         }
+        else{
+            assignsubmission_filero_observer::observer_log(
+                    "submit_for_grading(): Filero Archivierung ist deaktiviert für Submission $submission->id. User ID $submission->userid!");
+        }
         if (!isset($_SESSION['filero_submit_for_grading_'.$submission->id])){
             $this->grader_submissions($submission,"duplicate");
         }
