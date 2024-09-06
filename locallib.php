@@ -429,17 +429,17 @@ class assign_submission_filero extends assign_submission_plugin {
                 $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
                 assignsubmission_filero_observer::observer_log("Search: $search");
                 if (!stristr( $search, "protected")) { */
-                    if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
-                        assignsubmission_filero_observer::observer_log(
-                                "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
-                        continue;
-                    }
-                    $coursemodulecontext = context_module::instance($coursemodule->id);
-                    $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-                    // $assign::notify_graders($destsubmission);
-                    assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: - "
-                            . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
-                            . $currentsubmission->id . " of assignment " . $assignmentname);
+                /* if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
+                    assignsubmission_filero_observer::observer_log(
+                            "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
+                    continue;
+                }
+                $coursemodulecontext = context_module::instance($coursemodule->id);
+                $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                $assign::notify_graders($destsubmission);
+                assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: - "
+                        . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
+                        . $currentsubmission->id . " of assignment " . $assignmentname);*/
                 /*}
                 else{
                     assignsubmission_filero_observer::observer_log("ERROR: grader_submissions: notify_graders can't be called. The function is protected. - "
