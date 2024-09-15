@@ -1013,12 +1013,11 @@ class assign_submission_filero extends assign_submission_plugin {
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
                         . "</form>\n"
 
-                        . (strlen($fileroRes)>30
-                                ?'<form method="POST" style="font-size:81%;display:inline;">'
+                        . '<form method="POST" style="font-size:81%;display:inline;">'
                             . '<button name="assignsubmission_filero_archive" value="' . $submission->id
-                            . '" title="Studierende sehen diesen Button nicht!' . $info . '">Erneut archivieren</button>'
-                            ."</form>\n"
-                                :'');
+                            . '" title="Studierende sehen diesen Button nicht!' . $info . '">'
+                            . (strlen($fileroRes)>30 ?'Erneut a' : 'A') .'rchivieren</button>'
+                            ."</form>\n";
             }
         }
         return $fileroRes;
