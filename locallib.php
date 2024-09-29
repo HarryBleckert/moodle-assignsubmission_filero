@@ -410,63 +410,79 @@ class assign_submission_filero extends assign_submission_plugin {
                 assignsubmission_filero_observer::observer_log("grader_submissions: Submission "
                         . $destsubmission->id . " of assignment " . $assignment->name . " updated from submission "
                         . $currentsubmission->id . " of assignment " . $assignmentname);
-
-                /* notify_graders is a protected function in /mod/assign/locallib.php
-                    In order for grader notifications to be usable, locallib.php need to be patched and
-                    the function must be unprotected.
-                    Any other solution seems to be worse.
-                    grep "protected function notify_graders" ../../../assign/locallib.php
-                    /bin/sed -i 's/protected function notify_graders/function notify_graders/' ../../../assign/locallib.php
-                    grep "function notify_graders" ../../../assign/locallib.php
-                */
-                /* notify_graders with patch - disabled on July 5,2024
-                $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: $search");
-                if (stristr( $search, "protected")) {
-                    shell_exec("/usr/bin/sed -i 's/protected function notify_graders/function notify_graders/' "
-                            . $CFG->dirroot . "/mod/assign/locallib.php");
-                }
-                $search=shell_exec( '/usr/bin/grep "function notify_graders" ' .$CFG->dirroot. '/mod/assign/locallib.php');
-                assignsubmission_filero_observer::observer_log("Search: $search");
-                if (!stristr( $search, "protected")) { */
-                /* if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
+                if (!$coursemodule = get_coursemodule_from_instance('assign', $destsubmission->assignment)) {
                     assignsubmission_filero_observer::observer_log(
                             "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
                     continue;
                 }
                 $coursemodulecontext = context_module::instance($coursemodule->id);
                 $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-                $assign::notify_graders($destsubmission);
-                assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: - "
-                        . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
-                        . $currentsubmission->id . " of assignment " . $assignmentname);*/
-                /*}
-                else{
-                    assignsubmission_filero_observer::observer_log("ERROR: grader_submissions: notify_graders can't be called. The function is protected. - "
-                            . $destsubmission->id . " of assignment " . $assignment->name . " created from submission "
-                            . $currentsubmission->id . " of assignment " . $assignmentname);
-                }*/
-
-
-
-                /* disabled Nov 15,2023 on DHBW demand not to archive duplicate submission files
-                $_SESSION['filero_submit_for_grading_' . $destsubmission->id] = true;
-                //$this->notify_student_submission_receipt($submission);  // not possible, protected function
-                $this->submit_for_grading($destsubmission);
-                unset($_SESSION['filero_submit_for_grading_' . $destsubmission->id]);
-                */
+                $this->notify_graders( $destsubmission, $assign, $coursemodule, $currentsubmission->id, $assignmentname);
             }
         }
         return true;
     }
 
     /**
+     * Returns a list of users that should receive notification about given submission.
+     *
+     * @param int $userid The submission to grade
+     * @return array
+     */
+    protected function get_notifiable_users($userid, $assign) {
+        // Potential users should be active users only.
+        $potentialusers = get_enrolled_users($assign->context, "mod/assign:receivegradernotifications",
+                null, 'u.*', null, null, null, true);
+
+        $notifiableusers = array();
+        if (groups_get_activity_groupmode($assign->get_course_module()) == SEPARATEGROUPS) {
+            if ($groups = groups_get_all_groups($assign->get_course()->id, $userid, $assign->get_course_module()->groupingid)) {
+                foreach ($groups as $group) {
+                    foreach ($potentialusers as $potentialuser) {
+                        if ($potentialuser->id == $userid) {
+                            // Do not send self.
+                            continue;
+                        }
+                        if (groups_is_member($group->id, $potentialuser->id)) {
+                            $notifiableusers[$potentialuser->id] = $potentialuser;
+                        }
+                    }
+                }
+            } else {
+                // User not in group, try to find graders without group.
+                foreach ($potentialusers as $potentialuser) {
+                    if ($potentialuser->id == $userid) {
+                        // Do not send self.
+                        continue;
+                    }
+                    if (!groups_has_membership($assign->get_course_module(), $potentialuser->id)) {
+                        $notifiableusers[$potentialuser->id] = $potentialuser;
+                    }
+                }
+            }
+        } else {
+            foreach ($potentialusers as $potentialuser) {
+                if ($potentialuser->id == $userid) {
+                    // Do not send self.
+                    continue;
+                }
+                // Must be enrolled.
+                if (is_enrolled($assign->get_course_context(), $potentialuser->id)) {
+                    $notifiableusers[$potentialuser->id] = $potentialuser;
+                }
+            }
+        }
+        return $notifiableusers;
+    }
+
+
+    /**
      * Send notifications to graders upon student submissions.
      *
      * @param stdClass $submission, $assignment, $coursemodule
      * @return void
-     * /
-    protected function notify_graders( $submission, $assignment, $coursemodule) {
+     */
+    protected function notify_graders( $submission, $assignment, $coursemodule, $sourcesubmissionid, $assignmentname) {
         global $DB, $USER;
 
         $coursemodulecontext = context_module::instance($coursemodule->id);
@@ -478,6 +494,9 @@ class assign_submission_filero extends assign_submission_plugin {
 
         if (!$instance->sendnotifications && !($late && $instance->sendlatenotifications)) {
             // No need to do anything.
+            assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: Not sent due to settings- "
+                    . $submission->id . " of assignment " . $assign->name . " created from submission "
+                    . $sourcesubmissionid . " of assignment " . $assignmentname);
             return;
         }
 
@@ -487,17 +506,21 @@ class assign_submission_filero extends assign_submission_plugin {
             $user = $USER;
         }
 
-        if ($notifyusers = $assign->get_notifiable_users($user->id)) {
+        if ($notifyusers = $$this->get_notifiable_users($user->id)) {
             foreach ($notifyusers as $notifyuser) {
                 $assign->send_notification($user,
                         $notifyuser,
                         'gradersubmissionupdated',
                         'assign_notification',
                         $submission->timemodified);
+                assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: Mailed notification to "
+                        . $notifyuser->firstname . " " . $notifyuser->lastname
+                        . " of assignment " . $assign->name . " created from submission "
+                        . $sourcesubmissionid . " of assignment " . $assignmentname);
             }
         }
     }
-    */
+
 
 
     /**
