@@ -431,7 +431,7 @@ class assign_submission_filero extends assign_submission_plugin {
      */
     protected function get_notifiable_users($userid, $assign) {
         // Potential users should be active users only.
-        $potentialusers = get_enrolled_users($assign->context, "mod/assign:receivegradernotifications",
+        $potentialusers = get_enrolled_users($assign->get_context(), "mod/assign:receivegradernotifications",
                 null, 'u.*', null, null, null, true);
 
         $notifiableusers = array();
