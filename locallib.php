@@ -506,7 +506,7 @@ class assign_submission_filero extends assign_submission_plugin {
             $user = $USER;
         }
 
-        if ($notifyusers = $this->get_notifiable_users($user->id)) {
+        if ($notifyusers = $this->get_notifiable_users($user->id, $assign)) {
             foreach ($notifyusers as $notifyuser) {
                 $assign->send_notification($user,
                         $notifyuser,
