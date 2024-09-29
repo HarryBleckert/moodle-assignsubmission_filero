@@ -415,9 +415,9 @@ class assign_submission_filero extends assign_submission_plugin {
                             "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
                     continue;
                 }
-                $coursemodulecontext = context_module::instance($coursemodule->id);
-                $assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
-                $this->notify_graders( $destsubmission, $assign, $coursemodule, $currentsubmission->id, $assignmentname);
+                //$coursemodulecontext = context_module::instance($coursemodule->id);
+                //$assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
+                $this->notify_graders( $destsubmission, $assignment, $coursemodule, $currentsubmission->id, $assignmentname);
             }
         }
         return true;
@@ -495,7 +495,7 @@ class assign_submission_filero extends assign_submission_plugin {
         if (!$instance->sendnotifications && !($late && $instance->sendlatenotifications)) {
             // No need to do anything.
             assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: Not sent due to settings- "
-                    . $submission->id . " of assignment " . $assign->name . " created from submission "
+                    . $submission->id . " of assignment " . $assignment->name . " created from submission "
                     . $sourcesubmissionid . " of assignment " . $assignmentname);
             return;
         }
