@@ -415,8 +415,6 @@ class assign_submission_filero extends assign_submission_plugin {
                             "grader_submissions(): Course Module not found for submission $destsubmission->id of assignment $assignment->name!");
                     continue;
                 }
-                //$coursemodulecontext = context_module::instance($coursemodule->id);
-                //$assign = new assign($coursemodulecontext, $coursemodule, $assignment->course);
                 $this->notify_graders( $destsubmission, $assignment, $coursemodule, $currentsubmission->id, $assignmentname);
             }
         }
