@@ -1033,7 +1033,9 @@ class assign_submission_filero extends assign_submission_plugin {
                             <button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
                         . "</form>\n";
-                if ($submission->status == "submitted") {
+                $currentsubmission = $DB->get_record('assign_submission',
+                        array('assignment' => $submission->assignment,'userid' => $submission->userid));
+                if ($currentsubmission && $currentsubmission->status == "submitted") {
                     $fileroRes .= '<form method="POST" style="font-size:81%;display:inline;">'
                     . '<button name="assignsubmission_filero_archive" value="' . $submission->id
                     . '" title="Studierende sehen diesen Button nicht!' . $info . '">'
