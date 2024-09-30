@@ -1000,7 +1000,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     public function view(stdClass $submission) {
-        global $USER;
+        global $DB, $USER;
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission AND assign_submission_filero::use_archiving($submission)) {
