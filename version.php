@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024092900;
+$plugin->version = 2024093000;
 $plugin->release = "v1.2-rc";
 $plugin->component = 'assignsubmission_filero';
 $plugin->requires = 2021051700;     // Moodle 4.x
