@@ -320,14 +320,13 @@ class assignsubmission_filero_filero {
         if (!empty($assignsubmission_onlinetext)) {
             // $assignsubmission_onlinetext
             // id	assignment submission onlinetext onlineformat
-            /* until July 2024
+            /* until July 2024 */
             $SubmissionOnlinetext->AssignSubmissionOnlinetextId = $assignsubmission_onlinetext->id;
             $SubmissionOnlinetext->onlinetext = $assignsubmission_onlinetext->onlinetext;
             $SubmissionOnlinetext->SubmissionId = $assignsubmission_onlinetext->submission;
             $SubmissionOnlinetext->Assignment = $assignsubmission_onlinetext->assignment;
             $SubmissionOnlinetext->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
-
-            new in test */
+            /* new in test
             foreach ( $assignsubmission_onlinetext AS $onlinetext) {
                 $SubmissionOnlinetextA = new stdClass();
                 $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $onlinetext->id;
@@ -337,7 +336,7 @@ class assignsubmission_filero_filero {
                 $SubmissionOnlinetextA->OnlineFormat = $onlinetext->onlineformat;
                 $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
             }
-            
+            */
         }
         /* $this->output = "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
                 . "\nSubmissionOnlinetext" . var_export($SubmissionOnlinetext,true) . "\n";
