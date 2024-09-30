@@ -1004,7 +1004,7 @@ class assign_submission_filero extends assign_submission_plugin {
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission AND assign_submission_filero::use_archiving($submission)) {
-            $fileroRes = $this->get_archived_files_info($submission);
+            $fileroRes = $fileroFiles = $this->get_archived_files_info($submission);
             if (isset($_REQUEST['action']) and $_REQUEST['action'] != "grader"
                     and (is_siteadmin() or !user_has_role_assignment($USER->id, 5))) {
                 // archive manually now if button was pressen
@@ -1037,7 +1037,7 @@ class assign_submission_filero extends assign_submission_plugin {
                         . '<form method="POST" style="font-size:81%;display:inline;">'
                             . '<button name="assignsubmission_filero_archive" value="' . $submission->id
                             . '" title="Studierende sehen diesen Button nicht!' . $info . '">'
-                            . (strlen($fileroRes)>30 ?'Erneut a' : 'A') .'rchivieren</button>'
+                            . (strlen($fileroFiles)>30 ?'Erneut a' : 'A') .'rchivieren</button>'
                             ."</form>\n";
             }
         }

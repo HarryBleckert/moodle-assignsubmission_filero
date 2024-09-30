@@ -338,10 +338,10 @@ class assignsubmission_filero_filero {
             }
 
         }
-        /* $this->output = "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
+        $this->output .= "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
                 . "\nSubmissionOnlinetext" . var_export($SubmissionOnlinetext,true) . "\n";
-        */
-        $this->output = "\nSubmission ID: " . trim($this->submission->id) . "\n";
+
+        $this->output .= "\nSubmission ID: " . trim($this->submission->id) . "\n";
         $Assign = new stdClass();
         $Assign->AssignId = $assign->id;
         $Assign->Course = $assign->course;
@@ -613,11 +613,23 @@ class assignsubmission_filero_filero {
         }
         $FeedbackComments = new stdClass();
         if (!empty($assignfeedback_comments)) {
+            */
             $FeedbackComments->AssignFeedbackCommentId = $assignfeedback_comments->id;
             $FeedbackComments->commenttext = $assignfeedback_comments->commenttext;
             $FeedbackComments->AssignGradeId = $assignfeedback_comments->grade;
             $FeedbackComments->Assignment = $assignfeedback_comments->assignment;
             $FeedbackComments->CommentFormat = $assignfeedback_comments->commentformat;
+
+            new in test */
+            foreach ( $assignsubmission_onlinetext AS $onlinetext) {
+                $SubmissionOnlinetextA = new stdClass();
+                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $onlinetext->id;
+                $SubmissionOnlinetextA->onlinetext = $onlinetext->onlinetext;
+                $SubmissionOnlinetextA->SubmissionId = $onlinetext->submission;
+                $SubmissionOnlinetextA->Assignment = $onlinetext->assignment;
+                $SubmissionOnlinetextA->OnlineFormat = $onlinetext->onlineformat;
+                $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
+            }
         }
 
         $Assign = new stdClass();
