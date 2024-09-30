@@ -621,16 +621,18 @@ class assignsubmission_filero_filero {
             $FeedbackComments->CommentFormat = $assignfeedback_comments->commentformat;
 
             new in test  */
-            foreach ( $assignsubmission_onlinetext AS $onlinetext) {
+            foreach ( $assignfeedback_comments AS $FeedbackComment) {
                 $FeedbackCommentsC = new stdClass();
-                $FeedbackCommentsC->AssignFeedbackCommentId = $assignfeedback_comments->id;;
-                $FeedbackCommentsC->commenttext = $assignfeedback_comments->commenttext;
-                $FeedbackCommentsC->AssignGradeId = $assignfeedback_comments->grade;
-                $FeedbackCommentsC->Assignment = $assignfeedback_comments->assignment;
-                $FeedbackCommentsC->CommentFormat = $assignfeedback_comments->commentformat;
+                $FeedbackCommentsC->AssignFeedbackCommentId = $FeedbackComment->id;;
+                $FeedbackCommentsC->commenttext = $FeedbackComment->commenttext;
+                $FeedbackCommentsC->AssignGradeId = $FeedbackComment->grade;
+                $FeedbackCommentsC->Assignment = $FeedbackComment->assignment;
+                $FeedbackCommentsC->CommentFormat = $FeedbackComment->commentformat;
                 $FeedbackComments[] = $FeedbackCommentsC;
             }
         }
+        $this->output .= "\n\n$assignfeedback_comments: " . var_export($assignfeedback_comments,true)
+                . "\n$FeedbackComments: " . var_export($FeedbackComments,true) . "\n";
 
         $Assign = new stdClass();
         $Assign->AssignId = $assign->id;
