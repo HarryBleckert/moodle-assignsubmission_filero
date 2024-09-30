@@ -326,7 +326,7 @@ class assignsubmission_filero_filero {
             $SubmissionOnlinetext->SubmissionId = $assignsubmission_onlinetext->submission;
             $SubmissionOnlinetext->Assignment = $assignsubmission_onlinetext->assignment;
             $SubmissionOnlinetext->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
-            new in test  */
+            new in test */
             foreach ( $assignsubmission_onlinetext AS $onlinetext) {
                 $SubmissionOnlinetextC = new stdClass();
                 $SubmissionOnlinetextC->AssignSubmissionOnlinetextId = $onlinetext->id;
