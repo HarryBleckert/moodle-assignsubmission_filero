@@ -316,7 +316,7 @@ class assignsubmission_filero_filero {
             unset($AssignSubmissionFile);
         }
 
-        $SubmissionOnlinetext = new stdClass();
+        $SubmissionOnlinetext =array();
         if (!empty($assignsubmission_onlinetext)) {
             // $assignsubmission_onlinetext
             // id	assignment submission onlinetext onlineformat
@@ -611,7 +611,7 @@ class assignsubmission_filero_filero {
             $AssignFiles->AssignFeedbackFile = $AssignFeedbackFile;
             unset($AssignFeedbackFile);
         }
-        $FeedbackComments = new stdClass();
+        $FeedbackComments = array();
         if (!empty($assignfeedback_comments)) {
             /*
             $FeedbackComments->AssignFeedbackCommentId = $assignfeedback_comments->id;
