@@ -281,7 +281,7 @@ class assignsubmission_filero_filero {
                 array('assignment' => $this->submission->assignment, "userid" => $this->submission->userid));
         // id	assignment submission onlinetext onlineformat
         $assignsubmission_onlinetext = $DB->get_records('assignsubmission_onlinetext',
-                array('submission' => $this->submission->id, "assignment" => $assign->id));
+                array('submission' => $this->submission->id));
 
         $cm = get_coursemodule_from_instance('assign', $assign->id, $assign->course);
         $context = context_module::instance($cm->id);

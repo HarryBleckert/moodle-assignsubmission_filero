@@ -1000,7 +1000,7 @@ class assign_submission_filero extends assign_submission_plugin {
      * @return string
      */
     public function view(stdClass $submission) {
-        global $USER;
+        global $DB, $USER;
         $filesubmission = $this->get_filero_submission($submission->id);
         $fileroRes = "-";
         if ($filesubmission AND assign_submission_filero::use_archiving($submission)) {
@@ -1032,13 +1032,17 @@ class assign_submission_filero extends assign_submission_plugin {
                         . $filesubmission->submissiontimemodified . '">
                             <button name="assignsubmission_filero_showLog" value="' . $submission->id . '" 
                              title="Studierende sehen diesen Button nicht!' . $info . '">Log anzeigen</button>'
-                        . "</form>\n"
-
-                        . '<form method="POST" style="font-size:81%;display:inline;">'
-                            . '<button name="assignsubmission_filero_archive" value="' . $submission->id
-                            . '" title="Studierende sehen diesen Button nicht!' . $info . '">'
-                            . (strlen($fileroFiles)>30 ?'Erneut a' : 'A') .'rchivieren</button>'
-                            ."</form>\n";
+                        . "</form>\n";
+                $currentsubmission = $DB->get_record('assign_submission',
+                        array('assignment' => $submission->assignment,'userid' => $submission->userid));
+                if ($currentsubmission && $currentsubmission->status == "submitted") {
+                    $fileroRes .= '<form method="POST" style="font-size:81%;display:inline;">'
+                    . '<button name="assignsubmission_filero_archive" value="' . $submission->id
+                    . '" title="Studierende sehen diesen Button nicht!' . $info . '">'
+                    . (strlen($fileroFiles) > 30 ? 'Erneut a' : 'A') . 'rchivieren</button>'
+                    . "</form>\n";
+                }
+                print "Submission:<br>" . var_export($submission,true);
             }
         }
         return $fileroRes;
