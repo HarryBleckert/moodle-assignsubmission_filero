@@ -328,13 +328,13 @@ class assignsubmission_filero_filero {
             $SubmissionOnlinetext->OnlineFormat = $assignsubmission_onlinetext->onlineformat;
             new in test */
             foreach ( $assignsubmission_onlinetext AS $onlinetext) {
-                $SubmissionOnlinetextA = new stdClass();
-                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $onlinetext->id;
-                $SubmissionOnlinetextA->onlinetext = $onlinetext->onlinetext;
-                $SubmissionOnlinetextA->SubmissionId = $onlinetext->submission;
-                $SubmissionOnlinetextA->Assignment = $onlinetext->assignment;
-                $SubmissionOnlinetextA->OnlineFormat = $onlinetext->onlineformat;
-                $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
+                $SubmissionOnlinetextC = new stdClass();
+                $SubmissionOnlinetextC->AssignSubmissionOnlinetextId = $onlinetext->id;
+                $SubmissionOnlinetextC->onlinetext = $onlinetext->onlinetext;
+                $SubmissionOnlinetextC->SubmissionId = $onlinetext->submission;
+                $SubmissionOnlinetextC->Assignment = $onlinetext->assignment;
+                $SubmissionOnlinetextC->OnlineFormat = $onlinetext->onlineformat;
+                $SubmissionOnlinetext[] = $SubmissionOnlinetextC;
             }
 
         }
@@ -528,14 +528,14 @@ class assignsubmission_filero_filero {
         $SubmissionResult = $response_param->DeleteMoodleAssignmentSubmissionResult;
         $deletionresult = "Fehler beim Löschen des FILERO Archivs der letzten Abgabe mit submisssion ID ".$this->submission->id;
         if ( isset($SubmissionResult->msg)){
-                if ( stristr($SubmissionResult->msg, " null") ) {
-                    $deletionresult = "Das FILERO Archiv der letzten Abgabe mit submisssion ID "
-                            . $this->submission->id . " wurde erfolgreich gelöscht.";
-                }
-                else{
-                    $deletionresult .= "\nFILERO Fehlermeldung bei Archivierung der letzten Abgabe mit Submisssion ID "
-                            .$this->submission->id . ": ". $SubmissionResult->msg;
-                }
+            if ( stristr($SubmissionResult->msg, " null") ) {
+                $deletionresult = "Das FILERO Archiv der letzten Abgabe mit submisssion ID "
+                        . $this->submission->id . " wurde erfolgreich gelöscht.";
+            }
+            else{
+                $deletionresult .= "\nFILERO Fehlermeldung bei Archivierung der letzten Abgabe mit Submisssion ID "
+                        .$this->submission->id . ": ". $SubmissionResult->msg;
+            }
         }
 
         $this->output .= "\n$deletionresult. Datum: "
@@ -613,22 +613,22 @@ class assignsubmission_filero_filero {
         }
         $FeedbackComments = new stdClass();
         if (!empty($assignfeedback_comments)) {
-            */
+            /*
             $FeedbackComments->AssignFeedbackCommentId = $assignfeedback_comments->id;
             $FeedbackComments->commenttext = $assignfeedback_comments->commenttext;
             $FeedbackComments->AssignGradeId = $assignfeedback_comments->grade;
             $FeedbackComments->Assignment = $assignfeedback_comments->assignment;
             $FeedbackComments->CommentFormat = $assignfeedback_comments->commentformat;
 
-            new in test */
+            new in test  */
             foreach ( $assignsubmission_onlinetext AS $onlinetext) {
-                $SubmissionOnlinetextA = new stdClass();
-                $SubmissionOnlinetextA->AssignSubmissionOnlinetextId = $onlinetext->id;
-                $SubmissionOnlinetextA->onlinetext = $onlinetext->onlinetext;
-                $SubmissionOnlinetextA->SubmissionId = $onlinetext->submission;
-                $SubmissionOnlinetextA->Assignment = $onlinetext->assignment;
-                $SubmissionOnlinetextA->OnlineFormat = $onlinetext->onlineformat;
-                $SubmissionOnlinetext[] = $SubmissionOnlinetextA;
+                $FeedbackCommentsC = new stdClass();
+                $FeedbackCommentsC->AssignFeedbackCommentId = $assignfeedback_comments->id;;
+                $FeedbackCommentsC->commenttext = $assignfeedback_comments->commenttext;
+                $FeedbackCommentsC->AssignGradeId = $assignfeedback_comments->grade;
+                $FeedbackCommentsC->Assignment = $assignfeedback_comments->assignment;
+                $FeedbackCommentsC->CommentFormat = $assignfeedback_comments->commentformat;
+                $FeedbackComments[] = $FeedbackCommentsC;
             }
         }
 
@@ -948,7 +948,7 @@ class assignsubmission_filero_filero {
         return $logfile;
     }
 
-            // show log
+    // show log
     public function showLog($submissionid, $filerotimemodified = false) {
         global $CFG, $PAGE, $OUTPUT, $id;
         if ($submissionid == "observer") {
