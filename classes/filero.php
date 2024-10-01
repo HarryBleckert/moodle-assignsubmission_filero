@@ -72,7 +72,7 @@ class assignsubmission_filero_filero {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
             $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
-            $assign->id = (is_string($this->assign->id) ?intval($this->assign->id) :$this->assign->id);
+            $this->assign->id = (is_string($this->assign->id) ?intval($this->assign->id) :$this->assign->id);
             /*
              * Strange effect: assign returns only string values for all columns/fields !!!
             $this->assign->id = intval($this->assign->id);
