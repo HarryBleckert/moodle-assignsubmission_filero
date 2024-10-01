@@ -276,7 +276,7 @@ class assignsubmission_filero_filero {
         }
 
         set_time_limit(1800);
-        ini_set("memory_limit", "1500M");
+        ini_set("memory_limit", "2400M");
         $assign = $this->assign;
         $this->output .= "\n\nassign: \n" . var_export($assign,true). "\n\n";
         // $DB->get_record("assign", array("id" => $this->submission->assignment));
@@ -561,22 +561,22 @@ class assignsubmission_filero_filero {
         $filerotimecreated = $filerotimemodified = $filerocode = $filerovalidated = 0;
         $fileromsg = "";
         $validated_files = array();
+        // $this->showSpinner();  // showing only after page load!
+        $grade = $this->grade;
         $assign = $this->assign;
         // $DB->get_record("assign", array("id" => $this->submission->assignment));
-        $grade = $this->grade;
         $assignfeedback_file = $DB->get_record('assignfeedback_file',
                 array('grade' => $grade->id, "assignment" => $assign->id));
         // id assignment grade commenttext commentformat
         $assignfeedback_comments = $DB->get_records('assignfeedback_comments',
                 array('grade' => $grade->id, "assignment" => $assign->id));
 
-        // $this->showSpinner();  // showing only after page load!
         $this->output = "\n\nSubmission ID: " . trim($this->submission->id) . "\n";
         $this->output .= "Date: " . date("D, d.m.Y H:i:s e")
                 . " (UTC offset: " . $this->utcOffset . "s). Memory used: "
                 . (round(memory_get_peak_usage(true) / 1024 / 1024)) . "M of " . ini_get('memory_limit') . "\n"
                 . "Feedback and grading from: Grader id " . $grade->grader . " stored in grade with id:" . $grade->id . "\n";
-
+        $this->output .= "\n\nassign: \n" . var_export($assign,true). "\n\n";
         if (!$this->LoginToFilero()) {
             return $this->status;
         }
