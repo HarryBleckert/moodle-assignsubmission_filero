@@ -278,6 +278,7 @@ class assignsubmission_filero_filero {
         set_time_limit(1800);
         ini_set("memory_limit", "1500M");
         $assign = $this->assign;
+        $this->output .= "\n\nassign: " . var_export($assign,true). "\n\n";
         // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $this->submission->assignment, "userid" => $this->submission->userid));
@@ -318,7 +319,7 @@ class assignsubmission_filero_filero {
             unset($AssignSubmissionFile);
         }
 
-        $SubmissionOnlinetext =array();
+        $SubmissionOnlinetext = array();
         if (!empty($assignsubmission_onlinetext)) {
             // $assignsubmission_onlinetext
             // id	assignment submission onlinetext onlineformat
