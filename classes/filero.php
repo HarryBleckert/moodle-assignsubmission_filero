@@ -73,7 +73,7 @@ class assignsubmission_filero_filero {
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
             $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
             /*
-             * Strange effect string values returned for all columns/fields !!!
+             * Strange effect: assign returns only string values for all columns/fields !!!
             $this->assign->id = intval($this->assign->id);
             echo "<hr>assign: <br>";echo var_dump($this->assign). "<hr>\n\n";
             $this->assign = $DB->get_record_sql("select * from {assign} where id = "
