@@ -72,7 +72,7 @@ class assignsubmission_filero_filero {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
             $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
-            echo "<hr>assign: <br>";echo var_dump($assign). "<hr>\n\n";
+            echo "<hr>assign: <br>";echo var_dump($this->assign). "<hr>\n\n";
             /*$this->assign = $DB->get_record_sql("select * from {assign} where id = "
                     .$submission->assignment);
             */
