@@ -577,7 +577,7 @@ class assignsubmission_filero_filero {
                 . " (UTC offset: " . $this->utcOffset . "s). Memory used: "
                 . (round(memory_get_peak_usage(true) / 1024 / 1024)) . "M of " . ini_get('memory_limit') . "\n"
                 . "Feedback and grading from: Grader id " . $grade->grader . " stored in grade with id:" . $grade->id . "\n";
-        $this->output .= "\n\nassign: \n" . var_export($assign,true). "\n\n";
+        $this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
         if (!$this->LoginToFilero()) {
             return $this->status;
         }
