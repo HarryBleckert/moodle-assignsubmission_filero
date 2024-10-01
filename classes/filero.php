@@ -71,7 +71,8 @@ class assignsubmission_filero_filero {
         if ($submission) {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
-            $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
+            //$this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
+            $this->assign = $DB->get_record_sql("select * from {assign} where id = $submission->assignment");
         }
         // $this->cm = $cm;
         $this->files = $files;
