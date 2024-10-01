@@ -671,7 +671,7 @@ class assignsubmission_filero_filero {
         unset($AssignGrades);
         $this->output .= "\n\n" . "AssignGrades with ticket data: (Memory used: " .
                 round(memory_get_peak_usage(true) / 1024 / 1024) . "M)\n"
-                . $this->hideFileContent(var_dump($AssignGradesWTicket)) . "\n";
+                . $this->hideFileContent(var_export($AssignGradesWTicket)) . "\n";
 
         try {
             if (strstr(implode("\n", $this->client->__getFunctions()), "PutMoodleAssignmentGrade")) {
