@@ -17,7 +17,7 @@
 /**
  * This file contains the version information for the filero submission plugin
  *
- * @package    assignsubmission_filero
+ * @package   assignsubmission_filero
  * @copyright 2023 DHBW {@link https://DHBW.de/}
  * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author    Harry@Bleckert.com für LIB-IT DMS GmbH {@link https://www.LIB-IT.de/}
@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024093001;
+$plugin->version = 2024100100;
 $plugin->release = "v1.2-rc";
 $plugin->component = 'assignsubmission_filero';
 $plugin->requires = 2021051700;     // Moodle 4.x
