@@ -631,8 +631,10 @@ class assignsubmission_filero_filero {
                 $FeedbackComments[] = $FeedbackCommentsC;
             }
         }
-        $this->output .= "\n\n$assignfeedback_comments: " . var_export($assignfeedback_comments,true)
-                . "\n$FeedbackComments: " . var_export($FeedbackComments,true) . "\n";
+        $this->output .= "\n\nassignfeedback_comments: "
+                . var_export($assignfeedback_comments,true)
+                . "\nFeedbackComments: "
+                . var_export($FeedbackComments,true) . "\n";
 
         $Assign = new stdClass();
         $Assign->AssignId = $assign->id;
