@@ -71,9 +71,11 @@ class assignsubmission_filero_filero {
         if ($submission) {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
-            //$this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
-            $this->assign = $DB->get_record_sql("select * from {assign} where id = "
+            $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
+            echo "<hr>assign: <br>";echo var_dump($assign). "<hr>\n\n";
+            /*$this->assign = $DB->get_record_sql("select * from {assign} where id = "
                     .$submission->assignment);
+            */
         }
         // $this->cm = $cm;
         $this->files = $files;
@@ -280,7 +282,7 @@ class assignsubmission_filero_filero {
         set_time_limit(1800);
         ini_set("memory_limit", "2400M");
         $assign = $this->assign;
-        $this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
+        //$this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
         // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $this->submission->assignment, "userid" => $this->submission->userid));
@@ -578,7 +580,7 @@ class assignsubmission_filero_filero {
                 . " (UTC offset: " . $this->utcOffset . "s). Memory used: "
                 . (round(memory_get_peak_usage(true) / 1024 / 1024)) . "M of " . ini_get('memory_limit') . "\n"
                 . "Feedback and grading from: Grader id " . $grade->grader . " stored in grade with id:" . $grade->id . "\n";
-        $this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
+        // $this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
         if (!$this->LoginToFilero()) {
             return $this->status;
         }
