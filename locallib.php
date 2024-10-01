@@ -493,7 +493,7 @@ class assign_submission_filero extends assign_submission_plugin {
         if (!$instance->sendnotifications && !($late && $instance->sendlatenotifications)) {
             // No need to do anything.
             assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: Not sent due to settings- "
-                    . $submission->id . " of assignment " . $assignment->name . " created from submission "
+                    . $submission->id . " of assignment " . $instance->name . " created from submission "
                     . $sourcesubmissionid . " of assignment " . $assignmentname);
             return;
         }
@@ -513,7 +513,7 @@ class assign_submission_filero extends assign_submission_plugin {
                         $submission->timemodified);
                 assignsubmission_filero_observer::observer_log("grader_submissions: notify_graders: Mailed notification to "
                         . $notifyuser->firstname . " " . $notifyuser->lastname
-                        . " of assignment " . $assign->name . " created from submission "
+                        . " of assignment " . $instance->name . " created from submission "
                         . $sourcesubmissionid . " of assignment " . $assignmentname);
             }
         }
