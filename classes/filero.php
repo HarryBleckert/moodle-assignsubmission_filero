@@ -71,6 +71,7 @@ class assignsubmission_filero_filero {
         if ($submission) {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
+            $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
         }
         // $this->cm = $cm;
         $this->files = $files;
@@ -276,7 +277,8 @@ class assignsubmission_filero_filero {
 
         set_time_limit(1800);
         ini_set("memory_limit", "1500M");
-        $assign = $DB->get_record("assign", array("id" => $this->submission->assignment));
+        $assign = $this->assign;
+        // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $DB->get_record('assign_grades',
                 array('assignment' => $this->submission->assignment, "userid" => $this->submission->userid));
         // id	assignment submission onlinetext onlineformat
@@ -338,9 +340,9 @@ class assignsubmission_filero_filero {
             }
 
         }
-        $this->output .= "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
+        /*$this->output .= "\n\nassignsubmission_onlinetext: " . var_export($assignsubmission_onlinetext,true)
                 . "\nSubmissionOnlinetext" . var_export($SubmissionOnlinetext,true) . "\n";
-
+        */
         $this->output .= "\nSubmission ID: " . trim($this->submission->id) . "\n";
         $Assign = new stdClass();
         $Assign->AssignId = $assign->id;
@@ -558,7 +560,8 @@ class assignsubmission_filero_filero {
         $filerotimecreated = $filerotimemodified = $filerocode = $filerovalidated = 0;
         $fileromsg = "";
         $validated_files = array();
-        $assign = $DB->get_record("assign", array("id" => $this->submission->assignment));
+        $assign = $this->assign;
+        // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $this->grade;
         $assignfeedback_file = $DB->get_record('assignfeedback_file',
                 array('grade' => $grade->id, "assignment" => $assign->id));
@@ -631,11 +634,11 @@ class assignsubmission_filero_filero {
                 $FeedbackComments[] = $FeedbackCommentsC;
             }
         }
-        $this->output .= "\n\nassignfeedback_comments: "
+        /*$this->output .= "\n\nassignfeedback_comments: "
                 . var_export($assignfeedback_comments,true)
                 . "\nFeedbackComments: "
                 . var_export($FeedbackComments,true) . "\n";
-
+        */
         $Assign = new stdClass();
         $Assign->AssignId = (is_string($assign->id) ?intval($assign->id):$assign->id);
         $Assign->Course = $assign->course;
