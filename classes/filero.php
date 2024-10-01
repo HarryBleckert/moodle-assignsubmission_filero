@@ -72,9 +72,11 @@ class assignsubmission_filero_filero {
             $this->grade = $DB->get_record('assign_grades',
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
             $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
+            /*
+             * Strange effect string values returned for all columns/fields !!!
             $this->assign->id = intval($this->assign->id);
             echo "<hr>assign: <br>";echo var_dump($this->assign). "<hr>\n\n";
-            /*$this->assign = $DB->get_record_sql("select * from {assign} where id = "
+            $this->assign = $DB->get_record_sql("select * from {assign} where id = "
                     .$submission->assignment);
             */
         }
@@ -283,6 +285,7 @@ class assignsubmission_filero_filero {
         set_time_limit(1800);
         ini_set("memory_limit", "2400M");
         $assign = $this->assign;
+        $assign->id = (is_string($assign->id) ?intval($assign->id) :$assign->id);
         //$this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
         // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $grade = $DB->get_record('assign_grades',
@@ -646,7 +649,7 @@ class assignsubmission_filero_filero {
                 . var_export($FeedbackComments,true) . "\n";
         */
         $Assign = new stdClass();
-        $Assign->AssignId = (is_string($assign->id) ?intval($assign->id):$assign->id);
+        $Assign->AssignId = $assign->id;
         $Assign->Course = $assign->course;
         $Assign->CourseIDNumber = $course->idnumber;
         $Assign->Intro = $assign->intro;
