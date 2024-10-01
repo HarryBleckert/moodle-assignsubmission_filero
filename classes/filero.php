@@ -637,7 +637,7 @@ class assignsubmission_filero_filero {
                 . var_export($FeedbackComments,true) . "\n";
 
         $Assign = new stdClass();
-        $Assign->AssignId = $assign->id;
+        $Assign->AssignId = (is_string($assign->id) ?intval($assign->id):$assign->id);
         $Assign->Course = $assign->course;
         $Assign->CourseIDNumber = $course->idnumber;
         $Assign->Intro = $assign->intro;
