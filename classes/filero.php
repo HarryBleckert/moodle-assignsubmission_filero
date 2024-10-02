@@ -644,7 +644,7 @@ class assignsubmission_filero_filero {
         /*$this->output .= "\n\nassignfeedback_comments: "
                 . var_export($assignfeedback_comments,true)
                 . "\nFeedbackComments: "
-                . var_export($FeedbackComments,true) . "\n";
+                . var_export($FeedbackComments,true) ."\n";
         */
         $Assign = new stdClass();
         $Assign->Course = $assign->course;
