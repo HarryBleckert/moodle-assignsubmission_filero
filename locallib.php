@@ -1042,11 +1042,11 @@ class assign_submission_filero extends assign_submission_plugin {
                     . (strlen($fileroFiles) > 30 ? 'Erneut a' : 'A') . 'rchivieren</button>'
                     . "</form>\n";
                 }
-
-                print "<hr>assign: <br>";print var_dump($this->assign). "<hr>\n\n";
-                // print "Submission:<br>" . var_export($submission,true);
             }
         }
+        $assign = $DB->get_record("assign", array("id" => $submission->assignment));
+        print "<hr>assign: <br>";print var_dump($assign). "<hr>\n\n";
+        // print "Submission:<br>" . var_export($submission,true);
         return $fileroRes;
     }
 
