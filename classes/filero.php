@@ -465,7 +465,7 @@ class assignsubmission_filero_filero {
             }
             if ($this->debug and isset($filerocode) and $filerocode == 1 and !empty($fileroid)) {
                 $AssignSubmissionWTicket = new stdClass();
-                $AssignSubmissionWTicket->ticket = $ticket;
+                $AssignSubmissionWTicket->ticket = $_SESSION['ticket'];
                 $AssignSubmissionWTicket->submissionId = $response_param->PutMoodleAssignmentSubmissionResult->id;
                 $AssignSubmissionWTicket->status = $this->status;
                 $response_param = $this->client->GetMoodleAssignmentSubmission($AssignSubmissionWTicket);
@@ -647,11 +647,11 @@ class assignsubmission_filero_filero {
                 . var_export($FeedbackComments,true) . "\n";
         */
         $Assign = new stdClass();
-        $Assign->AssignId = $assign->id;
         $Assign->Course = $assign->course;
         $Assign->CourseIDNumber = $course->idnumber;
         $Assign->Intro = $assign->intro;
         $Assign->Name = $assign->name;
+        $Assign->AssignId = $assign->id;
 
         $AssignGrades = new stdClass();
         $AssignGrades->AssignGradeId = $grade->id;
