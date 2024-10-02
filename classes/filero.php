@@ -73,6 +73,8 @@ class assignsubmission_filero_filero {
                     array('assignment' => $submission->assignment, "userid" => $submission->userid));
             $this->assign = $DB->get_record("assign", array("id" => $submission->assignment));
             $this->assign->id = (is_string($this->assign->id) ?intval($this->assign->id) :$this->assign->id);
+
+            echo "<hr>assign: <br>";echo var_dump($this->assign). "<hr>\n\n";
             /*
              * Strange effect: assign returns only string values for all columns/fields !!!
             $this->assign->id = intval($this->assign->id);
@@ -572,7 +574,6 @@ class assignsubmission_filero_filero {
         // $this->showSpinner();  // showing only after page load!
         $grade = $this->grade;
         $assign = $this->assign;
-        // $DB->get_record("assign", array("id" => $this->submission->assignment));
         $assignfeedback_file = $DB->get_record('assignfeedback_file',
                 array('grade' => $grade->id, "assignment" => $assign->id));
         // id assignment grade commenttext commentformat
@@ -584,7 +585,6 @@ class assignsubmission_filero_filero {
                 . " (UTC offset: " . $this->utcOffset . "s). Memory used: "
                 . (round(memory_get_peak_usage(true) / 1024 / 1024)) . "M of " . ini_get('memory_limit') . "\n"
                 . "Feedback and grading from: Grader id " . $grade->grader . " stored in grade with id:" . $grade->id . "\n";
-        // $this->output .= "\n\nassign: \n" . var_dump($assign). "\n\n";
         if (!$this->LoginToFilero()) {
             return $this->status;
         }
