@@ -772,6 +772,13 @@ class assignsubmission_filero_filero {
         }
 
         unset($AssignFeedbackFile->Files, $Files);
+
+        if (stristr($fileromsg, "error")){
+            assignsubmission_filero_observer::observer_log("Error in PutMoodleAssignmentGrade: No data or files were archived!");
+            assignsubmission_filero_observer::observer_log("ErrorMsg: " . $fileroRes->fileromsg);
+            $this->SoapDebug($this->client);
+        }
+
         $filerograding = new stdClass();
         if (isset($filerocode)) {
             $filerograding->filerocode = $filerocode;
