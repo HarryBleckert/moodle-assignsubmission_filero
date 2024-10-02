@@ -1044,8 +1044,8 @@ class assign_submission_filero extends assign_submission_plugin {
                 }
             }
         }
-        $assign = $DB->get_record("assign", array("id" => $submission->assignment));
-        print "<hr>assign: <br>";print var_dump($assign). "<hr>\n\n";
+        // $assign = $DB->get_record("assign", array("id" => $submission->assignment));
+        // print "<hr>assign: <br>";print var_dump($assign). "<hr>\n\n";
         // print "Submission:<br>" . var_export($submission,true);
         return $fileroRes;
     }
