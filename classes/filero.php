@@ -868,6 +868,7 @@ class assignsubmission_filero_filero {
             $fileSpecs->License = $fileRec->license;
             $fileSpecs->UserId = $fileRec->userid;
             $fileSpecs->ContextId = $fileRec->contextid;
+            $fileSpecs->ItemId = $fileRec->itemid;
             $fileSpecs->Component = $fileRec->component;
             $fileSpecs->Status = $fileRec->status;
             $fileSpecs->ContentHashSha512 = hash("sha512", $Source);
