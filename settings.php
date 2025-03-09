@@ -117,11 +117,15 @@ foreach ( $roles as $role ){
 }
 $name = new lang_string('grader_roles', 'assignsubmission_filero');
 $description = new lang_string('grader_roles_help', 'assignsubmission_filero');
+
+
 $element = new admin_setting_configmultiselect('assignsubmission_filero/grader_roles',
         $name,
         $description,
         array("4"), $grader_roles);
 $settings->add($element);
+
+
 
 // Archive to Filero only AFTER grading has been recorded (assign_grades->grade >0)
 $name = new lang_string('archive_feedback_after_grading', 'assignsubmission_filero');

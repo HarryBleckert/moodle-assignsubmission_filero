@@ -1137,13 +1137,14 @@ class assign_submission_filero extends assign_submission_plugin {
      * @param stdClass $submission The submission
      * @return string
      */
+    /*
     public function format_for_log(stdClass $submission) {
         // Format the info for each submission plugin (will be added to log).
         $filecount = $this->count_files($submission->id, assignsubmission_file_FILEAREA);
 
         return get_string('numfilesforlog', 'assignsubmission_filero', $filecount);
     }
-
+    */
     /**
      * Count the number of files
      *
